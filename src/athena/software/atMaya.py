@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Type, Union, Sequence
+
 import sys
 from dataclasses import dataclass
 
@@ -13,9 +17,9 @@ from maya.api import OpenMaya, OpenMayaUI
 
 class PauseViewport(object):
 
-    __IS_RUNNING = False
+    __IS_RUNNING: bool = False
 
-    def __enter__(self):
+    def __enter__(self) -> None:
 
         if not cmds.ogs(query=True, pause=True):
             cmds.ogs(pause=True)
@@ -31,7 +35,7 @@ class PauseViewport(object):
         #   cmds.setAttr(node+'.nodeState', 1)
         # cmds.dgdirty(cmds.ls())
 
-    def __exit__(self, type, value, traceback):     
+    def __exit__(self, *_) -> None:
         
         # for node, (frozen, nodeState) in self._nodes.items():
         #   node = next(iter(cmds.ls(node, long=True)), None)
@@ -52,7 +56,11 @@ class PauseViewport(object):
         cmds.refresh()
 
 
-def selectInMaya(toSelect, mode='add', replace=True):
+def selectInMaya(
+    toSelect: Sequence[Union[str | OpenMaya.MObject | OpenMaya.MDagPath | OpenMaya.MFnDependencyNode], ...], 
+    mode: str ='add', 
+    replace: bool = True) -> None:
+
     selList = OpenMaya.MSelectionList()
 
     for each in toSelect:
@@ -71,7 +79,7 @@ def selectInMaya(toSelect, mode='add', replace=True):
     OpenMaya.MGlobal.setActiveSelectionList(selList, mode)
 
 
-def getDisplay(object_):
+def getDisplay(object_: Union[str | OpenMaya.MObject | OpenMaya.MDagPath | OpenMaya.MFnDependencyNode]) -> str:
     # For `str` or `maya.api.OpenMaya.MObject`
     if isinstance(object_, OpenMaya.MObject):
         handle = OpenMaya.MObjectHandle(object_)
@@ -88,6 +96,7 @@ def getDisplay(object_):
         return object_.name()
 
 
+#DEPRECATED: Remove this as it won't be used.
 def toViewportHUD(widget):
     # Create an instance of the M3dView class and get the 3D view from the modelPanel4 in Maya
     view = OpenMayaUI.M3dView.active3dView()
@@ -111,36 +120,36 @@ class MayaFeedbackContainer(AtCore.FeedbackContainer):
         if not self.selectable:
             return replace
         
-        with PauseViewport():
-            if self.children:
-                selectInMaya(tuple(child.feedback for child in self.children), mode='add', replace=replace)
-                replace = False
+        # with PauseViewport():
+        if self.children:
+            selectInMaya(tuple(child.feedback for child in self.children), mode='add', replace=replace)
+            replace = False
 
         return replace
 
-    def deselect(self):
+    def deselect(self) -> None:
         if not self.selectable:
             return
         
-        with PauseViewport():
-            if self.children:
-                selectInMaya(tuple(child.feedback for child in self.children), mode='remove', replace=False)
+        # with PauseViewport():
+        if self.children:
+            selectInMaya(tuple(child.feedback for child in self.children), mode='remove', replace=False)
 
 
 @dataclass(frozen=True)
 class MayaFeedback(AtCore.Feedback):
 
-    def __str__(self):
+    def __str__(self) -> str:
         return getDisplay(self.feedback)
 
-    def select(self, replace=True):
+    def select(self, replace: bool = True) -> bool:
         if self.selectable:
             selectInMaya((self.feedback,), mode='add', replace=replace)
             replace = False
 
         return super().select(replace=replace)
 
-    def deselect(self):
+    def deselect(self) -> None:
         super().deselect()
 
         if self.selectable:
@@ -149,4 +158,4 @@ class MayaFeedback(AtCore.Feedback):
 
 class MayaProcess(AtCore.Process):
 
-    FEEDBACK_CONTAINER_CLASS = MayaFeedbackContainer
+    FEEDBACK_CONTAINER_CLASS: Type[MayaFeedbackContainer] = MayaFeedbackContainer

@@ -1,4 +1,8 @@
+from __future__ import annotations
 import abc
+
+from typing import Type, Optional, Any, Tuple, Sequence
+
 
 
 _ALL_STATUS = {}
@@ -6,9 +10,9 @@ _ALL_STATUS = {}
 class Status(abc.ABC):
     """This is the base `Status` class that all type of status inherit From."""
 
-    __slots__ = ('_name', '_level', '_color')
+    __slots__: Tuple[str] = ('_name', '_level', '_color')
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args: Any, **kwargs: Any) -> Status:
         """Allow to store all new levels in the __ALL_LEVELS class variable to return singleton."""
 
         instance = super(Status, cls).__new__(cls)
@@ -16,46 +20,46 @@ class Status(abc.ABC):
 
         return instance
     
-    def __init__(self, name, color, level):
+    def __init__(self, name: str, color: Sequence[float, float, float], level: float) -> None:
         """Create the __Status object and setup it's attributes"""
 
         self._name = name
-        self._color = color
+        self._color = tuple(color)
         self._level = level
 
-    def __lt__(self, other):
+    def __lt__(self, other: Status) -> bool:
         return self._level < other._level
 
-    def __le__(self, other):
+    def __le__(self, other: Status) -> bool:
         return self._level <= other._level
 
-    def __gt__(self, other):
+    def __gt__(self, other: Status) -> bool:
         return self._level > other._level
 
-    def __ge__(self, other):
+    def __ge__(self, other: Status) -> bool:
         return self._level >= other._level
 
-    def __eq__(self, other):
+    def __eq__(self, other: Status) -> bool:
         return self._level == other._level
 
-    def __ne__(self, other):
+    def __ne__(self, other: Status) -> bool:
         return self._level != other._level
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(id(self))
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Property to access the name of the __Status"""
         return self._name
 
     @property
-    def level(self):
+    def level(self) -> int:
         """Property to access the level of the __Status"""
         return self._level
 
     @property
-    def color(self):
+    def color(self) -> Tuple[float, float, float]:
         """Property to access the color of the __Status"""
         return self._color
 
@@ -71,21 +75,25 @@ class _BuiltInStatus(Status):
     """Represent a Built-In Status, can be instantiated to define a new Built-In level"""
     ...
 
-_DEFAULT =  _BuiltInStatus('Default', (60, 60, 60), 0.0)
-_SKIPPED = _BuiltInStatus('Skipped', (85, 85, 85), 0.0)
+_DEFAULT: _BuiltInStatus =  _BuiltInStatus('Default', (60, 60, 60), 0.0)
+"""Default Status, it is set as base status for all :py:class:`.Process`"""
 
-CORRECT = SuccessStatus('Correct', (22, 194, 15), 0.1)
-SUCCESS = SuccessStatus('Success', (0, 128, 0), 0.2)
+_SKIPPED: _BuiltInStatus = _BuiltInStatus('Skipped', (85, 85, 85), 0.0)
 
-WARNING = FailStatus('Warning', (196, 98, 16), 1.1)
-ERROR = FailStatus('Error', (150, 0, 0), 1.2)
-CRITICAL = FailStatus('Critical', (102, 0, 0), 1.3)
+CORRECT: SuccessStatus = SuccessStatus('Correct', (22, 194, 15), 0.1)
+"""lolo"""
 
-_ABORTED = _BuiltInStatus('Aborted', (100, 100, 100), float('nan'))
-_EXCEPTION = _BuiltInStatus('Exception', (125, 125, 125), float('nan'))
+SUCCESS: SuccessStatus = SuccessStatus('Success', (0, 128, 0), 0.2)
+
+WARNING: FailStatus = FailStatus('Warning', (196, 98, 16), 1.1)
+ERROR: FailStatus = FailStatus('Error', (150, 0, 0), 1.2)
+CRITICAL: FailStatus = FailStatus('Critical', (102, 0, 0), 1.3)
+
+_ABORTED: _BuiltInStatus = _BuiltInStatus('Aborted', (100, 100, 100), float('nan'))
+_EXCEPTION: _BuiltInStatus = _BuiltInStatus('Exception', (125, 125, 125), float('nan'))
 
 
-def getAllStatus():
+def getAllStatus() -> Tuple[Status, ...]:
     """Return all existing Status in a list.
 
     Return:
@@ -94,10 +102,10 @@ def getAllStatus():
         List containing all Status defined, Based on `Status.__Status._ALL_STATUS` keys.
     """
 
-    return tuple(status for statusTypeList in __ALL_STATUS.values() for status in statusTypeList)
+    return tuple(status for statusTypeList in _ALL_STATUS.values() for status in statusTypeList)
 
 
-def getStatusByName(name):
+def getStatusByName(name: str) -> Optional[Status]:
     """Get a Status based on it's name.
 
     Parameters:
@@ -118,7 +126,7 @@ def getStatusByName(name):
         return None
 
 
-def getAllFailStatus():
+def getAllFailStatus() -> Tuple[FailStatus, ...]:
     """Get all Fail Statuses.
 
     Return:
@@ -127,10 +135,10 @@ def getAllFailStatus():
         List of all Fail Statuses defined.
     """
 
-    return __ALL_STATUS[FailStatus]
+    return tuple(_ALL_STATUS[FailStatus])
 
 
-def getAllSuccessStatus(cls):
+def getAllSuccessStatus() -> Tuple[SuccessStatus, ...]:
     """Get all Success Statuses.
 
     Return:
@@ -139,10 +147,10 @@ def getAllSuccessStatus(cls):
         List of all Success Statuses defined.
     """
 
-    return __ALL_STATUS[SuccessStatus]
+    return tuple(_ALL_STATUS[SuccessStatus])
 
 
-def lowestFailStatus(cls):
+def lowestFailStatus() -> FailStatus:
     """Get the lowest Fail Status based on Status._level.
 
     Return:
@@ -154,7 +162,7 @@ def lowestFailStatus(cls):
     return sorted(getAllFailStatus(), key=lambda x: x._level)[0]
 
 
-def highestFailStatus(cls):
+def highestFailStatus() -> FailStatus:
     """Get the highest Fail Status based on Status._level.
 
     Return:
@@ -166,7 +174,7 @@ def highestFailStatus(cls):
     return sorted(getAllFailStatus(), key=lambda x: x._level)[-1]
 
 
-def lowestSuccessStatus(cls):
+def lowestSuccessStatus() -> SuccessStatus:
     """Get the lowest Success Status based on Status._level.
 
     Return:
@@ -178,7 +186,7 @@ def lowestSuccessStatus(cls):
     return sorted(getAllSuccessStatus(), key=lambda x: x._level)[0]
 
 
-def highestSuccessStatus(cls):
+def highestSuccessStatus() -> SuccessStatus:
     """Get the highest Success Status based on Status._level.
 
     Return:

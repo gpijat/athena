@@ -1,20 +1,33 @@
-PROGRAM_NAME = 'Athena'
+from __future__ import annotations
 
-VERSION = '0.0.0'
+from typing import Tuple
 
-CHECK = 'check'
 
-FIX = 'fix'
+#: Project name string
+PROGRAM_NAME: str = 'Athena'
 
-TOOL = 'tool'
+#: Current version of the project. (Following simver convention)
+VERSION: str = '0.0.0'
 
-AVAILABLE_DISPLAY_MODE = ('Alphabetically', 'Category', 'Header')
+#: Name constant for the `check` function to implement in Process Subclasses.
+CHECK: str = 'check'
 
-DEFAULT_CATEGORY = 'Other'
+#: Name constant for the `fix` function to implement in Process Subclasses.
+FIX: str = 'fix'
 
-PROGRESSBAR_FORMAT = '  %p% - {0}'
+#: Name constant for the `tool` function to implement in Process Subclasses.
+TOOL: str = 'tool'
 
-# If types change, unit tests from AtTest must be updated too.
+#: All currently supported display modes.
+AVAILABLE_DISPLAY_MODE: Tuple[str, str, str] = ('Alphabetically', 'Category', 'Header')
+
+#: Default category for checks, this is used as a fallback an Blueprint should define an accurate category.
+DEFAULT_CATEGORY: str = 'Other'
+
+#: Format pattern for a QtWidgets.QProgressBar widget. It allows to add a custom text but force display of progress.
+PROGRESSBAR_FORMAT: str = '  %p% - {0}'
+
+#: Template for what's expected inside a Blueprint's description.
 BLUEPRINT_TEMPLATE = \
 {
     'process': '',  # String
@@ -26,6 +39,7 @@ BLUEPRINT_TEMPLATE = \
     'settings': {}  # Dict with str key and values.
 }
 
+#: Template for what's supported in a Blueprints' setting.
 SETTINGS_TEMPLATE = \
 {
     'recheck': True,
@@ -40,7 +54,11 @@ SETTINGS_TEMPLATE = \
     'toolContextManagers': (),
 }
 
-NO_DOCUMENTATION_AVAILABLE = '\nNo documentation available for this process.\n'
+#: Default text for Process documentation.
+NO_DOCUMENTATION_AVAILABLE: str = '\nNo documentation available for this process.\n'
 
-WIKI_LINK = 'https://github.com/gpijat/Athena'
-REPORT_BUG_LINK = 'https://github.com/gpijat/Athena/issues'
+#: Link to the Github's Wiki page.
+WIKI_LINK: str = 'https://github.com/gpijat/Athena'
+
+#: Link to the Github's issues page.
+REPORT_BUG_LINK: str = 'https://github.com/gpijat/Athena/issues'

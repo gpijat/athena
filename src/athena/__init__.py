@@ -1,81 +1,15 @@
-# coding: utf8
-"""
-          _   _                      
-     /\  | | | |                     
-    /  \ | |_| |__   ___ _ __   __ _ 
-   / /\ \| __| '_ \ / _ \ '_ \ / _` |
-  / ____ \ |_| | | |  __/ | | | (_| |
- /_/    \_\__|_| |_|\___|_| |_|\__,_|
-"""
-
 import sys
 
-from athena_qt import AtGui, AtUiUtils
 from athena import AtCore, AtUtils, AtConstants, AtExceptions
 
 __version__ = AtConstants.VERSION
 
-def launch(blueprint=None, displayMode=AtConstants.AVAILABLE_DISPLAY_MODE[0], parent=None, _dev=False):
-    """ Main function to launch the tool. """
 
-    AtCore.AtSession().dev = _dev
-
-    return AtGui.AthenaWidget.show(blueprint=blueprint, displayMode=displayMode)
-
-
-def batch(blueprintModule, doFix=False, recursion=1, dev=False):
-    """ Used to run blueprints without any Gui """
-
-    register = AtCore.Register()
-    register.loadBlueprintFromModuleStr(blueprintModule)
-
-    blueprint = register.blueprints[0]
-
-    traceback = []
-    toFix = []
-    for processor in blueprint.processors:
-
-        if not processor.isCheckable or processor.isNonBlocking or not processor.inBatch:
-            continue
-
-        try:
-            feedbacks, status = processor.check()
-            if isinstance(status, AtCore.Status.FailStatus):
-                toFix.append(processor)
-                traceback.append((processor.name, feedbacks, status))
-
-        except Exception as exception:
-            feedbacks, _ = processor._filterFeedbacks()
-            toFix.append(processor)
-            traceback.append((processor.name, feedbacks, AtCore.Status._EXCEPTION))
-
-    if doFix:
-        for processor in toFix:
-            try:
-                processor.fix()
-                feedbacks, status = processor.check()
-                
-                if isinstance(status, AtCore.Status.FailStatus):
-                    traceback.append((processor.name, feedbacks, status))
-
-            except Exception as exception:
-                feedbacks, status = processor._filterFeedbacks()
-                traceback.append((processor.name, feedbacks, AtCore.Status._EXCEPTION))
-
-    if traceback:
-        log = "\nErrors found during execution of {0}:\n".format(blueprint.name)
-        log += '-'*len(log) + '\n'
-
-        for processorName, feedbacks, status in traceback:
-            log += '\n\t{0} ({1}):'.format(processorName, status.name)
-
-            for feedback in feedbacks:
-                log += '\n\t\t- {0}:'.format(feedback.thread.title)
-                log += '\n\t\t\t{0}'.format(feedback.toDisplay)
-        
-        print(log)
-        return False
-    return True
+def __moduleSort(value, tuple_):
+    for prefix in tuple_:
+        if value == prefix or value.startswith(prefix + '.'):
+            return tuple_.index(prefix)
+    return len(tuple_)
 
 
 def _reload(main='__main__', toReload=(), verbose=False):
@@ -84,7 +18,7 @@ def _reload(main='__main__', toReload=(), verbose=False):
     It should not be used by artist and dev that work on processes. It should only be used to work on the API and 
     everything related to this package.
 
-    .. notes:: 
+    Notes:
         Athena loads some modules that contains processes that are subprocess of AtCore.Process. But when this base class is reloaded 
         and not the subclass weird things can happen because we now get two different version of the same class and AtCore.Process can 
         become different to AtCore.Process.
@@ -123,8 +57,8 @@ def _reload(main='__main__', toReload=(), verbose=False):
                 toReimport.append(moduleName)
                 break
 
-    toDelete.sort(key=lambda x: x.count('.'))
-    toReimport.sort(key=lambda x: x.count('.'))
+    toDelete.sort(key=lambda x: __moduleSort(x, toReload))
+    toReimport.sort(key=lambda x: __moduleSort(x, toReload))
 
     # ---------- Delete all Athena modules ---------- #
     # Then we delete all modules that must be deleted. After this, this function is unable to call any of its imported Athena modules.
@@ -148,25 +82,10 @@ def _reload(main='__main__', toReload=(), verbose=False):
 
     # ---------- Restore the reloaded Athena main module in the __main__ module ---------- #
     if __name__ != '__main__':
-        # for moduleName in toReimport:
-        #     setattr(sys.modules[main], moduleName, sys.modules[moduleName])  #FIXME: We can't update all name in local.
-        setattr(sys.modules[main], __name__, sys.modules[__name__])
+        for moduleName in toReload:
+            if hasattr(sys.modules[main], moduleName):
+                setattr(sys.modules[main], moduleName, sys.modules[moduleName])  #FIXME: We can't update all name in local.
+        # setattr(sys.modules[main], __name__, sys.modules[__name__])
 
     # ---------- Display reload time, even if there is no verbose ---------- #
     print('[Reloaded in {:.2f}s]'.format(time.time() - reloadStartTime))
-
-
-if __name__ == '__main__':
-
-    #FIXME: Seems to break the tool. instance checks will not trigger.
-    # _reload(__name__)
-
-    application = AtUi.QtWidgets.QApplication(sys.argv)
-
-    register = AtCore.Register()
-    register.loadBlueprintsFromPackageStr('Athena.ressources.examples.Athena_Standalone')
-
-    launch(register, displayMode='Category', _dev=True, parent=application)
-
-    application.exec_()
-    # window = sys.modules[__name__].AtUi.Athena(displayMode='Category', dev=True, verbose=False)

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>athena.AtTests &mdash; Athena 01.12.23 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=451d5c0a"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Athena
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">athena</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Athena</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">athena.AtTests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for athena.AtTests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">athena</span> <span class="kn">import</span> <span class="n">AtCore</span><span class="p">,</span> <span class="n">AtUtils</span><span class="p">,</span> <span class="n">AtConstants</span>
+
+<span class="c1"># if big_O module is available, load it.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">big_O</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">big_O</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------------------------------------------- Test Process</span>
+
+
+<div class="viewcode-block" id="TestProcess">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess">[docs]</a>
+<span class="k">class</span> <span class="nc">TestProcess</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="n">PROCESS</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TestProcess.setUp">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TestProcess.test_isProcessSubclass">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess.test_isProcessSubclass">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_isProcessSubclass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PROCESS</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">AtCore</span><span class="o">.</span><span class="n">Process</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;A Process must inherit from Athena.AtCore.Process&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestProcess.test_nonOverridedCoreMethods">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess.test_nonOverridedCoreMethods">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_nonOverridedCoreMethods</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">nonOverridableAttributesOverrided</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PROCESS</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_Process__NON_OVERRIDABLE_ATTRIBUTES</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PROCESS</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">nonOverridableAttributesOverrided</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Some methods are used for you to interact with the process, or for internal purpose, you should not override them.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestProcess.test_checkIsImplemented">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess.test_checkIsImplemented">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_checkIsImplemented</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PROCESS</span><span class="p">,</span> <span class="s1">&#39;check&#39;</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;The process must at least define a `check` method to be able to find errors.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestProcess.test_hasAtLeastOneThread">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess.test_hasAtLeastOneThread">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_hasAtLeastOneThread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PROCESS</span><span class="o">.</span><span class="n">threads</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;At least one Thread is requireds for the process to catch errors.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestProcess.test_processIsDocumented">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestProcess.test_processIsDocumented">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_processIsDocumented</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PROCESS</span><span class="o">.</span><span class="n">_doc_</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;The process must be documented, write a docstring or define the _doc_ class attribute.&#39;</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span> <span class="nf">__testProcess</span><span class="p">():</span>
+    <span class="n">suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestSuite</span><span class="p">()</span>
+    <span class="n">suite</span><span class="o">.</span><span class="n">addTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">makeSuite</span><span class="p">(</span><span class="n">TestProcess</span><span class="p">))</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="testProcessFromPath">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.testProcessFromPath">[docs]</a>
+<span class="k">def</span> <span class="nf">testProcessFromPath</span><span class="p">(</span><span class="n">processStrPath</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Method to process unit tests on a process str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span><span class="p">,</span> <span class="n">process</span> <span class="o">=</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">importProcessPath</span><span class="p">(</span><span class="n">processStrPath</span><span class="p">)</span>
+    <span class="n">TestProcess</span><span class="o">.</span><span class="n">PROCESS</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">__testProcess</span><span class="p">()</span></div>
+
+
+    
+<div class="viewcode-block" id="testFromProcessInstance">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.testFromProcessInstance">[docs]</a>
+<span class="k">def</span> <span class="nf">testFromProcessInstance</span><span class="p">(</span><span class="n">processInstance</span><span class="p">):</span>
+    <span class="n">TestProcess</span><span class="o">.</span><span class="n">PROCESS</span> <span class="o">=</span> <span class="n">processInstance</span>
+    <span class="n">__testProcess</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------------------------------------- Test Env</span>
+
+
+<div class="viewcode-block" id="TestEnv">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv">[docs]</a>
+<span class="k">class</span> <span class="nc">TestEnv</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="n">ENV</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TestEnv.setUp">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENV</span><span class="p">,</span> <span class="s1">&#39;header&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENV</span><span class="p">,</span> <span class="s1">&#39;header&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">register</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENV</span><span class="p">,</span> <span class="s1">&#39;register&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENV</span><span class="p">,</span> <span class="s1">&#39;register&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">SETTINGS_TEMPLATE</span><span class="p">)()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENV</span><span class="p">,</span> <span class="s1">&#39;settings&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ENV</span><span class="p">,</span> <span class="s1">&#39;settings&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__iterProcessKey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processKey</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">processValue</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">processKey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">processValue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">processValue</span>
+
+<span class="c1"># - Test Header</span>
+<div class="viewcode-block" id="TestEnv.test_headerIsDefined">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_headerIsDefined">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_headerIsDefined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;The header must be the defined in the env to define execution order.&#39;</span><span class="p">)</span></div>
+
+<span class="c1"># - #</span>
+<span class="c1"># - Test Register</span>
+<div class="viewcode-block" id="TestEnv.test_registerIsDefined">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_registerIsDefined">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_registerIsDefined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;The Env must contain a valid register that define the processes.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_allRegisterKeysAreDefinedInHeader">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_allRegisterKeysAreDefinedInHeader">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_allRegisterKeysAreDefinedInHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;All keys in the register must be defined in the header.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_registerKeysExists">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_registerKeysExists">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_registerKeysExists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">blueprint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">bpKey</span><span class="p">,</span> <span class="n">bpValue</span> <span class="ow">in</span> <span class="n">blueprint</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">bpKey</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">AtConstants</span><span class="o">.</span><span class="n">BLUEPRINT_TEMPLATE</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Theses blueprints contains unkown keys. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)))</span></div>
+
+<span class="c1"># - #</span>
+<span class="c1"># - Test Processes</span>
+<div class="viewcode-block" id="TestEnv.test_allRegisterKeyHaveAProcessPath">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_allRegisterKeyHaveAProcessPath">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_allRegisterKeyHaveAProcessPath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">blueprint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;process&#39;</span> <span class="ow">in</span> <span class="n">blueprint</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Defining a process path (full python import path) is required. - (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_allRegisterKeyProcessPathAreValid">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_allRegisterKeyProcessPathAreValid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_allRegisterKeyProcessPathAreValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">blueprint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">importPathStrExist</span><span class="p">(</span><span class="n">blueprint</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;process&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Process path for these register entries are not reachable. - (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)))</span></div>
+
+<span class="c1"># - #</span>
+<span class="c1"># - Test links</span>
+<div class="viewcode-block" id="TestEnv.test_linksDataTypeAreCompliant">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_linksDataTypeAreCompliant">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_linksDataTypeAreCompliant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;links&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">linkTuple</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linkTuple</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Link must be a tuple of 3 values. The target process, the source method and the target method. - (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_linksTargetAreInRegister">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_linksTargetAreInRegister">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_linksTargetAreInRegister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;links&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;See `test_linksDataTypeAreCompliant`. Abort without completing test.&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">linkTuple</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">linkTuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Link target must be in the register. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_linksSourceAndTargetMethodsAreValid">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_linksSourceAndTargetMethodsAreValid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_linksSourceAndTargetMethodsAreValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;links&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;See `test_linksDataTypeAreCompliant`. Abort without completing test.&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">linkTuple</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">linkTuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">AtCore</span><span class="o">.</span><span class="n">Link</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">linkTuple</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">AtCore</span><span class="o">.</span><span class="n">Link</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Link source and/or target methods are not linkable. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)))</span></div>
+
+<span class="c1"># - # </span>
+<span class="c1"># - Test arguments</span>
+<div class="viewcode-block" id="TestEnv.test_argumentsDataTypeAreCompliant">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_argumentsDataTypeAreCompliant">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_argumentsDataTypeAreCompliant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">argumentsData</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;arguments&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argumentsData</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span> <span class="ow">in</span> <span class="n">argumentsData</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arguments</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span>
+            <span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> 
+            <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Arguments type for these blueprints are not compliant. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_argumentsMethodsAreValid">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_argumentsMethodsAreValid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_argumentsMethodsAreValid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">argumentsData</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;arguments&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">argumentsData</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;See `test_argumentsDataTypeAreCompliant`. Abort without completing test.&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">arguments</span> <span class="ow">in</span> <span class="n">argumentsData</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;__init__&#39;</span><span class="p">,</span> <span class="s1">&#39;check&#39;</span><span class="p">,</span> <span class="s1">&#39;fix&#39;</span><span class="p">,</span> <span class="s1">&#39;tool&#39;</span><span class="p">):</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span>
+            <span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> 
+            <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Arguments keys must be one of these methods: `__init__`, `check`, `fix`, `tool`. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+<span class="c1"># - #</span>
+<span class="c1"># - Test Status overrides</span>
+<div class="viewcode-block" id="TestEnv.test_statusOverridesTypeAreCompliant">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_statusOverridesTypeAreCompliant">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_statusOverridesTypeAreCompliant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">statusOverridesData</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;statusOverrides&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statusOverridesData</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">threadName</span><span class="p">,</span> <span class="n">overrides</span> <span class="ow">in</span> <span class="n">statusOverridesData</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">threadName</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">overrides</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span>
+            <span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> 
+            <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Status overrides type for these blueprints are not compliant. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestEnv.test_statusOverridesAreStatusSubclasses">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.TestEnv.test_statusOverridesAreStatusSubclasses">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_statusOverridesAreStatusSubclasses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">statusOverridesData</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterProcessKey</span><span class="p">(</span><span class="s1">&#39;statusOverrides&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">statusOverridesData</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;See `test_statusOverridesTypeAreCompliant`. Abort without completing test.&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">threadName</span><span class="p">,</span> <span class="n">overrides</span> <span class="ow">in</span> <span class="n">statusOverridesData</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">overrides</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;See `test_statusOverridesTypeAreCompliant`. Abort without completing test.&#39;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">statusType</span><span class="p">,</span> <span class="n">newStatus</span> <span class="ow">in</span> <span class="n">overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">statusType</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">AtCore</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">FailStatus</span><span class="p">,</span> <span class="n">AtCore</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SuccessStatus</span><span class="p">):</span>
+                        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">newStatus</span><span class="p">,</span> <span class="p">(</span><span class="n">AtCore</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">FailStatus</span><span class="p">,</span> <span class="n">AtCore</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SuccessStatus</span><span class="p">)):</span>
+                        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="k">continue</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span>
+            <span class="nb">bool</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> 
+            <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Status overrides are not instances of AtCore.Status.FailStatus or AtCore.Status.SuccessStatus ordered by their types. (</span><span class="si">{0}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+        <span class="p">)</span></div>
+</div>
+
+<span class="c1"># - #</span>
+
+
+<span class="k">def</span> <span class="nf">__testEnv</span><span class="p">():</span>
+    <span class="n">suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestSuite</span><span class="p">()</span>
+    <span class="n">suite</span><span class="o">.</span><span class="n">addTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">makeSuite</span><span class="p">(</span><span class="n">TestEnv</span><span class="p">))</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="testEnvFromPath">
+<a class="viewcode-back" href="../../athena.html#athena.AtTests.testEnvFromPath">[docs]</a>
+<span class="k">def</span> <span class="nf">testEnvFromPath</span><span class="p">(</span><span class="n">contextStrPath</span><span class="p">,</span> <span class="n">envStr</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Method to process unit tests on a process instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">envs</span> <span class="o">=</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">getEnvs</span><span class="p">(</span><span class="n">contextStrPath</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="n">AtUtils</span><span class="o">.</span><span class="n">getSoftware</span><span class="p">())</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">envs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">envStr</span><span class="p">)</span>
+
+    <span class="n">TestEnv</span><span class="o">.</span><span class="n">ENV</span> <span class="o">=</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">importFromStr</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;import&#39;</span><span class="p">])</span>
+    <span class="n">__testEnv</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------------------------------------- Test __main__</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    
+    <span class="n">suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestSuite</span><span class="p">()</span>
+    <span class="n">suite</span><span class="o">.</span><span class="n">addTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">makeSuite</span><span class="p">(</span><span class="n">TestProcess</span><span class="p">))</span>
+
+    <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gregory Pijat.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

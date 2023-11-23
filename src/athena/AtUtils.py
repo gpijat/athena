@@ -7,19 +7,17 @@ import importlib
 import traceback
 import platform
 
+from types import ModuleType, FunctionType
+from typing import TypeVar, Type, Optional, Any, Iterator, Tuple, Dict, Hashable
+
 from collections.abc import Collection
 from collections.abc import Sequence
 from collections.abc import Mapping
 
-import types
-
 try:
-    reload  # Python 2.7
-except NameError:
-    try:
-        from importlib import reload  # Python 3.4+
-    except ImportError:
-        from imp import reload  # Python 3.0 - 3.3
+    from importlib import reload  # Python 3.4+
+except ImportError:
+    from imp import reload  # Python 3.0 - 3.3
 
 from athena import AtConstants
 
@@ -27,7 +25,7 @@ LOGGER = logging.getLogger(AtConstants.PROGRAM_NAME)
 LOGGER.setLevel(10)
 
 
-def iterBlueprintsPath(package, software='standalone', verbose=False):
+def iterBlueprintsPath(package: str, software: str = 'standalone', verbose: bool = False) -> Iterator[str]:
     """Retrieve available envs from imported packages.
 
     Retrieve the currently imported packages path that match the pattern to works with this tool: {program}_{prod}
@@ -55,7 +53,8 @@ def iterBlueprintsPath(package, software='standalone', verbose=False):
         yield os.path.join(packagePath, '{}.py'.format(moduleName))
 
 
-def getPackages():
+#WATCME: Not used anymore.
+def getPackages() -> Tuple[str, ...]:
     """Get all packages that match the tool convention pattern.
 
     Loop through all modules in sys.modules.keys() and package those who match the tool convention pattern
@@ -105,7 +104,7 @@ def getPackages():
     return tuple(packages)
 
 
-def importProcessModuleFromPath(processStrPath):
+def importProcessModuleFromPath(processStrPath: str) -> ModuleType:
 
     moduleStrPath, _, processName = processStrPath.rpartition('.')
     module = importFromStr(moduleStrPath)
@@ -116,7 +115,8 @@ def importProcessModuleFromPath(processStrPath):
     return module
 
 
-def getSoftware():
+#WATCME: Not used anymore.
+def getSoftware() -> str:
     """Get the current software from which the tool is executed.
 
     Fallback on different instruction an try to get the current running software.
@@ -153,10 +153,13 @@ def getSoftware():
 
     return 'Standalone'
 
-def getOs():
+
+def getOs() -> str:
     return platform.system().replace('Darwin', 'MacOs')
 
-def _formatSoftware(softwarePath):
+
+#WATHCME: Not used anymore.
+def _formatSoftware(softwarePath: str) -> str:
     """Check if there is an available software str in the hiven Path
 
     parameters
@@ -171,7 +174,6 @@ def _formatSoftware(softwarePath):
     str
         Return the software found in softwarePath if there is one or an empty string.
     """
-
     path = str(softwarePath).lower()
     for soft, regexes in AtConstants.AVAILABLE_SOFTWARE.items():
         for regex in regexes:
@@ -182,7 +184,7 @@ def _formatSoftware(softwarePath):
     return ''
 
 
-def pythonImportPathFromPath(path):
+def pythonImportPathFromPath(path: str) -> str:
     if not os.path.exists(path):
         raise IOError('Path `{}` does not exists.'.format(path))
 
@@ -210,7 +212,7 @@ def pythonImportPathFromPath(path):
     return pythonImportPath
 
 
-def importFromStr(moduleStr, verbose=False):
+def importFromStr(moduleStr: str, verbose: bool = False) -> ModuleType:
     """Try to import the module from the given string
 
     parameters
@@ -228,12 +230,10 @@ def importFromStr(moduleStr, verbose=False):
 
     module = None  #Maybe QC Error ?
     try:
-        # module = __import__(moduleStr, fromlist=[''])
         module = importlib.import_module(moduleStr) #TODO: if multiple checks come from same module try to load module multiple time
         if verbose: 
             LOGGER.info('import {} success'.format(moduleStr))
     except ImportError as exception:
-        print(moduleStr)
         if verbose:
             LOGGER.exception('load {} failed'.format(moduleStr))
 
@@ -242,11 +242,11 @@ def importFromStr(moduleStr, verbose=False):
     return module
 
 
-def reloadModule(module):
+def reloadModule(module: ModuleType) -> ModuleType:
     return reload(module)
 
 
-def moduleFromStr(pythonCode, name='DummyAthenaModule'):
+def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleType:
     # spec = importlib.util.spec_from_loader(name, loader=None)
 
     # module = importlib.util.module_from_spec(spec)
@@ -256,7 +256,7 @@ def moduleFromStr(pythonCode, name='DummyAthenaModule'):
 
     # return module
 
-    module = types.ModuleType(name)
+    module = ModuleType(name)
     exec(pythonCode, module.__dict__)
     sys.modules[name] = module
 
@@ -265,12 +265,13 @@ def moduleFromStr(pythonCode, name='DummyAthenaModule'):
     return module
 
 
-def importPathStrExist(moduleStr):
+def importPathStrExist(moduleStr: str) -> bool:
     return bool(pkgutil.find_loader(moduleStr))
 
 
 # could be only with instance of class. (get inheritance and return dict with each one as key and list of overriden as value)
-def getOverridedMethods(instance, cls):
+T = TypeVar('T')
+def getOverridedMethods(instance: T, cls: Type[T]) -> Dict[str, FunctionType]:
     """Detect all methods that have been overridden from a subclass of a class
 
     Parameters
@@ -292,7 +293,7 @@ def getOverridedMethods(instance, cls):
         if isinstance(value, classmethod):
             value = callable(getattr(instance, key))
 
-        if isinstance(value, (types.FunctionType, classmethod)):
+        if isinstance(value, (FunctionType, classmethod)):
             method = getattr(cls, key, None)
             if method is not None and callable(method) is not value:
                 res[key] = value
@@ -300,7 +301,7 @@ def getOverridedMethods(instance, cls):
     return res
 
 
-def camelCaseSplit(toSplit):
+def camelCaseSplit(toSplit: str) -> str:
     """Format a string write with camelCase convention into a string with space.
 
     Parameters
@@ -332,52 +333,68 @@ def camelCaseSplit(toSplit):
     return ' '.join(splitString)
 
 
-class lazyProperty(object):
-    def __init__(self, fget):
-        self.fget = fget
+# class lazyProperty(object):
+#     def __init__(self, fget: FunctionType) -> None:
+#         self.fget = fget
 
-    def __get__(self, instance, cls):
-        value = self.fget(instance)
-        setattr(instance, self.fget.__name__, value)
-        return value
+#     def __get__(self, instance: T, cls: Type[T]) -> Any:
+#         value = self.fget(instance)
+#         setattr(instance, self.fget.__name__, value)
+#         return value
+
+
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+    @classmethod
+    def __instancecheck__(mcls, instance):
+        if instance.__class__ is mcls:
+            return True
+        else:
+            return isinstance(instance.__class__, mcls)
 
 
 class SearchPattern(object):
 
-    MATCH_NONE = '^$'
+    MATCH_NONE: str = '^$'
 
-    TEXT_PATTERN = r'(?!#|@)(^.+?)(?:(?=\s(?:#|@)[a-zA-Z]+)|$|\s$)'
-    TEXT_REGEX = re.compile(TEXT_PATTERN)
+    TEXT_PATTERN: str = r'(?!#|@)(^.+?)(?:(?=\s(?:#|@)[a-zA-Z]+)|$|\s$)'
+    TEXT_REGEX: re.Pattern = re.compile(TEXT_PATTERN)
 
-    HASH_PATTERN = r'(?:^|\s)?#([a-zA-Z\s]+)(?:\s|$)'
-    HASH_REGEX = re.compile(HASH_PATTERN)
+    HASH_PATTERN: str = r'(?:^|\s)?#([a-zA-Z\s]+)(?:\s|$)'
+    HASH_REGEX: re.Pattern = re.compile(HASH_PATTERN)
 
-    CATEGORY_PATTERN = r'(?:^|\s)?@([a-zA-Z\s]+)(?:\s|$)'
-    CATEGORY_REGEX = re.compile(CATEGORY_PATTERN)
+    CATEGORY_PATTERN: str = r'(?:^|\s)?@([a-zA-Z\s]+)(?:\s|$)'
+    CATEGORY_REGEX: re.Pattern = re.compile(CATEGORY_PATTERN)
 
-    def __init__(self, rawPattern=MATCH_NONE):
+    def __init__(self, rawPattern: str = MATCH_NONE) -> None:
 
         self._rawPattern = rawPattern
 
-        self._pattern = None
-        self._regex = None
-        self._isValid = False
+        self._pattern: str = None
+        self._regex: re.Pattern = None
+        self._isValid: bool = False
 
         self.setPattern(rawPattern)
 
     @property
-    def pattern(self):
+    def pattern(self) -> str:
         return self._pattern
 
     @property
-    def regex(self):
+    def regex(self) -> re.Pattern:
         return self._regex      
 
     @property
-    def isValid(self):
+    def isValid(self) -> bool:
         return self._isValid
 
-    def setPattern(self, pattern):
+    def setPattern(self, pattern: str) -> None:
         match = self.TEXT_REGEX.match(pattern)
         self._pattern = pattern = '.*' if not match else match.group(0)
 
@@ -388,27 +405,27 @@ class SearchPattern(object):
             self._regex = re.compile(self.MATCH_NONE)
             self._isValid = False
 
-    def iterHashTags(self):
+    def iterHashTags(self) -> Iterator[str]:
         for match in self.HASH_REGEX.finditer(self._rawPattern):
             yield match.group(1)
 
-    def iterCategories(self):
+    def iterCategories(self) -> Iterator[str]:
         for match in self.CATEGORY_REGEX.finditer(self._rawPattern):
             yield match.group(1)        
 
-    def search(self, text):
+    def search(self, text: str) -> Optional[re.Match]:
         if not self._isValid:
-            return False
+            return None
 
         return self._regex.search(text)
 
 
-def formatException(exception):
+def formatException(exception: Exception) -> str:
     traceback_ = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
     return '# ' + '# '.join(traceback_.rstrip().splitlines(True))
 
 
-def createNewAthenaPackageHierarchy(rootDirectory):
+def createNewAthenaPackageHierarchy(rootDirectory: str) -> None:
 
     if os.path.exists(rootDirectory):
         raise OSError('`{}` already exists. Abort {0} package creation.'.format(AtConstants.PROGRAM_NAME))
@@ -478,36 +495,3 @@ def deepMap(function, collection):
         return mapSequence(function, collection)
     elif isinstance(collection, Mapping):
         return mapMapping(function, collection)
-
-
-##########  IDEAS  ##########
-"""
-
-[Athena_{whatever}]
-|___[prod]
-    |___[software]
-        |___[env]
-            [processes]
-"""
-
-"""
-class AbstractClass(object):
-    
-    def __new__(self):
-        if self is AbstractClass:
-            raise NotImplementedError('{}: cannot instantiate abstract class'.format(self.__name__))
-        
-        return super(AbstractClass, self).__new__(self)
-        
-    def hello(self, kwarg='hello world'):
-        print kwarg
-        
-toto = AbstractClass()
-
-class fffgt(AbstractClass):
-    
-    def __init__(self):
-        self.hello()
-        
-ffff = fffgt()
-"""

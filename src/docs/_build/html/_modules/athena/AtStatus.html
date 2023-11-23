@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>athena.AtStatus &mdash; Athena 01.12.23 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=451d5c0a"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Athena
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">athena</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Athena</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">athena.AtStatus</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for athena.AtStatus</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span>
+
+
+
+<span class="n">_ALL_STATUS</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Status">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.Status">[docs]</a>
+<span class="k">class</span> <span class="nc">Status</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the base `Status` class that all type of status inherit From.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_name&#39;</span><span class="p">,</span> <span class="s1">&#39;_level&#39;</span><span class="p">,</span> <span class="s1">&#39;_color&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Status</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allow to store all new levels in the __ALL_LEVELS class variable to return singleton.&quot;&quot;&quot;</span>
+
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Status</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">_ALL_STATUS</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">instance</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">level</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the __Status object and setup it&#39;s attributes&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_color</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">=</span> <span class="n">level</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to access the name of the __Status&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to access the level of the __Status&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">color</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to access the color of the __Status&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color</span></div>
+
+
+<div class="viewcode-block" id="FailStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.FailStatus">[docs]</a>
+<span class="k">class</span> <span class="nc">FailStatus</span><span class="p">(</span><span class="n">Status</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent a Fail Status, can be instantiated to define a new Fail level&quot;&quot;&quot;</span>
+    <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="SuccessStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.SuccessStatus">[docs]</a>
+<span class="k">class</span> <span class="nc">SuccessStatus</span><span class="p">(</span><span class="n">Status</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent a Success Status, can be instantiated to define a new Success level&quot;&quot;&quot;</span>
+    <span class="o">...</span></div>
+
+
+<span class="k">class</span> <span class="nc">_BuiltInStatus</span><span class="p">(</span><span class="n">Status</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent a Built-In Status, can be instantiated to define a new Built-In level&quot;&quot;&quot;</span>
+    <span class="o">...</span>
+
+<span class="n">_DEFAULT</span><span class="p">:</span> <span class="n">_BuiltInStatus</span> <span class="o">=</span>  <span class="n">_BuiltInStatus</span><span class="p">(</span><span class="s1">&#39;Default&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Default Status, it is set as base status for all :py:class:`.Process`&quot;&quot;&quot;</span>
+
+<span class="n">_SKIPPED</span><span class="p">:</span> <span class="n">_BuiltInStatus</span> <span class="o">=</span> <span class="n">_BuiltInStatus</span><span class="p">(</span><span class="s1">&#39;Skipped&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">85</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">85</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<span class="n">CORRECT</span><span class="p">:</span> <span class="n">SuccessStatus</span> <span class="o">=</span> <span class="n">SuccessStatus</span><span class="p">(</span><span class="s1">&#39;Correct&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">194</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;lolo&quot;&quot;&quot;</span>
+
+<span class="n">SUCCESS</span><span class="p">:</span> <span class="n">SuccessStatus</span> <span class="o">=</span> <span class="n">SuccessStatus</span><span class="p">(</span><span class="s1">&#39;Success&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">)</span>
+
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">FailStatus</span> <span class="o">=</span> <span class="n">FailStatus</span><span class="p">(</span><span class="s1">&#39;Warning&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">196</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">ERROR</span><span class="p">:</span> <span class="n">FailStatus</span> <span class="o">=</span> <span class="n">FailStatus</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">1.2</span><span class="p">)</span>
+<span class="n">CRITICAL</span><span class="p">:</span> <span class="n">FailStatus</span> <span class="o">=</span> <span class="n">FailStatus</span><span class="p">(</span><span class="s1">&#39;Critical&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">1.3</span><span class="p">)</span>
+
+<span class="n">_ABORTED</span><span class="p">:</span> <span class="n">_BuiltInStatus</span> <span class="o">=</span> <span class="n">_BuiltInStatus</span><span class="p">(</span><span class="s1">&#39;Aborted&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))</span>
+<span class="n">_EXCEPTION</span><span class="p">:</span> <span class="n">_BuiltInStatus</span> <span class="o">=</span> <span class="n">_BuiltInStatus</span><span class="p">(</span><span class="s1">&#39;Exception&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">125</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">125</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="getAllStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.getAllStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">getAllStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Status</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all existing Status in a list.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        List containing all Status defined, Based on `Status.__Status._ALL_STATUS` keys.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">status</span> <span class="k">for</span> <span class="n">statusTypeList</span> <span class="ow">in</span> <span class="n">_ALL_STATUS</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">status</span> <span class="ow">in</span> <span class="n">statusTypeList</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getStatusByName">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.getStatusByName">[docs]</a>
+<span class="k">def</span> <span class="nf">getStatusByName</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Status</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a Status based on it&#39;s name.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    name: str</span>
+<span class="sd">        Name of the status to find.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    Status.__Status | None</span>
+<span class="sd">        The status that match the name if any, else None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">status</span> <span class="ow">in</span> <span class="n">getAllStatus</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">_name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">status</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="getAllFailStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.getAllFailStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">getAllFailStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FailStatus</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all Fail Statuses.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        List of all Fail Statuses defined.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_ALL_STATUS</span><span class="p">[</span><span class="n">FailStatus</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="getAllSuccessStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.getAllSuccessStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">getAllSuccessStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">SuccessStatus</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all Success Statuses.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        List of all Success Statuses defined.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_ALL_STATUS</span><span class="p">[</span><span class="n">SuccessStatus</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="lowestFailStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.lowestFailStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">lowestFailStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">FailStatus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest Fail Status based on Status._level.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    FailStatus:</span>
+<span class="sd">        The Fail Status with the lowest priority.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">getAllFailStatus</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_level</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="highestFailStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.highestFailStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">highestFailStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">FailStatus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the highest Fail Status based on Status._level.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    FailStatus:</span>
+<span class="sd">        The Fail Status with the highest priority.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">getAllFailStatus</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_level</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="lowestSuccessStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.lowestSuccessStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">lowestSuccessStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SuccessStatus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest Success Status based on Status._level.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    FailStatus:</span>
+<span class="sd">        The Success Status with the lowest priority.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">getAllSuccessStatus</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_level</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="highestSuccessStatus">
+<a class="viewcode-back" href="../../athena.html#athena.AtStatus.highestSuccessStatus">[docs]</a>
+<span class="k">def</span> <span class="nf">highestSuccessStatus</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SuccessStatus</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the highest Success Status based on Status._level.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">    -------</span>
+<span class="sd">    FailStatus:</span>
+<span class="sd">        The Success Status with the highest priority.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">getAllSuccessStatus</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_level</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gregory Pijat.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
