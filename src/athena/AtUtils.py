@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import re
 import sys
@@ -32,18 +34,12 @@ def iterBlueprintsPath(package: str, software: str = 'standalone', verbose: bool
     Then, generate the usual path to the env using the package, the current software for the first sub package and env to the 
     desired package.
 
-    parameters
-    -----------
-    package: str
-        This is the string path to a python package.
-    software: str, optional
-        The software for which to get envs. (default: 'standalone')
-    verbose: bool
-        Define if the function should log informations about its process.
+    Parameters:
+        package: This is the string path to a python package.
+        software: The software for which to get envs. (default: 'standalone')
+        verbose: Define if the function should log informations about its process.
 
-    Returns
-    --------
-    dict
+    Return:
         Return a dict containing all envs for the given package and software.
         The key is the env and the value is a dict containing the imported module object for the env and its str path.
     """
@@ -58,18 +54,16 @@ def getPackages() -> Tuple[str, ...]:
     """Get all packages that match the tool convention pattern.
 
     Loop through all modules in sys.modules.keys() and package those who match the tool convention pattern
-    that is {PROGRAM_NAME}_???
+    that is `{PROGRAM_NAME}_*`
 
-    parameters
-    -----------
-    verbose: bool
-        Define if the function should log informations about its process. (default: False)
+    Parameters:
+        verbose: Define if the function should log informations about its process. (default: False)
 
-    Returns
-    --------
-    dict
+    Return:
         Return a dict containing all package that match the pattern of the tool
         The key is the prod and the value is a dict containing the module object and its str path.
+
+    .. deprecated:: 1.0.0
     """
 
     packages = []
@@ -105,6 +99,17 @@ def getPackages() -> Tuple[str, ...]:
 
 
 def importProcessModuleFromPath(processStrPath: str) -> ModuleType:
+    """Import the :class:`~Process` module from the given process python import string.
+    
+    Parameters:
+        processStrPath: Python import string to a :class:`~Process` class.
+
+    Return:
+        The imported module that contains the Process' class.
+
+    Raises:
+        ImportError: If the imported :class:`~Process` module is missing the mentionned :class:`~Process` class.
+    """
 
     moduleStrPath, _, processName = processStrPath.rpartition('.')
     module = importFromStr(moduleStrPath)
@@ -122,10 +127,10 @@ def getSoftware() -> str:
     Fallback on different instruction an try to get the current running software.
     If no software are retrieved, return the default value.
 
-    Returns
-    --------
-    str
-        Return the current software if any are find else the default value.
+    Returns:
+        The current software if any are find else the default value.
+
+    .. deprecated:: 1.0.0
     """
 
     # Fallback on the most efficient solution if psutil package is available
@@ -154,26 +159,20 @@ def getSoftware() -> str:
     return 'Standalone'
 
 
-def getOs() -> str:
-    return platform.system().replace('Darwin', 'MacOs')
-
-
 #WATHCME: Not used anymore.
 def _formatSoftware(softwarePath: str) -> str:
     """Check if there is an available software str in the hiven Path
 
-    parameters
-    -----------
-    softwarePath: str
-        The path to a software executable is expected here, but this works with any str.
-    verbose: bool
-        Define if the function should log informations about its process. (default: False)
+    Parameters:
+        softwarePath: The path to a software executable is expected here, but this works with any str.
+        verbose: Define if the function should log informations about its process. (default: False)
 
-    Returns
-    --------
-    str
-        Return the software found in softwarePath if there is one or an empty string.
+    Returns:
+        The software found in softwarePath if there is one or an empty string.
+
+    .. deprecated:: 1.0.0
     """
+
     path = str(softwarePath).lower()
     for soft, regexes in AtConstants.AVAILABLE_SOFTWARE.items():
         for regex in regexes:
@@ -184,7 +183,33 @@ def _formatSoftware(softwarePath: str) -> str:
     return ''
 
 
+def getOs() -> str:
+    """Get the current used OS platform.
+
+    If the Process Platform is `Darwin`, return `MacOs` instead for simplicity.
+
+    Return:
+        The current os name.
+    """
+
+    return platform.system().replace('Darwin', 'MacOs')
+
+
 def pythonImportPathFromPath(path: str) -> str:
+    """Generate a python import string path from a system path to a python Module or Package.
+
+    Iterate through all directories in the path and include it in the python import string if it contains an `__init__.py` module.
+
+    Parameters:
+        path: The system path to convert to a python import string path.
+
+    Returns:
+        The python import string path generated from the given system path.
+
+    Raises:
+        IOError: If the given system path does not exists.
+    """
+
     if not os.path.exists(path):
         raise IOError('Path `{}` does not exists.'.format(path))
 
@@ -215,17 +240,12 @@ def pythonImportPathFromPath(path: str) -> str:
 def importFromStr(moduleStr: str, verbose: bool = False) -> ModuleType:
     """Try to import the module from the given string
 
-    parameters
-    -----------
-    moduleStr: str
-        Path to a module to import.
-    verbose: bool
-        Define if the function should log informations about its process. (default: False)
+    Parameters:
+        moduleStr: Path to a module to import.
+        verbose: Define if the function should log informations about its process. (default: False)
 
-    Returns
-    --------
-    str
-        Return the loaded module or None if fail.
+    Return:
+        The loaded Module or None if fail.
     """
 
     module = None  #Maybe QC Error ?
@@ -243,10 +263,41 @@ def importFromStr(moduleStr: str, verbose: bool = False) -> ModuleType:
 
 
 def reloadModule(module: ModuleType) -> ModuleType:
+    """Reload the given module object using the right `reload` function, whether it's from `imp` or `importLib`.
+    
+    Python 3.4 and above use the `reload` function from the `importLib` module while previous version use whether the 
+    `reload` function from the `imp` module (>3.0 <3.4) or the built-in function directly (<3.0).
+
+    Parameter:
+        module: The module to reload.
+
+    Return:
+        The reloaded module given to the function, for convenience.
+
+    Notes:
+        This function exists as an helper to simplify Athena's module reloading without having to deal with which reload 
+        function to use.
+    """
+
     return reload(module)
 
 
 def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleType:
+    """Build a Module object with the given str as it's code.
+    
+    This will build a python module object and set's it's `code` so it acts as a normal module and can be loaded into 
+    Athena's :class:`~Register`.
+
+    Parameters:
+        pythonCode: The Python code for the module as a string.
+        name: Name for the created module object.
+
+    Return:
+        A python module that contains the given code and can be used the same way any module can.
+
+    .. deprecated:: 1.0.0
+    """
+
     # spec = importlib.util.spec_from_loader(name, loader=None)
 
     # module = importlib.util.module_from_spec(spec)
@@ -265,26 +316,29 @@ def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleTyp
     return module
 
 
-def importPathStrExist(moduleStr: str) -> bool:
-    return bool(pkgutil.find_loader(moduleStr))
+def importPathStrExist(importStr: str) -> bool:
+    """Tells whether or not the given python import string is valid or not.
+    
+    Parameters:
+        importStr: The python import string path to a module or package.
+
+    Return:
+        Whether or not the given import string is valid and could be imported.
+    """
+
+    return bool(pkgutil.find_loader(importStr))
 
 
-# could be only with instance of class. (get inheritance and return dict with each one as key and list of overriden as value)
 T = TypeVar('T')
 def getOverridedMethods(instance: T, cls: Type[T]) -> Dict[str, FunctionType]:
-    """Detect all methods that have been overridden from a subclass of a class
+    """Get all methods that have been overridden from a the given instance and the given type.
 
-    Parameters
-    -----------
-    instance: object
-        An instance of a subclass of cls.
-    cls: object
-        An object type to compare the instance to.
+    Parameters:
+        instance: An instance of a subclass of cls.
+        cls: An object type to compare the instance to.
 
-    Returns
-    --------
-    list
-        Return a list containing all method that have been overridden from the instance in the given class.
+    Return:
+        All method that have been overridden from the instance in the given class.
     """
 
     res = {}
@@ -304,128 +358,70 @@ def getOverridedMethods(instance: T, cls: Type[T]) -> Dict[str, FunctionType]:
 def camelCaseSplit(toSplit: str) -> str:
     """Format a string write with camelCase convention into a string with space.
 
-    Parameters
-    -----------
-    toSplit: str
-        The string to split and format
+    Parameters:
+        toSplit: The camelCase string to split and format.
 
-    Returns
-    --------
-    str
-        Return the given string with spaces.
+    Return:
+        The given string camelCase string splitted from upper cases with whitespaces instead.
     """
 
     matches = re.finditer('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', toSplit)
     splitString = []
 
-    # Index of beginning of slice
     previous = 0
     for match in matches:
-        # get slice
         splitString.append(toSplit[previous:match.start()])
-
-        # advance index
         previous = match.start()
 
-    # get remaining string
     splitString.append(toSplit[previous:])
 
     return ' '.join(splitString)
 
 
-# class lazyProperty(object):
-#     def __init__(self, fget: FunctionType) -> None:
-#         self.fget = fget
-
-#     def __get__(self, instance: T, cls: Type[T]) -> Any:
-#         value = self.fget(instance)
-#         setattr(instance, self.fget.__name__, value)
-#         return value
-
-
+T = TypeVar('T')
 class Singleton(type):
+    """Singleton Metaclass to implement the design pattern in different class definition."""
+
     _instances = {}
+    """Keep track of the classes instances and prevent multiple instantiation"""
 
     def __call__(cls, *args, **kwargs):
+        """Override the call behavior and therefore a new class instantion.
+
+        If no instance of the given class exists, one is created and cached. 
+        If one already exists, it's returned instead.
+
+        Parameters:
+            *args: Variable length argument list used to instantiate the class.
+            **kwargs: Variable length keyword argument dict to instantiate the class.
+
+        Return:
+            A new or already existing instance of the given class, always the same and unique instand as expected from 
+            the Singleton's design pattern.
+        """
+
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
     @classmethod
-    def __instancecheck__(mcls, instance):
+    def __instancecheck__(mcls: Type[T], instance: T) -> bool:
+        """Implement behavior on instance check."""
+
         if instance.__class__ is mcls:
             return True
         else:
             return isinstance(instance.__class__, mcls)
 
 
-class SearchPattern(object):
-
-    MATCH_NONE: str = '^$'
-
-    TEXT_PATTERN: str = r'(?!#|@)(^.+?)(?:(?=\s(?:#|@)[a-zA-Z]+)|$|\s$)'
-    TEXT_REGEX: re.Pattern = re.compile(TEXT_PATTERN)
-
-    HASH_PATTERN: str = r'(?:^|\s)?#([a-zA-Z\s]+)(?:\s|$)'
-    HASH_REGEX: re.Pattern = re.compile(HASH_PATTERN)
-
-    CATEGORY_PATTERN: str = r'(?:^|\s)?@([a-zA-Z\s]+)(?:\s|$)'
-    CATEGORY_REGEX: re.Pattern = re.compile(CATEGORY_PATTERN)
-
-    def __init__(self, rawPattern: str = MATCH_NONE) -> None:
-
-        self._rawPattern = rawPattern
-
-        self._pattern: str = None
-        self._regex: re.Pattern = None
-        self._isValid: bool = False
-
-        self.setPattern(rawPattern)
-
-    @property
-    def pattern(self) -> str:
-        return self._pattern
-
-    @property
-    def regex(self) -> re.Pattern:
-        return self._regex      
-
-    @property
-    def isValid(self) -> bool:
-        return self._isValid
-
-    def setPattern(self, pattern: str) -> None:
-        match = self.TEXT_REGEX.match(pattern)
-        self._pattern = pattern = '.*' if not match else match.group(0)
-
-        try:
-            self._regex = re.compile(pattern)
-            self._isValid = True
-        except Exception:
-            self._regex = re.compile(self.MATCH_NONE)
-            self._isValid = False
-
-    def iterHashTags(self) -> Iterator[str]:
-        for match in self.HASH_REGEX.finditer(self._rawPattern):
-            yield match.group(1)
-
-    def iterCategories(self) -> Iterator[str]:
-        for match in self.CATEGORY_REGEX.finditer(self._rawPattern):
-            yield match.group(1)        
-
-    def search(self, text: str) -> Optional[re.Match]:
-        if not self._isValid:
-            return None
-
-        return self._regex.search(text)
-
-
-def formatException(exception: Exception) -> str:
-    traceback_ = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
-    return '# ' + '# '.join(traceback_.rstrip().splitlines(True))
-
-
 def createNewAthenaPackageHierarchy(rootDirectory: str) -> None:
+    """Create a new Athena's package hierarchy at the given root directory.
+
+    Parameters:
+        rootDirectory: The root directory at which to create a new Athena's package hierarchy.
+    
+    .. deprecated:: 1.0.0
+    """
 
     if os.path.exists(rootDirectory):
         raise OSError('`{}` already exists. Abort {0} package creation.'.format(AtConstants.PROGRAM_NAME))
@@ -456,7 +452,23 @@ def createNewAthenaPackageHierarchy(rootDirectory: str) -> None:
         file.write(header + AtConstants.DUMMY_BLUEPRINT_TEMPLATE)
 
 
-def mapMapping(function, mapping):
+T = TypeVar("T")
+R = TypeVar("R")
+
+def mapMapping(function: Callable[[T], R], mapping: Mapping[T]) -> Mapping[R]:
+    """Execute the given function on all values inside the given Mapping object.
+
+    Parameters:
+        function: The function to call for each value and sub-value of the given mapping.
+        mapping: The Mapping object to recursively iterate on and execute the function for each of it's values.
+
+    Return:
+        Equivalent of the input mapping with all values and sub-values modified through the given function.
+
+    Notes:
+        This method will iterate recursively on the mapping and it's values from top to bottom.
+    """
+
     newMapping = {}
     for key, value in mapping.items():
         if isinstance(value, Mapping):
@@ -465,9 +477,27 @@ def mapMapping(function, mapping):
             newMapping[key] = mapSequence(function, value)
         else:
             newMapping[key] = function(value)
+    
     return type(mapping)(newMapping)
-            
-def mapSequence(function, sequence):
+          
+
+def mapSequence(function: Callable[[T], R], sequence: Sequence[T]) -> Sequence[R]:
+    """Execute the given function on all values inside the given Sequence object.
+
+    Parameters:
+        function: The function to call for each value of the given sequence.
+        sequence: The Sequence object to recursively iterate on and execute the function for each of it's values.
+
+    Return:
+        Equivalent of the input sequence with all values modified through the given function.
+
+    Notes:
+        
+        * This method will iterate recursively on the sequence and it's values from top to bottom.
+        * As `str` is technically a sub-type of `Sequence`, the first step is to do an instance check and early return if 
+          the `sequence` is a string. The function will still be called with this string though and the result value returned
+          like it would be for any other type.
+    """
 
     # `str` in python is a sequence, but substring are also `str`.
     # This is meant to prevent RecursionError to occur as even the
@@ -483,9 +513,28 @@ def mapSequence(function, sequence):
             newSequence.append(mapMapping(function, each))
         else:
             newSequence.append(function(each))
+    
     return type(sequence)(newSequence)
 
-def deepMap(function, collection):
+
+def deepMap(function: Callable[[T], R], collection: Collection[T]) -> Collection[R]:
+    """Execute the given function on all values inside the given Collection object.
+
+    This will automatically call :func:`~mapSequence` or :func:`~mapMapping` based on the input collection or sub-collection
+    inside it. It should be prefered to those method when you're not aware of your input collection type or that this type
+    is different from one iteration to the other.
+
+    Parameters:
+        function: The function to call for each value and sub-value of the given collection.
+        collection: The Collection object to recursively iterate on and execute the function for each of it's values.
+
+    Return:
+        Equivalent of the input collection with all values and sub-values modified through the given function.
+
+    Notes:
+        This method will iterate recursively on the collection and it's values from top to bottom.
+    """
+
     if not isinstance(collection, Collection):
         raise TypeError('{} must be a subtype of {}. (Sequence: {} or Mapping: {})'.format(collection, Collection, Sequence, Mapping))
     if not callable(function):

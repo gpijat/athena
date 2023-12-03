@@ -36,6 +36,11 @@ athena.AtCore module
 
    .. autoclass:: _NumberParameter
       :members:
+      :show-inheritance:
+
+   .. autoclass:: _ProcessProfile
+      :members:
+      :show-inheritance:
 
 athena.AtExceptions module
 --------------------------
@@ -53,10 +58,14 @@ athena.AtStatus module
    :undoc-members:
    :show-inheritance:
 
-.. autodata:: athena.AtStatus._DEFAULT
-.. autodata:: athena.AtStatus._SKIPPED
-.. autodata:: athena.AtStatus._ABORTED
-.. autodata:: athena.AtStatus._EXCEPTION
+   .. autoclass:: _BuiltInStatus
+      :members:
+      :show-inheritance:
+      
+   .. autodata:: _DEFAULT
+   .. autodata:: _SKIPPED
+   .. autodata:: _ABORTED
+   .. autodata:: _EXCEPTION
 
 athena.AtTests module
 ---------------------

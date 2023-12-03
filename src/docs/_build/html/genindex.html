@@ -98,6 +98,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtStatus._ABORTED">_ABORTED (in module athena.AtStatus)</a>
 </li>
+      <li><a href="athena.html#athena.AtStatus._BuiltInStatus">_BuiltInStatus (class in athena.AtStatus)</a>
+</li>
       <li><a href="athena.html#athena.AtStatus._DEFAULT">_DEFAULT (in module athena.AtStatus)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Process._doc_">_doc_ (athena.AtCore.Process attribute)</a>
@@ -111,6 +113,8 @@
       <li><a href="athena.html#athena.AtCore.Process._name_">_name_ (athena.AtCore.Process attribute)</a>
 </li>
       <li><a href="athena.html#athena.AtCore._NumberParameter">_NumberParameter (class in athena.AtCore)</a>
+</li>
+      <li><a href="athena.html#athena.AtCore._ProcessProfile">_ProcessProfile (class in athena.AtCore)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Process._registerInteruption">_registerInteruption() (athena.AtCore.Process method)</a>
 </li>
@@ -257,10 +261,6 @@
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.category">category (athena.AtCore.Processor property)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.CATEGORY_PATTERN">CATEGORY_PATTERN (athena.AtUtils.SearchPattern attribute)</a>
-</li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.CATEGORY_REGEX">CATEGORY_REGEX (athena.AtUtils.SearchPattern attribute)</a>
-</li>
       <li><a href="athena.html#athena.AtCore.Link.CHECK">CHECK (athena.AtCore.Link attribute)</a>
 
       <ul>
@@ -289,8 +289,16 @@
 </li>
       <li><a href="athena.html#athena.AtCore.Process.clearFeedback">clearFeedback() (athena.AtCore.Process method)</a>
 </li>
-      <li><a href="athena.html#athena.AtStatus.Status.color">color (athena.AtStatus.Status property)</a>
+      <li><a href="athena.html#athena.AtStatus._BuiltInStatus.color">color (athena.AtStatus._BuiltInStatus attribute)</a>
+
+      <ul>
+        <li><a href="athena.html#athena.AtStatus.FailStatus.color">(athena.AtStatus.FailStatus attribute)</a>
 </li>
+        <li><a href="athena.html#athena.AtStatus.Status.color">(athena.AtStatus.Status attribute)</a>
+</li>
+        <li><a href="athena.html#athena.AtStatus.SuccessStatus.color">(athena.AtStatus.SuccessStatus attribute)</a>
+</li>
+      </ul></li>
       <li><a href="athena.html#athena.AtStatus.CORRECT">CORRECT (in module athena.AtStatus)</a>
 </li>
       <li><a href="athena.html#athena.AtUtils.createNewAthenaPackageHierarchy">createNewAthenaPackageHierarchy() (in module athena.AtUtils)</a>
@@ -355,6 +363,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtTests.TestEnv.ENV">ENV (athena.AtTests.TestEnv attribute)</a>
 </li>
+      <li><a href="athena.html#athena.AtStatus.ERROR">ERROR (in module athena.AtStatus)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Event">Event (class in athena.AtCore)</a>
@@ -413,14 +423,14 @@
       </ul></li>
       <li><a href="athena.html#athena.AtCore.FloatParameter">FloatParameter (class in athena.AtCore)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.formatException">formatException() (in module athena.AtUtils)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="athena.html#athena.AtCore._ProcessProfile.get">get() (athena.AtCore._ProcessProfile method)</a>
+</li>
       <li><a href="athena.html#athena.AtStatus.getAllFailStatus">getAllFailStatus() (in module athena.AtStatus)</a>
 </li>
       <li><a href="athena.html#athena.AtStatus.getAllStatus">getAllStatus() (in module athena.AtStatus)</a>
@@ -463,6 +473,8 @@
 </li>
       <li><a href="athena.html#athena.AtUtils.getSoftware">getSoftware() (in module athena.AtUtils)</a>
 </li>
+      <li><a href="athena.html#athena.AtCore._ProcessProfile.getStatsFromProfile">getStatsFromProfile() (athena.AtCore._ProcessProfile method)</a>
+</li>
       <li><a href="athena.html#athena.AtStatus.getStatusByName">getStatusByName() (in module athena.AtStatus)</a>
 </li>
   </ul></td>
@@ -477,12 +489,8 @@
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.hasFixMethod">hasFixMethod (athena.AtCore.Processor property)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.HASH_PATTERN">HASH_PATTERN (athena.AtUtils.SearchPattern attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.HASH_REGEX">HASH_REGEX (athena.AtUtils.SearchPattern attribute)</a>
-</li>
       <li><a href="athena.html#athena.AtCore.Processor.hasToolMethod">hasToolMethod (athena.AtCore.Processor property)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Blueprint.header">header (athena.AtCore.Blueprint property)</a>
@@ -507,29 +515,25 @@
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.inBatch">inBatch (athena.AtCore.Processor property)</a>
 </li>
+      <li><a href="athena.html#athena.AtCore.Processor.interupt">interupt() (athena.AtCore.Processor method)</a>
+</li>
       <li><a href="athena.html#athena.AtCore.IntParameter">IntParameter (class in athena.AtCore)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Processor.inUi">inUi (athena.AtCore.Processor property)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.isCheckable">isCheckable (athena.AtCore.Processor property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Processor.isEnabled">isEnabled (athena.AtCore.Processor property)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.isFixable">isFixable (athena.AtCore.Processor property)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.isNonBlocking">isNonBlocking (athena.AtCore.Processor property)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.isValid">isValid (athena.AtUtils.SearchPattern property)</a>
-</li>
       <li><a href="athena.html#athena.AtUtils.iterBlueprintsPath">iterBlueprintsPath() (in module athena.AtUtils)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.iterCategories">iterCategories() (athena.AtUtils.SearchPattern method)</a>
-</li>
       <li><a href="athena.html#athena.AtCore.Process.iterFeedback">iterFeedback() (athena.AtCore.Process method)</a>
-</li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.iterHashTags">iterHashTags() (athena.AtUtils.SearchPattern method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -537,7 +541,7 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="athena.html#athena.AtStatus.Status.level">level (athena.AtStatus.Status property)</a>
+      <li><a href="athena.html#athena.AtStatus.Status.level">level (athena.AtStatus.Status attribute)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Link">Link (class in athena.AtCore)</a>
 </li>
@@ -568,8 +572,6 @@
       <li><a href="athena.html#athena.AtUtils.mapMapping">mapMapping() (in module athena.AtUtils)</a>
 </li>
       <li><a href="athena.html#athena.AtUtils.mapSequence">mapSequence() (in module athena.AtUtils)</a>
-</li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.MATCH_NONE">MATCH_NONE (athena.AtUtils.SearchPattern attribute)</a>
 </li>
       <li><a href="athena.software.html#athena.software.atMaya.MayaFeedback">MayaFeedback (class in athena.software.atMaya)</a>
 </li>
@@ -631,17 +633,23 @@
       <ul>
         <li><a href="athena.html#athena.AtCore.Parameter.name">(athena.AtCore.Parameter property)</a>
 </li>
-        <li><a href="athena.html#athena.AtStatus.Status.name">(athena.AtStatus.Status property)</a>
+        <li><a href="athena.html#athena.AtStatus._BuiltInStatus.name">(athena.AtStatus._BuiltInStatus attribute)</a>
+</li>
+        <li><a href="athena.html#athena.AtStatus.FailStatus.name">(athena.AtStatus.FailStatus attribute)</a>
+</li>
+        <li><a href="athena.html#athena.AtStatus.Status.name">(athena.AtStatus.Status attribute)</a>
+</li>
+        <li><a href="athena.html#athena.AtStatus.SuccessStatus.name">(athena.AtStatus.SuccessStatus attribute)</a>
 </li>
       </ul></li>
       <li><a href="athena.html#athena.AtCore.Processor.niceName">niceName (athena.AtCore.Processor property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Tag.NO_BATCH">NO_BATCH (athena.AtCore.Tag attribute)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Tag.NO_CHECK">NO_CHECK (athena.AtCore.Tag attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtConstants.NO_DOCUMENTATION_AVAILABLE">NO_DOCUMENTATION_AVAILABLE (in module athena.AtConstants)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Tag.NO_FIX">NO_FIX (athena.AtCore.Tag attribute)</a>
@@ -682,23 +690,25 @@
 </li>
       <li><a href="athena.html#athena.AtCore.ProtoFeedback.parent">parent() (athena.AtCore.ProtoFeedback method)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.pattern">pattern (athena.AtUtils.SearchPattern property)</a>
-</li>
       <li><a href="athena.software.html#athena.software.atMaya.PauseViewport">PauseViewport (class in athena.software.atMaya)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.process">process (athena.AtCore.Processor property)</a>
 </li>
       <li><a href="athena.html#athena.AtTests.TestProcess.PROCESS">PROCESS (athena.AtTests.TestProcess attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Process">Process (class in athena.AtCore)</a>
 </li>
+      <li><a href="athena.html#athena.AtCore.Processor.processClass">processClass (athena.AtCore.Processor property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Processor">Processor (class in athena.AtCore)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Blueprint.processorByName">processorByName() (athena.AtCore.Blueprint method)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Blueprint.processors">processors (athena.AtCore.Blueprint property)</a>
+</li>
+      <li><a href="athena.html#athena.AtCore._ProcessProfile.profileMethod">profileMethod() (athena.AtCore._ProcessProfile method)</a>
 </li>
       <li><a href="athena.html#athena.AtConstants.PROGRAM_NAME">PROGRAM_NAME (in module athena.AtConstants)</a>
 </li>
@@ -715,8 +725,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Processor.rawName">rawName (athena.AtCore.Processor property)</a>
-</li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.regex">regex (athena.AtUtils.SearchPattern property)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.AtSession.register">register (athena.AtCore.AtSession property)</a>
 </li>
@@ -742,10 +750,6 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.search">search() (athena.AtUtils.SearchPattern method)</a>
-</li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern">SearchPattern (class in athena.AtUtils)</a>
-</li>
       <li><a href="athena.html#athena.AtCore.Feedback.select">select() (athena.AtCore.Feedback method)</a>
 
       <ul>
@@ -784,10 +788,6 @@
 </li>
       <li><a href="athena.html#athena.AtCore.Processor.setParameter">setParameter() (athena.AtCore.Processor method)</a>
 </li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.setPattern">setPattern() (athena.AtUtils.SearchPattern method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Process.setProgess">setProgess() (athena.AtCore.Process method)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Process.setProgressbar">setProgressbar() (athena.AtCore.Process method)</a>
@@ -796,6 +796,8 @@
         <li><a href="athena.html#athena.AtCore.Processor.setProgressbar">(athena.AtCore.Processor method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtCore.Process.setProgressText">setProgressText() (athena.AtCore.Process method)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Process.setProgressValue">setProgressValue() (athena.AtCore.Process method)</a>
@@ -831,6 +833,8 @@
       <li><a href="athena.html#athena.AtCore.Thread.status">status() (athena.AtCore.Thread method)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.StringParameter">StringParameter (class in athena.AtCore)</a>
+</li>
+      <li><a href="athena.html#athena.AtStatus.SUCCESS">SUCCESS (in module athena.AtStatus)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Thread.successStatus">successStatus (athena.AtCore.Thread property)</a>
 </li>
@@ -888,13 +892,9 @@
 </li>
       <li><a href="athena.html#athena.AtTests.TestProcess">TestProcess (class in athena.AtTests)</a>
 </li>
-      <li><a href="athena.html#athena.AtTests.testProcessFromPath">testProcessFromPath() (in module athena.AtTests)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.TEXT_PATTERN">TEXT_PATTERN (athena.AtUtils.SearchPattern attribute)</a>
-</li>
-      <li><a href="athena.html#athena.AtUtils.SearchPattern.TEXT_REGEX">TEXT_REGEX (athena.AtUtils.SearchPattern attribute)</a>
+      <li><a href="athena.html#athena.AtTests.testProcessFromPath">testProcessFromPath() (in module athena.AtTests)</a>
 </li>
       <li><a href="athena.html#athena.AtCore.Thread">Thread (class in athena.AtCore)</a>
 </li>
@@ -975,6 +975,10 @@
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="athena.html#athena.AtStatus.WARNING">WARNING (in module athena.AtStatus)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="athena.html#athena.AtConstants.WIKI_LINK">WIKI_LINK (in module athena.AtConstants)</a>
 </li>

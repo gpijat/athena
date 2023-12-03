@@ -107,7 +107,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes an Event with a given name.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            name (str): The name of the event.</span>
+<span class="sd">            name: The name of the event.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -123,10 +123,10 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a callback function to the event&#39;s list of callbacks.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            callback (Callable): The callback function to be registered.</span>
+<span class="sd">            callback: The callback function to be registered.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            bool: True if the callback was successfully registered, False otherwise.</span>
+<span class="sd">            True if the callback was successfully registered, False otherwise.</span>
 
 <span class="sd">        Warnings:</span>
 <span class="sd">            If the provided callback is not callable, a warning message is logged,</span>
@@ -185,6 +185,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_dev</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
+    <span class="c1">#TODO: Remove this code or update it for blueprint import 2.0</span>
     <span class="c1"># @cached_property</span>
     <span class="c1"># def environVar(self):</span>
     <span class="c1">#     return &#39;{program}_{software}&#39;.format(</span>
@@ -250,7 +251,7 @@
     <span class="n">selectable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determines whether the feedback is selectable. This attribute is not used in comparison,</span>
-<span class="sd">    meaning two instances with the same data (`ProtoFeedback.feedback`) will be considered</span>
+<span class="sd">    meaning two instances with the same data (:obj:`~ProtoFeedback.feedback`) will be considered</span>
 <span class="sd">    similar, regardless of the `selectable` value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -303,7 +304,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add child feedback items to create a hierarchical structure.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            *feedbacks (List[ProtoFeedback]): Child feedback items to be added.</span>
+<span class="sd">            *feedbacks: Child feedback items to be added.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">feedbacks</span><span class="p">)</span></div>
@@ -607,27 +608,27 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class that serves as the foundation for all Athena Processes.</span>
 
 <span class="sd">    The `Process` class acts as the base (abstract) class for all user-defined check processes within the Athena framework.</span>
-<span class="sd">    To create a new process, it&#39;s essential to define at least one :py:class:`~Thread` object as a class attribute. These threads</span>
+<span class="sd">    To create a new process, it&#39;s essential to define at least one :class:`~Thread` object as a class attribute. These threads</span>
 <span class="sd">    manage various feedbacks that the process will inspect and potentially address.</span>
 
-<span class="sd">    During the execution of your process&#39;s :py:meth:`~Process.check`, if any issues are detected, you need to create </span>
+<span class="sd">    During the execution of your process&#39;s :meth:`~Process.check`, if any issues are detected, you need to create </span>
 <span class="sd">    instances of the :obj:`~Feedback` class (or its subclasses) and register them for the appropriate threads using </span>
-<span class="sd">    the :py:meth:`~Process.addFeedback` method. In the :py:meth:`~Process.fix` method, iterate over these feedback </span>
+<span class="sd">    the :meth:`~Process.addFeedback` method. In the :meth:`~Process.fix` method, iterate over these feedback </span>
 <span class="sd">    instances and implement any necessary actions to automatically resolve fixable issues.</span>
 <span class="sd">    </span>
 <span class="sd">    Additional methods for managing internal feedback are available, allowing you to retrieve feedbacks, iterate over them,</span>
 <span class="sd">    or check if there are any feedbacks for a specific Thread.</span>
 
 <span class="sd">    At the end of the check process, it&#39;s crucial to set the state for each Thread. By default, they are all set to the</span>
-<span class="sd">    :py:obj:`.AtStatus._DEFAULT` built-in status. To change a Thread status, you can call the :py:meth:`~Process.setSuccess`</span>
-<span class="sd">    or :py:meth:`~Process.setFail` methods.</span>
-<span class="sd">    Alternatively, you can skip the execution of a specific Thread using the :py:meth:`~Process.setSkipped` method.</span>
+<span class="sd">    :obj:`.AtStatus._DEFAULT` built-in status. To change a Thread status, you can call the :meth:`~Process.setSuccess`</span>
+<span class="sd">    or :meth:`~Process.setFail` methods.</span>
+<span class="sd">    Alternatively, you can skip the execution of a specific Thread using the :meth:`~Process.setSkipped` method.</span>
 
 <span class="sd">    Three non-implemented methods must or can be overridden to create a functional process:</span>
 
-<span class="sd">        * :py:meth:`~Process.check`</span>
-<span class="sd">        * :py:meth:`~Process.fix`</span>
-<span class="sd">        * :py:meth:`~Process.tool`</span>
+<span class="sd">        * :meth:`~Process.check`</span>
+<span class="sd">        * :meth:`~Process.fix`</span>
+<span class="sd">        * :meth:`~Process.tool`</span>
 
 <span class="sd">    Communication of progress can be achieved using the `setProgress*` methods to provide feedback to the user on the</span>
 <span class="sd">    current state of the check or fix progress. For this to work, a QProgressBar must be set using `setProgressBar`.</span>
@@ -676,26 +677,26 @@
         <span class="n">instance</span><span class="o">.</span><span class="n">__doInterupt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Sunder instance attribute (Can be overrided user to custom the process)</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">_name_</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_name_</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">_doc_</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_doc_</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span>
+        <span class="c1"># instance._name_ = cls._name_ or cls.__name__</span>
+        <span class="c1"># instance._doc_ = cls._doc_ or cls.__doc__</span>
 
         <span class="k">return</span> <span class="n">instance</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Give a nice representation of the Process with it&#39;s nice name.&quot;&quot;&quot;</span>
         
         <span class="k">return</span> <span class="s1">&#39;&lt;Process `</span><span class="si">{0}</span><span class="s1">` at </span><span class="si">{1}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_</span><span class="p">,</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">__makeFeedbackContainer</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Thread</span><span class="p">,</span> <span class="n">FeedbackContainer</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and initialize a dictionary of :py:class:`~FeedbackContainers` for each :py:class:`~Thread`.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and initialize a dictionary of :class:`~FeedbackContainers` for each :class:`~Thread`.</span>
 
 <span class="sd">        This class method generates a dictionary of FeedbackContainers for each Thread associated with the Process class.</span>
 <span class="sd">        The FeedbackContainers are initialized with the Thread, True (indicating the container is selectable),</span>
-<span class="sd">        and :py:obj:`~.AtStatus._DEFAULT` (the default status for the containers).</span>
+<span class="sd">        and :obj:`~.AtStatus._DEFAULT` (the default status for the containers).</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            A new dict with an empty FeedbackContainer per Thread with status set to :py:obj:`.AtStatus._DEFAULT`</span>
+<span class="sd">            A new dict with an empty FeedbackContainer per Thread with status set to :obj:`.AtStatus._DEFAULT`</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method is typically used internally within the Process class to initialize the FeedbackContainers for</span>
@@ -703,9 +704,9 @@
 
 <span class="sd">        See Also:</span>
 
-<span class="sd">            * :py:class:`~Thread`: The class representing a task within the Athena framework.</span>
-<span class="sd">            * :py:class:`~FeedbackContainer`: The container for managing feedback associated with a specific Thread.</span>
-<span class="sd">            * :py:obj:`.AtStatus._DEFAULT`: The default status used when initializing FeedbackContainers.</span>
+<span class="sd">            * :class:`~Thread`: The class representing a task within the Athena framework.</span>
+<span class="sd">            * :class:`~FeedbackContainer`: The container for managing feedback associated with a specific Thread.</span>
+<span class="sd">            * :obj:`.AtStatus._DEFAULT`: The default status used when initializing FeedbackContainers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="n">thread</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FEEDBACK_CONTAINER_CLASS</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">AtStatus</span><span class="o">.</span><span class="n">_DEFAULT</span><span class="p">)</span> <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">threads</span><span class="p">()}</span>
@@ -943,13 +944,13 @@
     <span class="k">def</span> <span class="nf">listenForUserInteruption</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger an user interuption Event to prematurely end process execution.</span>
 
-<span class="sd">        This method triggers the :py:obj:`~Process._listenForUserInteruption` Event, which requires a registered callback</span>
-<span class="sd">        to invoke the :py:meth:`~Process._registerInteruption` method from the Qt Application.</span>
+<span class="sd">        This method triggers the :obj:`~Process._listenForUserInteruption` Event, which requires a registered callback</span>
+<span class="sd">        to invoke the :meth:`~Process._registerInteruption` method from the Qt Application.</span>
 
 <span class="sd">        After triggering the event, if there is a callback to invoke the appropriate method, the boolean value</span>
-<span class="sd">        for :py:obj:`~Process.__doIterupt` will be set to True, and an :py:class:`.AtExceptions.AtProcessExecutionInterrupted` </span>
+<span class="sd">        for :obj:`~Process.__doIterupt` will be set to True, and an :class:`.AtExceptions.AtProcessExecutionInterrupted` </span>
 <span class="sd">        exception will be raised. This exception can be handle in the Qt Application to force the Process Status to </span>
-<span class="sd">        :py:obj:`.AtStatus._ABORTED`.</span>
+<span class="sd">        :obj:`.AtStatus._ABORTED`.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            AtExceptions.AtProcessExecutionInterrupted: If the interruption is caught and propagated.</span>
@@ -957,7 +958,7 @@
 <span class="sd">        Important:</span>
 <span class="sd">            When the Process is executing, the Qt Event System stacks QEvents, processing them at the end of the</span>
 <span class="sd">            execution, typically after all process executions are finished. To catch user interactions during</span>
-<span class="sd">            execution, the Qt Event System must process pending events. The :py:obj:`~Process._listenForUserInteruption`</span>
+<span class="sd">            execution, the Qt Event System must process pending events. The :obj:`~Process._listenForUserInteruption`</span>
 <span class="sd">            Event can trigger a call to `QApplication.processEvents`, accomplished by adding it as a callback for this </span>
 <span class="sd">            Event.</span>
 
@@ -965,7 +966,7 @@
 <span class="sd">            press. A side effect is that the key press becomes part of the Qt UI thread.</span>
 
 <span class="sd">            To ensure the raise directly impacts the application and ends the process, it must be done from the main thread.</span>
-<span class="sd">            Therefore, the :py:meth:`~Process._registerInteruption` method needs to be called from the Qt Application to</span>
+<span class="sd">            Therefore, the :meth:`~Process._registerInteruption` method needs to be called from the Qt Application to</span>
 <span class="sd">            toggle the behavior of this method so it can raise. Typically, this method is called in the check or fix </span>
 <span class="sd">            method, ensuring that the raise occurs from the main thread.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -983,7 +984,7 @@
 <div class="viewcode-block" id="Process._registerInteruption">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Process._registerInteruption">[docs]</a>
     <span class="k">def</span> <span class="nf">_registerInteruption</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the value for the private member :py:obj:`~Process.__doInterupt` to True.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the value for the private member :obj:`~Process.__doInterupt` to True.</span>
 <span class="sd">        </span>
 <span class="sd">        This simply allow to change the value of this private member from outside the class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -998,7 +999,7 @@
 <span class="k">class</span> <span class="nc">Register</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The register is a container that allow the user to load and manage blueprints.</span>
 
-<span class="sd">    After initialisation the register will not contain any data and you will need to load the :py:class:`~Blueprint` you </span>
+<span class="sd">    After initialisation the register will not contain any data and you will need to load the :class:`~Blueprint` you </span>
 <span class="sd">    want for your current Athena Session.</span>
 <span class="sd">    The role of the register is to act as a loader and data keeper for all existing Blueprints you defined and want your</span>
 <span class="sd">    user&#39;s to be able to use for their sanity checking.</span>
@@ -1206,13 +1207,13 @@
 <span class="sd">    providing settings for each process. It requires two members to be defined in the module:</span>
 
 <span class="sd">        * `header`: A list of names in the desired execution order, representing the sequence of processes.</span>
-<span class="sd">        * `descriptions`: A dictionary where each value in the `header` contains data to initialize a :py:class:`~Processor`.</span>
+<span class="sd">        * `descriptions`: A dictionary where each value in the `header` contains data to initialize a :class:`~Processor`.</span>
 
 <span class="sd">    An optional member called `settings` can be added, which must be a dictionary as well. The values in this dictionary </span>
 <span class="sd">    modify the global execution behavior for the current blueprint.</span>
 
 <span class="sd">    The Blueprint lazily loads all its data on demand to minimize initialization calls. For example, processors are not</span>
-<span class="sd">    created until the :py:meth:`~Blueprint.processors` attribute is called.</span>
+<span class="sd">    created until the :meth:`~Blueprint.processors` attribute is called.</span>
 
 <span class="sd">    Notes:</span>
 <span class="sd">        The name of a processor is based on the name of its module.</span>
@@ -1340,7 +1341,7 @@
 <span class="sd">        automatically resolve the links for each description in case this is meant to be used in batch.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            A tuple containing all :py:class:`~Processor` for the current Blueprint&#39;s description.</span>
+<span class="sd">            A tuple containing all :class:`~Processor` for the current Blueprint&#39;s description.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">batchLinkResolve</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1385,9 +1386,9 @@
 <span class="k">class</span> <span class="nc">Tag</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">IntFlag</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tags are modifiers used by athena to affect the way a process behavior. </span>
 <span class="sd">    </span>
-<span class="sd">    Tags are defined in the :py:class:`~Blueprint` and will be parsed by the :py:class:`~Processor` which will change </span>
+<span class="sd">    Tags are defined in the :class:`~Blueprint` and will be parsed by the :class:`~Processor` which will change </span>
 <span class="sd">    it&#39;s configuration based on them.</span>
-<span class="sd">    The :py:class:`~Process` by itself is totaly unaware of it&#39;s Tags as they are only used by it&#39;s wrapper, the Processor.</span>
+<span class="sd">    The :class:`~Process` by itself is totaly unaware of it&#39;s Tags as they are only used by it&#39;s wrapper, the Processor.</span>
 <span class="sd">    </span>
 <span class="sd">    Tags allow Process to be optional, non blocking, hide their checks or even be completely disabled or dependant to</span>
 <span class="sd">    another Process using Link.</span>
@@ -1444,11 +1445,25 @@
 <div class="viewcode-block" id="Processor">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor">[docs]</a>
 <span class="k">class</span> <span class="nc">Processor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Processor is a proxy for a process object, build from the description of a blueprint.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Proxy object representing a :class:`~Process` configured from a :class:`~Blueprint` description.</span>
 
-<span class="sd">    The Processor will init all informations it need to wrap a process like the methods that have been overrided, </span>
-<span class="sd">    if it can run a check, a fix, if it is part of te ui/batch, its name, docstring and a lot more.</span>
-<span class="sd">    It will also resolve some of it&#39;s data lazilly to speed up execution process.</span>
+<span class="sd">    The `Processor` is constructed based on a Python import string, responsible for instantiating and managing a specific </span>
+<span class="sd">    Process.</span>
+<span class="sd">    It requires essential data typically specified in a Blueprint&#39;s description. The class internally determines the </span>
+<span class="sd">    implemented methods on the Process class, setting up attributes to describe available functionalities.</span>
+
+<span class="sd">    In addition, the `Processor` resolves Tags and slightly overrides the initial Process behavior (e.g., removing `fix`,</span>
+<span class="sd">    disabling the Process in batch mode). This adds flexibility to the framework by allowing customization of the Process&#39;s </span>
+<span class="sd">    behavior.</span>
+
+<span class="sd">    The implementation of the `Processor` class is predominantly lazy, initializing only the necessary arguments during </span>
+<span class="sd">    instantiation and deferring expensive computation until they are actually needed, while caching their results. </span>
+<span class="sd">    The `Processor` takes on the responsibility of resolving all :class:`~Tag`, :class:`~Link`, and </span>
+<span class="sd">    :class:`~.AtStatus.Status` overrides for all Process&#39; :class:`~Thread`. Additionally, it can be made aware of </span>
+<span class="sd">    :class:`~Blueprint` settings through the `setting` argument or receive extra data for later use.</span>
+
+<span class="sd">    Overall, the `Processor` plays a pivotal role in configuring and executing Processes defined in a Blueprint, contributing </span>
+<span class="sd">    to the framework&#39;s flexibility and ease of use. Whether it&#39;s for using them in a UI or batch.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
@@ -1462,27 +1477,18 @@
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Init the Processor instances attributes and define all the default values. The tags will also be resolved.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        -----------</span>
-<span class="sd">        process: str</span>
-<span class="sd">            The python path to import the process from, it must be a full import path to the Process class.</span>
-<span class="sd">        category: str</span>
-<span class="sd">            The name of the category of the Processor, if no value are provided the category will be `AtConstants.DEFAULT_CATEGORY` (default: `None`)</span>
-<span class="sd">        arguments: dict(str: tuple(tuple, dict))</span>
-<span class="sd">            This dict must contain by method name (&#39;__init__&#39;, &#39;check&#39;, ...) a tuple containing a tuple for the args and </span>
-<span class="sd">            a dict for the keyword arguments. (default: `None`)</span>
-<span class="sd">        tags: int</span>
-<span class="sd">            The tag is an integer where bytes refers to `athena.AtCore.Tags`, it must be made of one or more tags. (default: `None`)</span>
-<span class="sd">        links: tuple(tuple(str, Links, Links))</span>
-<span class="sd">            The links must contain an ordered sequence of tuple with the name of another Process of the same blueprint, and two</span>
-<span class="sd">            Links that are the source and the target methods to connect. (default: `None`)</span>
-<span class="sd">        statusOverride: dict(str: dict(type: AtStatus.Status))</span>
-<span class="sd">            Status overrides must be a dict with name of process Thread as key (str) and a dict with `AtStatus.FailStatus` or</span>
-<span class="sd">            `AtStatus.SuccessStatus` as key (possibly both) and the status for the override as value. (default: `None`)</span>
-<span class="sd">        settings: dict</span>
-<span class="sd">            Setting is a dict that contain data as value for each setting name as key. (default: `None`)</span>
-<span class="sd">        **kwargs:</span>
-<span class="sd">            All remaining data passed at initialisation will automatically be used to init the Processor data.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            process: The python path to import the process from, it must be a full import path to the Process class.</span>
+<span class="sd">            category: The name of the category of the Processor, if no value are provided the category will be `AtConstants.DEFAULT_CATEGORY` (default: `None`)</span>
+<span class="sd">            arguments: This dict must contain by method name (&#39;__init__&#39;, &#39;check&#39;, ...) a tuple containing a tuple for the args and </span>
+<span class="sd">                a dict for the keyword arguments.</span>
+<span class="sd">            tags: The tag is an integer where bytes refers to `athena.AtCore.Tags`, it must be made of one or more tags. (default: `None`)</span>
+<span class="sd">            links: The links must contain an ordered sequence of tuple with the name of another Process of the same blueprint, and two </span>
+<span class="sd">                Links that are the source and the target methods to connect.</span>
+<span class="sd">            statusOverride: Status overrides must be a dict with name of process Thread as key (str) and a dict with `AtStatus.FailStatus` or</span>
+<span class="sd">                `AtStatus.SuccessStatus` as key (possibly both) and the status for the override as value. (default: `None`)</span>
+<span class="sd">            settings: Setting is a dict that contain data as value for each setting name as key. (default: `None`)</span>
+<span class="sd">            **kwargs: All remaining data passed at initialisation will automatically be used to init the Processor data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span> <span class="o">=</span> <span class="n">process</span>
@@ -1511,119 +1517,264 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_processProfile</span><span class="p">:</span> <span class="n">_ProcessProfile</span> <span class="o">=</span> <span class="n">_ProcessProfile</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the representation of the Processor.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Readable representation of the Processor object</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A readable representation of the Processor based on it&#39;s process import path and id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{0}</span><span class="s1"> `</span><span class="si">{1}</span><span class="s1">` at </span><span class="si">{2}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">moduleName</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter for the Processor&#39;s Process module name.</span>
+<span class="sd">        </span>
+<span class="sd">        Return:</span>
+<span class="sd">            The Processor&#39;s Process module name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">module</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleType</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy property that import and hold the module object for the Processor&#39;s Process.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter that import the Processor&#39;s Process module.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The Processor&#39;s Process module object that was imported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">importProcessModuleFromPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">processClass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter for the Processor&#39;s Process class</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The Processor&#39;s Process class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Process</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy property to get the process class object of the Processor&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter for the Processor&#39;s Process class</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            An initialised instance of the Processor&#39;s Process class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">initArgs</span><span class="p">,</span> <span class="n">initKwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getArguments</span><span class="p">(</span><span class="s1">&#39;__init__&#39;</span><span class="p">)</span>
-        <span class="n">process</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])(</span><span class="o">*</span><span class="n">initArgs</span><span class="p">,</span> <span class="o">**</span><span class="n">initKwargs</span><span class="p">)</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="p">(</span><span class="o">*</span><span class="n">initArgs</span><span class="p">,</span> <span class="o">**</span><span class="n">initKwargs</span><span class="p">)</span>
 
-        <span class="c1"># We do the overrides only once, they require the process instance.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_overrideLevels</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statusOverrides</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_overrideStatus</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statusOverrides</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">process</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">overridedMethods</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy property to get the overrided methods of the Processor&#39;s Process class.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter Processor&#39;s Process&#39; Parameters.</span>
 
-        <span class="k">return</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">getOverridedMethods</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span>
+<span class="sd">        Return:</span>
+<span class="sd">            All Parameters objects for the Processor&#39;s Process.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">parameters</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">):</span>
+                <span class="n">parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">overridedMethods</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter for the overrided methods of the Processor&#39;s Process class.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            List of name for each overrided method on the Processor&#39;s Process class compared to :class:`~Process`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">getOverridedMethods</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">niceName</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy property to get a nice name based on the Processor&#39;s Process name.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter for the Processor&#39;s Process nice name.</span>
 
-        <span class="k">return</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">camelCaseSplit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_name_</span><span class="p">)</span>
+<span class="sd">        Return:</span>
+<span class="sd">            A nice name for the Processor&#39;s Process, split if on camelCase.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">AtUtils</span><span class="o">.</span><span class="n">camelCaseSplit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rawName</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">docstring</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy property to get the docstring of the Processor&#39;s process.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_createDocstring</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter for the Processor&#39;s Process docstring</span>
+
+<span class="sd">        Use the value in the Processor&#39;s :obj:`~Process._doc_` attribute, if it&#39;s empty, use class docstring</span>
+<span class="sd">        :obj:`~Process.__doc__`. If it&#39;s also empty, fallback on :obj:`~.AtConstants.NO_DOCUMENTATION_AVAILABLE`</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The formatted docstring to be more readable and also display the path of the process.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">docstring</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="o">.</span><span class="n">_doc_</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="n">AtConstants</span><span class="o">.</span><span class="n">NO_DOCUMENTATION_AVAILABLE</span>
+        <span class="n">docstring</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="p">)</span>
+
+        <span class="n">docFormat</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\{(\w+)\}&#39;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">):</span>
+            <span class="n">matchStr</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">docFormat</span><span class="p">[</span><span class="n">matchStr</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="o">.</span><span class="n">_docFormat_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">matchStr</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">docstring</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">docFormat</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">hasCheckMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if the Processor&#39;s Process have a `check` method.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter to know if the Processor&#39;s Process has a `check` method.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            True if the Processor&#39;s Process has a `check` method, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overridedMethods</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">CHECK</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">hasFixMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if the Processor&#39;s Process have a `fix` method.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter to know if the Processor&#39;s Process has a `fix` method.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            True if the Processor&#39;s Process has a `fix` method, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overridedMethods</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">FIX</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">hasToolMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if the Processor&#39;s Process have a `tool` method.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy getter to know if the Processor&#39;s Process has a `tool` method.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            True if the Processor&#39;s Process has a `tool` method, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overridedMethods</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">TOOL</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rawName</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the raw name of the Processor&#39;s Process.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_name_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter fore the Processor&#39;s Process raw name.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The name for the Processor&#39;s Process, this will fallback to the class name if no `_name_` is set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="o">.</span><span class="n">_name_</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="o">.</span><span class="vm">__name__</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">isEnabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Blueprint&#39;s enabled state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for the Processor&#39;s state.</span>
+<span class="sd">        </span>
+<span class="sd">        Return:</span>
+<span class="sd">            `True` if the Processor is enabled, `False` Otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isEnabled</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">isCheckable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Blueprint&#39;s checkable state&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for the Processor&#39;s checkable state.</span>
+<span class="sd">        </span>
+<span class="sd">        Return:</span>
+<span class="sd">            `True` if the Processor is checkable, `False` Otherwise. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isCheckable</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">isFixable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Blueprint&#39;s fixable state&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for the Processor&#39;s fixable state.</span>
+<span class="sd">        </span>
+<span class="sd">        Return:</span>
+<span class="sd">            `True` if the Processor is fixable, `False` Otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isFixable</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">inUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if the Blueprint should be run in ui&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for Processor&#39;s UI state.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            `True` if the Processor can be run in UI mode, `False` Otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inUi</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">inBatch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if the Blueprint should be run in batch&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for Processor&#39;s batch state.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            `True` if the Processor can be run in batch mode, `False` Otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__inBatch</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">isNonBlocking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Blueprint&#39;s non blocking state&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter to know whether the Processor&#39;s Process FailStatus are blocking or not.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            `False` if the Processor&#39;s Process FailStatus are blocking, `True` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isNonBlocking</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">category</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Blueprint&#39;s category&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Processor&#39;s category.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The Processor&#39;s category name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_category</span>
+
+<div class="viewcode-block" id="Processor.getArguments">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getArguments">[docs]</a>
+    <span class="k">def</span> <span class="nf">getArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve arguments values for the given method of the Processor&#39;s Process.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            method: The method name as str for which to retrieve the arguments and keyword arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple containing a list of arguments values and a dict of keyword arguments values.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            This method will not raise any error, if no argument is found, return a tuple containing empty</span>
+<span class="sd">            list and empty dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span>
+        <span class="k">if</span> <span class="n">arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">([],</span> <span class="p">{})</span>
+
+        <span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">([],</span> <span class="p">{})</span>
+
+        <span class="k">return</span> <span class="n">arguments</span></div>
+
 
 <div class="viewcode-block" id="Processor.getSetting">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getSetting">[docs]</a>
     <span class="k">def</span> <span class="nf">getSetting</span><span class="p">(</span><span class="n">setting</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for a specific setting if it exists, else None.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for a specific setting if it exists.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        setting: hashable</span>
-<span class="sd">            The setting to get from the Processor&#39;s settings.</span>
-<span class="sd">        default: object</span>
-<span class="sd">            The default value to return if the Processor does not have any value for this setting. (default: `None`)</span>
+<span class="sd">            setting: The setting to get from the Processor&#39;s settings.</span>
+<span class="sd">            default: The default value to return if the Processor does not have any value for this setting.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">        -------</span>
-<span class="sd">        object</span>
-<span class="sd">            The value for the given setting or the default value if the given setting does not exists.</span>
+<span class="sd">            The value for the requested setting or the default value if the requested setting does not exists.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">setting</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
@@ -1632,12 +1783,10 @@
 <div class="viewcode-block" id="Processor.getLowestFailStatus">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getLowestFailStatus">[docs]</a>
     <span class="k">def</span> <span class="nf">getLowestFailStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtStatus</span><span class="o">.</span><span class="n">FailStatus</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the lowest Fail status from all Threads of the Processor&#39;s Process.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the lowest Fail status from all :class:`~Thread` from the Processor&#39;s Process.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">        -------</span>
-<span class="sd">        Status.FailStatus:</span>
-<span class="sd">            The Lowest Fail Status of the Processor&#39;s Process</span>
+<span class="sd">            The Lowest Fail Status of the Processor&#39;s Process accross all it&#39;s :class:`~Thread`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="n">thread</span><span class="o">.</span><span class="n">_failStatus</span> <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_priority</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span></div>
@@ -1646,33 +1795,33 @@
 <div class="viewcode-block" id="Processor.getLowestSuccessStatus">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getLowestSuccessStatus">[docs]</a>
     <span class="k">def</span> <span class="nf">getLowestSuccessStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtStatus</span><span class="o">.</span><span class="n">SuccessStatus</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the lowest Success status from all Threads of the Processor&#39;s Process.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the lowest Success status from all :class:`~Thread` from the Processor&#39;s Process.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">        -------</span>
-<span class="sd">        Status.SuccessStatus</span>
-<span class="sd">            The Lowest Success Status of the Processor&#39;s Process</span>
+<span class="sd">            The Lowest Success Status of the Processor&#39;s Process accross all it&#39;s :class:`~Thread`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="n">thread</span><span class="o">.</span><span class="n">_successStatus</span> <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_priority</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FeedbackContainer</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is a wrapper for the Processor&#39;s process&#39;s check that will automatically execute it with the right parameters.</span>
+<div class="viewcode-block" id="Processor.check">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.check">[docs]</a>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FeedbackContainer</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is a wrapper for the Processor&#39;s Process `check`.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        links: bool</span>
-<span class="sd">            Should the wrapper launch the connected links or not.</span>
-<span class="sd">        doProfiling: bool</span>
-<span class="sd">            Whether the check method will be runt with the Processor&#39;s Profiler and data retrieved or not. (default: `False`)</span>
+<span class="sd">        This will automatically execute the `check` method with it&#39;s right parameters and profile the execution if requested. </span>
+<span class="sd">        If the `links` attribute is set to `True`, the Processor&#39;s :class:`~Link` will also be executed..</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        type</span>
-<span class="sd">            The Processor&#39;s Process feedback.</span>
-<span class="sd">        bool</span>
-<span class="sd">            True if the Processor&#39;s Process have any feedback, False otherwise.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            links: Should the wrapper launch the connected links or not.</span>
+<span class="sd">            doProfiling: Whether the `check` method must be run with the Processor&#39;s Profiler.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            All feedback containers for the Processor&#39;s Process post check.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasCheckMethod</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
         
         <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getArguments</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">CHECK</span><span class="p">)</span>
 
@@ -1687,25 +1836,27 @@
             <span class="k">if</span> <span class="n">links</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">runLinks</span><span class="p">(</span><span class="n">Link</span><span class="o">.</span><span class="n">CHECK</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">getFeedbackContainers</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">getFeedbackContainers</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FeedbackContainer</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is a wrapper for the Processor&#39;s process&#39;s fix that will automatically execute it with the right parameters.</span>
-<span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        links: bool</span>
-<span class="sd">            Should the wrapper launch the connected links or not.</span>
-<span class="sd">        doProfiling: bool</span>
-<span class="sd">            Whether the fix method will be runt with the Processor&#39;s Profiler and data retrieved or not. (default: `False`)</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        type</span>
-<span class="sd">            The Processor&#39;s Process feedback.</span>
-<span class="sd">        bool</span>
-<span class="sd">            True if the Processor&#39;s Process have any feedback, False otherwise.</span>
+<div class="viewcode-block" id="Processor.fix">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.fix">[docs]</a>
+    <span class="k">def</span> <span class="nf">fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FeedbackContainer</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is a wrapper for the Processor&#39;s Process `fix`.</span>
+
+<span class="sd">        This will automatically execute the `fix` method with it&#39;s right parameters and profile the execution if requested. </span>
+<span class="sd">        If the `links` attribute is set to `True`, the Processor&#39;s :class:`~Link` will also be executed..</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            links: Should the wrapper launch the connected links or not.</span>
+<span class="sd">            doProfiling: Whether the `fix` method must be run with the Processor&#39;s Profiler.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            All feedback containers for the Processor&#39;s Process post fix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasFixMethod</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
         <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getArguments</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">FIX</span><span class="p">)</span>
 
@@ -1720,24 +1871,28 @@
             <span class="k">if</span> <span class="n">links</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">runLinks</span><span class="p">(</span><span class="n">Link</span><span class="o">.</span><span class="n">FIX</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">getFeedbackContainers</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">_tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is a wrapper for the Processor&#39;s process&#39;s tool that will automatically execute it with the right parameters.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        links: bool</span>
-<span class="sd">            Should the wrapper launch the connected links or not.</span>
-<span class="sd">        doProfiling: bool</span>
-<span class="sd">            Whether the tool method will be runt with the Processor&#39;s Profiler and data retrieved or not. (default: `False`)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">getFeedbackContainers</span><span class="p">()</span></div>
 
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        type</span>
-<span class="sd">            The value returned by the tool method.</span>
+<div class="viewcode-block" id="Processor.tool">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.tool">[docs]</a>
+    <span class="k">def</span> <span class="nf">tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is a wrapper for the Processor&#39;s Process `tool`.</span>
+
+<span class="sd">        This will automatically execute the `tool` method with it&#39;s right parameters and profile the execution if requested.</span>
+<span class="sd">        If the `links` attribute is set to `True`, the Processor&#39;s :class:`~Link` will also be executed..</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            links: Should the wrapper launch the connected links or not.</span>
+<span class="sd">            doProfiling: Whether the `tool` method must be run with the Processor&#39;s Profiler.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The value returned by the Processor&#39;s Process `tool` method. Usually, `None`, but it could be the tool widget</span>
+<span class="sd">            so it can be parented to the UI this Processor&#39;s is runt from.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasToolMethod</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
         <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getArguments</span><span class="p">(</span><span class="n">AtConstants</span><span class="o">.</span><span class="n">TOOL</span><span class="p">)</span>
 
@@ -1752,105 +1907,54 @@
             <span class="k">if</span> <span class="n">links</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">runLinks</span><span class="p">(</span><span class="n">Link</span><span class="o">.</span><span class="n">TOOL</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">returnValue</span>
-
-<div class="viewcode-block" id="Processor.check">
-<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.check">[docs]</a>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FeedbackContainer</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as `_check` method but will check if the Processor is checkable and has a check method.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasCheckMethod</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isCheckable</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">()</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">,</span> <span class="n">doProfiling</span><span class="o">=</span><span class="n">doProfiling</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Processor.fix">
-<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.fix">[docs]</a>
-    <span class="k">def</span> <span class="nf">fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">FeedbackContainer</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as `_fix` method but will check if the Processor is checkable and has a check method.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasFixMethod</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isFixable</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">()</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fix</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">,</span> <span class="n">doProfiling</span><span class="o">=</span><span class="n">doProfiling</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="Processor.tool">
-<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.tool">[docs]</a>
-    <span class="k">def</span> <span class="nf">tool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">doProfiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as `_tool` method but will check if the Processor is checkable and has a check method.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasToolMethod</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tool</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">,</span> <span class="n">doProfiling</span><span class="o">=</span><span class="n">doProfiling</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">returnValue</span></div>
 
 
 <div class="viewcode-block" id="Processor.runLinks">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.runLinks">[docs]</a>
     <span class="k">def</span> <span class="nf">runLinks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">which</span><span class="p">:</span> <span class="n">Link</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the Processor&#39;s linked Processors for the given Link.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the Processor&#39;s links for the given :class:`~Link`.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        which: athena.AtCore.Link</span>
-<span class="sd">            Which link we want to run.</span>
+<span class="sd">            which: Which link we want to run.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__linksData</span><span class="p">[</span><span class="n">which</span><span class="p">]:</span>
             <span class="n">link</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Processor.getArguments">
-<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getArguments">[docs]</a>
-    <span class="k">def</span> <span class="nf">getArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">FunctionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">:</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve arguments for the given method of the Processor&#39;s Process.</span>
-<span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method: types.FunctionType</span>
-<span class="sd">            The method for which retrieve the arguments and keyword arguments.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        This method will not raise any error, if no argument is found, return a tuple containing empty</span>
-<span class="sd">        list and empty dict.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple</span>
-<span class="sd">            Tuple containing a list of args and a dict of kwargs</span>
-<span class="sd">            =&gt; tuple(list, dict)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span>
-        <span class="k">if</span> <span class="n">arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">([],</span> <span class="p">{})</span>
-
-        <span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">arguments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">([],</span> <span class="p">{})</span>
-
-        <span class="k">return</span> <span class="n">arguments</span></div>
-
-
-    <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Parameter</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-        <span class="n">parameters</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">))</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">):</span>
-                <span class="n">parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
-
 <div class="viewcode-block" id="Processor.getParameter">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getParameter">[docs]</a>
     <span class="k">def</span> <span class="nf">getParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">parameter</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">))</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for the given :class:`~Parameter` object.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The current value for the given :class:`~Parameter` object.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            Python descriptors are defined on classes but hold different values per instance of the class that owns them, for</span>
+<span class="sd">            this reason, we can&#39;t query the value from the :class:`~Parameter` itself. This method query the value as it knows both the</span>
+<span class="sd">            class that own the :class:`~Parameter` and the instance for which we want the value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">parameter</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">processClass</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Processor.setParameter">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.setParameter">[docs]</a>
     <span class="k">def</span> <span class="nf">setParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the given value to the given :class:`~Parameter` object.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The current value for the given :class:`~Parameter` object after being set. This allows to know the exact value the attribute</span>
+<span class="sd">            was set on after it does it&#39;s validation.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            Python descriptors are defined on classes but hold different values per instance of the class that owns them, for</span>
+<span class="sd">            this reason, we can&#39;t set the value from the :class:`~Parameter` itself. This method query the value as it knows both the</span>
+<span class="sd">            class that own the :class:`~Parameter` and the instance for which we want to set the value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">parameter</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getParameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span></div>
 
@@ -1858,7 +1962,7 @@
 <div class="viewcode-block" id="Processor.setupTags">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.setupTags">[docs]</a>
     <span class="k">def</span> <span class="nf">setupTags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup the tags used by this Processor to modify the Processor&#39;s behaviour.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup the tags used by this Processor to modify the it&#39;s behaviour.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__isEnabled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__isCheckable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasCheckMethod</span>
@@ -1898,25 +2002,20 @@
 <div class="viewcode-block" id="Processor.resolveLinks">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.resolveLinks">[docs]</a>
     <span class="k">def</span> <span class="nf">resolveLinks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-        <span class="n">linkedObjects</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Processor</span><span class="o">|</span><span class="kc">None</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> 
+        <span class="n">linkedObjects</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Processor</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> 
         <span class="n">check</span><span class="p">:</span> <span class="n">Link</span> <span class="o">=</span> <span class="n">AtConstants</span><span class="o">.</span><span class="n">CHECK</span><span class="p">,</span> 
         <span class="n">fix</span><span class="p">:</span> <span class="n">Link</span> <span class="o">=</span> <span class="n">AtConstants</span><span class="o">.</span><span class="n">FIX</span><span class="p">,</span> 
         <span class="n">tool</span><span class="p">:</span> <span class="n">Link</span> <span class="o">=</span> <span class="n">AtConstants</span><span class="o">.</span><span class="n">TOOL</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the links between the given objects and the current Blueprint&#39;s Process.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the links between the given objects and the current Processor.</span>
 
-<span class="sd">        This need to be called with an ordered list of Objects (Blueprint or custom object) with None for blueprints to skip.</span>
+<span class="sd">        This need to be called with an ordered list of :class:`~Processor` or None for :class:`~Processor` to skip.</span>
 <span class="sd">        (e.g. to skip those that should not be linked because they dont have to be run in batch or ui.)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        linkedObjects: list(object, ...)</span>
-<span class="sd">            List of all objects used to resolve the current Blueprint links. Objects to skip have to be replaced with `None`.</span>
-<span class="sd">        check: str</span>
-<span class="sd">            Name of the method to use as check link on the given objects.</span>
-<span class="sd">        fix: str</span>
-<span class="sd">            Name of the method to use as fix link on the given objects.</span>
-<span class="sd">        tool: str</span>
-<span class="sd">            Name of the method to use as tool link on the given objects.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            linkedObjects: List of all objects used to resolve the current Processor&#39;s links. Objects to skip have to be replaced with `None`.</span>
+<span class="sd">            check: Name of the method to use as check link on the given objects.</span>
+<span class="sd">            fix: Name of the method to use as fix link on the given objects.</span>
+<span class="sd">            tool: Name of the method to use as tool link on the given objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__linksData</span> <span class="o">=</span> <span class="n">linksData</span> <span class="o">=</span> <span class="p">{</span><span class="n">Link</span><span class="o">.</span><span class="n">CHECK</span><span class="p">:</span> <span class="p">[],</span> <span class="n">Link</span><span class="o">.</span><span class="n">FIX</span><span class="p">:</span> <span class="p">[],</span> <span class="n">Link</span><span class="o">.</span><span class="n">TOOL</span><span class="p">:</span> <span class="p">[]}</span>
@@ -1941,20 +2040,17 @@
             <span class="n">linksData</span><span class="p">[</span><span class="n">_driver</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">linkedObjects</span><span class="p">[</span><span class="n">id_</span><span class="p">],</span> <span class="n">driven</span><span class="p">))</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_overrideLevels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">_overrideStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
         <span class="n">process</span><span class="p">:</span> <span class="n">Process</span><span class="p">,</span> 
         <span class="n">overrides</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">AtStatus</span><span class="o">.</span><span class="n">FailStatus</span><span class="p">]</span><span class="o">|</span><span class="n">Type</span><span class="p">[</span><span class="n">AtStatus</span><span class="o">.</span><span class="n">SuccessStatus</span><span class="p">]],</span> <span class="n">AtStatus</span><span class="o">.</span><span class="n">Status</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the Processor&#39;s Process&#39;s Threads Statuses based on a dict of overrides.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the Processor&#39;s Process&#39; Threads Statuses based on a dict of overrides.</span>
 
-<span class="sd">        Will iter through all Processor&#39;s Process&#39;s Threads and do the overrides from the dict by replacing the Fail</span>
+<span class="sd">        Will iter through all Processor&#39;s Process&#39; Threads and do the overrides from the dict by replacing the Fail</span>
 <span class="sd">        or Success Statuses.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        process: AtCore.Process</span>
-<span class="sd">            The Processor&#39;s Process instance.</span>
-<span class="sd">        overrides: dict(str: dict(AtStatus.FailStatus|AtStatus.SuccessStatus: AtStatus.Status))</span>
-<span class="sd">            The data to do the Status Overrides from.</span>
+<span class="sd">        Parameters: </span>
+<span class="sd">            process: The Processor&#39;s Process instance.</span>
+<span class="sd">            overrides: The Status Overrides data, define the new FailStatus and/or the new SuccessStatus.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1">#FIXME: It&#39;s highly likely that this override the statuses owned by the class.</span>
@@ -1965,7 +2061,7 @@
 
         <span class="k">for</span> <span class="n">threadName</span><span class="p">,</span> <span class="n">overridesDict</span> <span class="ow">in</span> <span class="n">overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">threadName</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Process </span><span class="si">{0}</span><span class="s1"> have not thread named </span><span class="si">{1}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">_name_</span><span class="p">,</span> <span class="n">threadName</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Process </span><span class="si">{0}</span><span class="s1"> have no thread named </span><span class="si">{1}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">_name_</span><span class="p">,</span> <span class="n">threadName</span><span class="p">))</span>
             <span class="n">thread</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">threadName</span><span class="p">)</span>
             
             <span class="c1"># Get the fail overrides for the current name</span>
@@ -1993,35 +2089,17 @@
 <div class="viewcode-block" id="Processor.setProgressbar">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.setProgressbar">[docs]</a>
     <span class="k">def</span> <span class="nf">setProgressbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progressbar</span><span class="p">:</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QProgressBar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Called in the ui this method allow to give access to the progress bar for the user</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the ProgressBar object in the UI to be used by the Processor&#39;s Process.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        progressbar: QtWidgets.QProgressBar</span>
-<span class="sd">            QProgressBar object to connect to the process to display check and fix progression.</span>
+<span class="sd">        Made to be called in the ui this method allow to give access to the progress bar in the Processor&#39;s Process to </span>
+<span class="sd">        give feedback on the execution progress while performing `check` and/or `fix`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            progressbar: ProgressBar object object to connect to the process to display check and fix progression.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">setProgressbar</span><span class="p">(</span><span class="n">progressbar</span><span class="p">)</span></div>
 
-
-    <span class="k">def</span> <span class="nf">_createDocstring</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the Blueprint doc from Process docstring and data in the `_docFormat_` variable.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        str</span>
-<span class="sd">            Return the formatted docstring to be more readable and also display the path of the process.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">docstring</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_doc_</span> <span class="ow">or</span> <span class="n">AtConstants</span><span class="o">.</span><span class="n">NO_DOCUMENTATION_AVAILABLE</span>
-        <span class="n">docstring</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_processStrPath</span><span class="p">)</span>
-
-        <span class="n">docFormat</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\{(\w+)\}&#39;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">):</span>
-            <span class="n">matchStr</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">docFormat</span><span class="p">[</span><span class="n">matchStr</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_docFormat_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">matchStr</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">docstring</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">docFormat</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Processor.getData">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.getData">[docs]</a>
@@ -2029,11 +2107,11 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Processor&#39;s Data for the given key or default value if key does not exists.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        key: hashable</span>
-<span class="sd">            The key to get the data from.</span>
-<span class="sd">        default: object</span>
-<span class="sd">            The default value to return if the key does not exists.</span>
+<span class="sd">            key: The key to get the data from.</span>
+<span class="sd">            default: The default value to return if the key does not exists.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The value at the given key in the Processor&#39;s data if the key exists. Else the default value is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
@@ -2045,14 +2123,19 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the Processor&#39;s Data for the given key</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        key: hashable</span>
-<span class="sd">            The key to set the data.</span>
-<span class="sd">        value: object</span>
-<span class="sd">            The value to store as data for the give key.</span>
+<span class="sd">            key: The key to set the data for.</span>
+<span class="sd">            value: The value to store as data for the given key.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Processor.interupt">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore.Processor.interupt">[docs]</a>
+    <span class="k">def</span> <span class="nf">interupt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register user interuption for the Processor&#39;s Process&quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">_registerInteruption</span><span class="p">()</span></div>
 </div>
 
 
@@ -2064,7 +2147,7 @@
 <div class="viewcode-block" id="Parameter">
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Parameter">[docs]</a>
 <span class="k">class</span> <span class="nc">Parameter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Athena Parameter descriptor that represent a variable value to be used in an Athena :py:class:`~Process`</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Athena Parameter descriptor that represent a variable value to be used in an Athena :class:`~Process`</span>
 
 <span class="sd">    The Parameter is a python descriptor object that must be defined at the class level. It require a value that will be </span>
 <span class="sd">    used both as it&#39;s default value and it&#39;s current value until it&#39;s changed.</span>
@@ -2075,7 +2158,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">TYPE</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent the type of the Parameter and is used for type casting in the :py:meth:`~Parameter.typeCast` method&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent the type of the Parameter and is used for type casting in the :meth:`~Parameter.typeCast` method&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a new instance of Parameter.</span>
@@ -2084,8 +2167,8 @@
 <span class="sd">            default: The default value for the current Parameter. Will be set as default and current value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__default</span> <span class="o">=</span> <span class="n">default</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__default</span><span class="p">:</span> <span class="n">T</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__value</span><span class="p">:</span> <span class="n">T</span> <span class="o">=</span> <span class="n">default</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">__name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -2124,9 +2207,9 @@
     <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Process</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Descriptor setter for the Parameter value.</span>
 
-<span class="sd">        Cast the given value to the right Parameter&#39;s type (:py:obj:`~Parameter.TYPE`) using the</span>
-<span class="sd">        :py:meth:`~Parameter.typeCast` method and then, if the value can be validate with the </span>
-<span class="sd">        :py:meth:`~Parameter.validate` method, the value is set for the Parameter on the given instance.</span>
+<span class="sd">        Cast the given value to the right Parameter&#39;s type (:obj:`~Parameter.TYPE`) using the</span>
+<span class="sd">        :meth:`~Parameter.typeCast` method and then, if the value can be validate with the </span>
+<span class="sd">        :meth:`~Parameter.validate` method, the value is set for the Parameter on the given instance.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            instance: The instance for which we want to set the Parameter value.</span>
@@ -2175,12 +2258,12 @@
 <a class="viewcode-back" href="../../athena.html#athena.AtCore.Parameter.typeCast">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">typeCast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cast the input value to the Parameter&#39;s type set in :py:obj:`~Parameter.TYPE`.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cast the input value to the Parameter&#39;s type set in :obj:`~Parameter.TYPE`.</span>
 
 <span class="sd">        This method is not implemented on the Parameter abstract base class, it needs to be implemented in </span>
-<span class="sd">        each an every subclass that are meant to be instanciated and use in an Athena :py:class:`~Process`.</span>
+<span class="sd">        each an every subclass that are meant to be instanciated and use in an Athena :class:`~Process`.</span>
 <span class="sd">        The input may be of various type so this method should handle different case of type casting.</span>
-<span class="sd">        To do so, you can use the the :py:obj:`~Parameter.TYPE` attribute to convert the input value to the desired type.</span>
+<span class="sd">        To do so, you can use the the :obj:`~Parameter.TYPE` attribute to convert the input value to the desired type.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            value: The input value to convert to the Parameter&#39;s type.</span>
@@ -2286,8 +2369,8 @@
 <span class="sd">        This implementation of Parameter is not meant to be instantiated, use the following concrete implementations</span>
 <span class="sd">        instead:</span>
 
-<span class="sd">            * :py:class:`~IntParameter`</span>
-<span class="sd">            * :py:class:`~FloatParameter`</span>
+<span class="sd">            * :class:`~IntParameter`</span>
+<span class="sd">            * :class:`~FloatParameter`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">TYPE</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">]</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span>
@@ -2321,7 +2404,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Cast the input value to the `numbers.Number` type.</span>
 <span class="sd">        </span>
 <span class="sd">        As the `numbers.Number` type is not instantiable, this method is meant to work wit sub-types that define an</span>
-<span class="sd">        instantiable type for the :py:obj:`~Parameter.TYPE`.</span>
+<span class="sd">        instantiable type for the :obj:`~Parameter.TYPE`.</span>
 <span class="sd">        Will convert the input value to the Parameter&#39;s type and make sur it&#39;s in the range if the `keepInRange` attribute</span>
 <span class="sd">        is set to `True`.</span>
 
@@ -2447,6 +2530,8 @@
 
 
 
+<div class="viewcode-block" id="_ProcessProfile">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore._ProcessProfile">[docs]</a>
 <span class="k">class</span> <span class="nc">_ProcessProfile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Profiler that allow to profile the execution of `athena.AtCore.Process`&quot;&quot;&quot;</span>
 
@@ -2467,6 +2552,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialiste a Process Profiler and define the default instance attributes.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="o">|</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">]]]]</span> <span class="o">=</span> <span class="p">{}</span> 
 
+<div class="viewcode-block" id="_ProcessProfile.get">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore._ProcessProfile.get">[docs]</a>
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a profile log from the given key, or default if key does not exists.</span>
 <span class="sd">        </span>
@@ -2478,7 +2565,8 @@
 <span class="sd">            The data stored at the given key if exists else the default value is returned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_getCallDataList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callData</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Format and split `cProfile.Profiler` call data list (each value in the list must be one line.)</span>
@@ -2487,9 +2575,7 @@
 <span class="sd">        string is now an entry in the tuple. The order is the same than `athena.AtCore._ProcessProfile.CATEGORIES`.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        callData: list(str, ...)</span>
-<span class="sd">            List of call entry from a `cProfile.Profiler` run.</span>
+<span class="sd">            callData: Call entries from a `cProfile.Profiler` run.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">dataList</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2508,6 +2594,8 @@
 
         <span class="k">return</span> <span class="n">dataList</span>
 
+<div class="viewcode-block" id="_ProcessProfile.profileMethod">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore._ProcessProfile.profileMethod">[docs]</a>
     <span class="k">def</span> <span class="nf">profileMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Profile the given method execution and return it&#39;s result. The profiling result will be stored in the </span>
 <span class="sd">        object.</span>
@@ -2520,17 +2608,11 @@
 <span class="sd">        The raw stats result is also saved under the `rawStats` key if the user want to use it directly.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        method: types.FunctionType</span>
-<span class="sd">            A callable for which we want to profile the execution and save new data.</span>
-<span class="sd">        *args: *list</span>
-<span class="sd">            The arguments to call the method with.</span>
-<span class="sd">        **kwargs: **kwargs</span>
-<span class="sd">            The keywords arguments to call the method with.</span>
+<span class="sd">            method: A callable for which we want to profile the execution and save new data.</span>
+<span class="sd">            *args: The arguments to call the method with.</span>
+<span class="sd">            **kwargs: The keyword arguments to call the method with.</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">        -------</span>
-<span class="sd">        object:</span>
 <span class="sd">            The result of the given method with the provided args and kwargs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -2553,8 +2635,11 @@
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception_</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_profiles</span><span class="p">[</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getStatsFromProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-            <span class="k">raise</span>
+            <span class="k">raise</span></div>
 
+
+<div class="viewcode-block" id="_ProcessProfile.getStatsFromProfile">
+<a class="viewcode-back" href="../../athena.html#athena.AtCore._ProcessProfile.getStatsFromProfile">[docs]</a>
     <span class="k">def</span> <span class="nf">getStatsFromProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="o">|</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -2594,7 +2679,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">methodProfile</span><span class="p">[</span><span class="s1">&#39;ncalls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">methodProfile</span>
+        <span class="k">return</span> <span class="n">methodProfile</span></div>
+</div>
+
 
         
 
