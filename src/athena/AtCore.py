@@ -614,7 +614,7 @@ class Process(abc.ABC):
 
         self.__progressbar = progressBar
 
-    def setProgess(self, value: Optional[bool] = None, text: Optional[bool] = None) -> None:
+    def setProgress(self, value: Optional[bool] = None, text: Optional[bool] = None) -> None:
         """Set the progress value and/or text for the associated QProgressBar.
 
         This method allows setting the progress value and/or text for the QProgressBar associated with the Process instance.
@@ -1304,7 +1304,7 @@ class Processor(object):
             The Processor's Process module name.
         """
 
-        return self._processStrPath.rpartition('.')[2]
+        return self._processStrPath.split('.')[-2]
 
     @cached_property
     def module(self) -> ModuleType:
