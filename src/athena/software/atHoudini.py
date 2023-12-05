@@ -1,18 +1,16 @@
+from typing import Iterable
+
 import hou
 
 
-class DefaultContext(object):
+def select(toSelect: Iterable[hou.Node], replace: bool = True) -> None:
+    """Implement software selection in Houdini.
 
-    __IS_RUNNING = False
+    Parameters:
+        toSelect: All `hou.Node` to select.
+        replace: Whether or not the original selection must be replace with the given objects.
+    """
 
-    def __enter__(self):
-        pass
-
-    def __exit__(self, type, value, traceback):
-        pass
-
-
-def select(toSelect, replace=True):
     if replace:
         hou.clearAllSelected()
 
@@ -20,9 +18,14 @@ def select(toSelect, replace=True):
         each.setSelected(True)
 
 
-def getDisplay(object_):
+def getDisplay(object_: hou.Node) -> str:
+    """Get the given nice name for the given `hou.Node` for display purpose.
+
+    Parameters:
+        object_: The node to get a display from.
+    
+    Return:
+        The name of the given `hou.Node` for display purpose.
+    """
+
     return object_.name()
-
-
-def toViewportHUD(widget):
-    pass

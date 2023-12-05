@@ -1,12 +1,11 @@
 from __future__ import annotations
+
 import abc
 import numbers
 from dataclasses import dataclass, field
-
 from typing import Type, Optional, Any, Tuple, Sequence
 
 from athena import AtExceptions
-
 
 
 _ALL_STATUS = {}

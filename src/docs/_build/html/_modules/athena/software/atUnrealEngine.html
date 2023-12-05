@@ -69,26 +69,35 @@
            <div itemprop="articleBody">
              
   <h1>Source code for athena.software.atUnrealEngine</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">unreal</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Protocol</span>
+<span class="k">except</span><span class="p">:</span> <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="kn">import</span> <span class="nn">unreal</span>
 
 
-<div class="viewcode-block" id="DefaultContext">
-<a class="viewcode-back" href="../../../athena.software.html#athena.software.atUnrealEngine.DefaultContext">[docs]</a>
-<span class="k">class</span> <span class="nc">DefaultContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="SupportsStr">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atUnrealEngine.SupportsStr">[docs]</a>
+<span class="k">class</span> <span class="nc">SupportsStr</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Type Hints Protocol implementation for all class that support string convertion.&quot;&quot;&quot;</span>
 
-    <span class="n">__IS_RUNNING</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
-
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Minimal implementation to supports the str Protocol.&quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
 
 
 
 <div class="viewcode-block" id="select">
 <a class="viewcode-back" href="../../../athena.software.html#athena.software.atUnrealEngine.select">[docs]</a>
-<span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">toSelect</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">toSelect</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">unreal</span><span class="o">.</span><span class="n">Actor</span><span class="p">],</span> <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allow in-scene selection for Unreal-Engine.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        toSelect: All Unreal actors to select in the current scene.</span>
+<span class="sd">        replace: Whether or not the current selection should be replaced with the new objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">actorSubSystem</span> <span class="o">=</span> <span class="n">unreal</span><span class="o">.</span><span class="n">get_editor_subsystem</span><span class="p">(</span><span class="n">unreal</span><span class="o">.</span><span class="n">EditorActorSubsystem</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
@@ -101,18 +110,25 @@
 
 <div class="viewcode-block" id="getDisplay">
 <a class="viewcode-back" href="../../../athena.software.html#athena.software.atUnrealEngine.getDisplay">[docs]</a>
-<span class="k">def</span> <span class="nf">getDisplay</span><span class="p">(</span><span class="n">object_</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">getDisplay</span><span class="p">(</span><span class="n">object_</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">unreal</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="n">SupportsStr</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a displayable string for the given object.</span>
+<span class="sd">    </span>
+<span class="sd">    If the input is an `unreal.Actor` object, it&#39;s label is returned. If not, it&#39;s just converted to string.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        object_: The object to get a displayable string from. `unreal.Actor` are preferred but not mandatory.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        A displayable string for the given object. For `unreal.Actor`, the label is returned.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        This methods works whether the input is an unreal.Actor or anything else that implement the str protocol.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">unreal</span><span class="o">.</span><span class="n">Actor</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">object_</span><span class="o">.</span><span class="n">get_actor_label</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">object_</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="toViewportHUD">
-<a class="viewcode-back" href="../../../athena.software.html#athena.software.atUnrealEngine.toViewportHUD">[docs]</a>
-<span class="k">def</span> <span class="nf">toViewportHUD</span><span class="p">(</span><span class="n">widget</span><span class="p">):</span>
-    <span class="k">pass</span></div>
 
 </pre></div>
 

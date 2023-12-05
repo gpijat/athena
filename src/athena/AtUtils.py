@@ -1,20 +1,17 @@
 from __future__ import annotations
 
+import importlib
+import logging
 import os
+import pkgutil
+import platform
 import re
 import sys
-import pkgutil
-import logging
-import importlib
 import traceback
-import platform
 
+from collections.abc import Collection, Mapping, Sequence
 from types import ModuleType, FunctionType
 from typing import TypeVar, Type, Optional, Any, Iterator, Tuple, Dict, Hashable
-
-from collections.abc import Collection
-from collections.abc import Sequence
-from collections.abc import Mapping
 
 try:
     from importlib import reload  # Python 3.4+
@@ -23,8 +20,9 @@ except ImportError:
 
 from athena import AtConstants
 
+
 LOGGER = logging.getLogger(AtConstants.PROGRAM_NAME)
-LOGGER.setLevel(10)
+LOGGER.setLevel(20)
 
 
 def iterBlueprintsPath(package: str, software: str = 'standalone', verbose: bool = False) -> Iterator[str]:
@@ -120,7 +118,6 @@ def importProcessModuleFromPath(processStrPath: str) -> ModuleType:
     return module
 
 
-#WATCME: Not used anymore.
 def getSoftware() -> str:
     """Get the current software from which the tool is executed.
 
@@ -159,7 +156,6 @@ def getSoftware() -> str:
     return 'Standalone'
 
 
-#WATHCME: Not used anymore.
 def _formatSoftware(softwarePath: str) -> str:
     """Check if there is an available software str in the hiven Path
 
@@ -298,6 +294,7 @@ def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleTyp
     .. deprecated:: 1.0.0
     """
 
+    #TODO: Remove dead code.
     # spec = importlib.util.spec_from_loader(name, loader=None)
 
     # module = importlib.util.module_from_spec(spec)

@@ -1,26 +1,22 @@
 from __future__ import annotations
 
 import abc
-import re
-import os
-import numbers
-import time
-import inspect
+import cProfile
 import enum
-import tempfile
+import inspect
+import numbers
+import os
+import pstats
+import re
 import sys
-from types import ModuleType, FunctionType
-from typing import TypeVar, Type, Iterator, Iterable, Callable, Optional, Union, Any, Dict, List, Tuple, Mapping, Literal, Sequence
+import tempfile
+import time
 from dataclasses import dataclass, field
 from functools import cached_property
+from types import ModuleType, FunctionType
+from typing import TypeVar, Type, Iterator, Callable, Optional, Union, Any, Dict, List, Tuple, Mapping, Sequence
 
-import cProfile
-import pstats
-
-from athena import AtConstants
-from athena import AtExceptions
-from athena import AtUtils
-from athena import AtStatus
+from athena import AtConstants, AtExceptions, AtStatus, AtUtils
 
 
 class Event(object):
@@ -1777,7 +1773,7 @@ class Processor(object):
 
     def _overrideStatus(self, 
         process: Process, 
-        overrides: Mapping[str, Mapping[Union[Type[AtStatus.FailStatus]|Type[AtStatus.SuccessStatus]], AtStatus.Status]]) -> None:
+        overrides: Mapping[str, Mapping[Union[Type[AtStatus.FailStatus], Type[AtStatus.SuccessStatus]], AtStatus.Status]]) -> None:
         """Override the Processor's Process' Threads Statuses based on a dict of overrides.
 
         Will iter through all Processor's Process' Threads and do the overrides from the dict by replacing the Fail
@@ -2228,7 +2224,7 @@ class _ProcessProfile(object):
 
     def __init__(self) -> None:
         """Initialiste a Process Profiler and define the default instance attributes."""
-        self._profiles: Dict[str, Dict[str, Union[float|List[Tuple[str, ...], ...]]]] = {} 
+        self._profiles: Dict[str, Dict[str, Union[float, List[Tuple[str, ...], ...]]]] = {} 
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:
         """Get a profile log from the given key, or default if key does not exists.
@@ -2310,7 +2306,7 @@ class _ProcessProfile(object):
             self._profiles[method.__name__] = self.getStatsFromProfile(profile)
             raise
 
-    def getStatsFromProfile(self, profile: cProfile.Profile) -> Dict[str, Union[float|List[Tuple[str, ...], ...]]]:
+    def getStatsFromProfile(self, profile: cProfile.Profile) -> Dict[str, Union[float, List[Tuple[str, ...], ...]]]:
         """
 
         """

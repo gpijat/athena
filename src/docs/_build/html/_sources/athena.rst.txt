@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    athena.software
+   athena.examples
 
 Submodules
 ----------
@@ -61,7 +62,7 @@ athena.AtStatus module
    .. autoclass:: _BuiltInStatus
       :members:
       :show-inheritance:
-      
+
    .. autodata:: _DEFAULT
    .. autodata:: _SKIPPED
    .. autodata:: _ABORTED

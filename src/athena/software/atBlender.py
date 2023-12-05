@@ -1,18 +1,16 @@
+from typing import Iterable
+
 import bpy
 
 
-class DefaultContext(object):
+def select(toSelect: Iterable[bpy.types.Object], replace: bool = True) -> None:
+    """Allow software selection in Blender.
 
-    __IS_RUNNING = False
+    Parameters:
+        toSelect: All nodes to select.
+        replace: Whether or not to replace the current selection with the new objects to select.
+    """
 
-    def __enter__(self):
-        pass
-
-    def __exit__(self, type, value, traceback):
-        pass
-
-
-def select(toSelect, replace=True):
     if replace:
         bpy.ops.object.select_all(action='DESELECT')
 
@@ -20,9 +18,16 @@ def select(toSelect, replace=True):
         each.select_set(True)
 
 
-def getDisplay(object_):
+def getDisplay(object_: bpy.types.Object) -> str:
+    """Get a proper displayable string for the given object.
+
+    Will simply return the object's name.
+
+    Parameters:
+        object_: The object to get the name from.
+
+    Return:
+        The name of the given object.
+    """
+
     return object_.name
-
-
-def toViewportHUD(widget):
-    pass

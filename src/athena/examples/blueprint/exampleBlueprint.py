@@ -1,5 +1,6 @@
 from athena.AtCore import Tag, Link
 
+
 header = \
 (
     'AthenaExampleProcess',
@@ -16,15 +17,7 @@ descriptions = \
 }
 
 
-class ExampleContext(object):
-    def __enter__(self, *args, **kwargs):
-        pass
-
-    def __exit__(self, *args, **kwargs):
-        pass
-
 settings = \
 {
-    'context': ExampleContext,
     'autoOpenOnFailAndError': True
 }

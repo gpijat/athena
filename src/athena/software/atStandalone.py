@@ -1,25 +1,24 @@
+from typing import Any
+
 import sys
 import os
 
 
-class DefaultContext(object):
+def select(toSelect: Any, replace: bool = True) -> None:
+    """Allow selection in standalone mode.
 
-    __IS_RUNNING = False
+    Raises:
+        NotImplementedError: This function is not implemented yet, will be in a future release.
+    """
 
-    def __enter__(self):
-        pass
-
-    def __exit__(self, type, value, traceback):
-        pass
-
-
-def select(toSelect, replace=True):
-    pass
+    raise NotImplementedError('To be implemented in a future release.')
 
 
-def getDisplay(object_):
-    return str(object_)
+def getDisplay(object_: Any) -> str:
+    """Get a displayable string for the given object.
 
-
-def toViewportHUD(widget):
-    pass
+    Raises:
+        NotImplementedError: This function is not implemented yet, will be in a future release.
+    """
+    
+    raise NotImplementedError('To be implemented in a future release.')
