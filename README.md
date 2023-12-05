@@ -12,13 +12,10 @@ Ensure you have Python >3.7 installed. Athena has no external dependencies.
 
 ### Installing
 
-You can install Athena using pip:
+Download the latest release [here](https://github.com/gpijat/athena/releases).
+PyPi project will be available *soon*.
 
-```bash
-pip install athena
-```
-
-### Example
+### Usage Example
 
 You can load a blueprint and run all it's processes, or query one single process to run:
 ```python
@@ -53,6 +50,8 @@ for container in result:
 
 ```
 
+You can find examples on how to write a Process or Blueprint [here](https://github.com/gpijat/athena/tree/master/src/athena/examples)
+
 ## Running the Tests
 
 Full support for unit test will come later.
@@ -63,22 +62,18 @@ Full support for unit test will come later.
 
 ## Versioning
 
-Athena follows the principles of [Semantic Versioning (SemVer)](http://semver.org/). Check the [tags on this repository](https://github.com/your/project/tags) for available versions.
+Athena follows the principles of [Semantic Versioning (SemVer)](http://semver.org/). Check the [tags on this repository](https://github.com/gpijat/athena/tags) for available versions.
 
 ## Authors
 
 * **Gregory Pijat** - *Author* - [GitHub](https://github.com/gpijat)
 
-See the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See the list of [contributors](https://github.com/gpijat/athena/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the GPT-3.0 License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the GPT-3.0 License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## More
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
-
-For an enhanced experience, check out the available on Gumroad.
+For an enhanced experience, check out the available UI on Gumroad. (Available *soon*)
