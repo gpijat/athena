@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>athena.software.atMaya &mdash; Athena 01.12.23 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=451d5c0a"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Athena
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">athena</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Athena</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">athena.software.atMaya</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for athena.software.atMaya</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span> <span class="nn">athena</span> <span class="kn">import</span> <span class="n">AtCore</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">shiboken2</span> <span class="kn">import</span> <span class="n">wrapInstance</span>
+<span class="kn">from</span> <span class="nn">PySide2</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+
+<span class="kn">from</span> <span class="nn">maya</span> <span class="kn">import</span> <span class="n">cmds</span>
+<span class="kn">from</span> <span class="nn">maya.api</span> <span class="kn">import</span> <span class="n">OpenMaya</span><span class="p">,</span> <span class="n">OpenMayaUI</span>
+
+
+<div class="viewcode-block" id="PauseViewport">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.PauseViewport">[docs]</a>
+<span class="k">class</span> <span class="nc">PauseViewport</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Maya specific context manager to pause viewport execution during a processing.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pause the viewport&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cmds</span><span class="o">.</span><span class="n">ogs</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pause</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">cmds</span><span class="o">.</span><span class="n">ogs</span><span class="p">(</span><span class="n">pause</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">cmds</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">suspend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># self._nodes = {}</span>
+        <span class="c1"># for node in cmds.ls():</span>
+        <span class="c1">#   self._nodes[cmds.ls(node, uuid=True)[0]] = (</span>
+        <span class="c1">#       cmds.getAttr(node+&#39;.frozen&#39;),</span>
+        <span class="c1">#       cmds.getAttr(node+&#39;.nodeState&#39;) </span>
+        <span class="c1">#   )</span>
+        <span class="c1">#   cmds.setAttr(node+&#39;.frozen&#39;, True)</span>
+        <span class="c1">#   cmds.setAttr(node+&#39;.nodeState&#39;, 1)</span>
+        <span class="c1"># cmds.dgdirty(cmds.ls())</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restore the viewport and force a scene refresh&quot;&quot;&quot;</span>
+        
+        <span class="c1"># for node, (frozen, nodeState) in self._nodes.items():</span>
+        <span class="c1">#   node = next(iter(cmds.ls(node, long=True)), None)</span>
+        <span class="c1">#   if node is None:  # The node have been deleted.</span>
+        <span class="c1">#       continue</span>
+        <span class="c1">#   cmds.setAttr(node+&#39;.frozen&#39;, frozen)</span>
+        <span class="c1">#   cmds.setAttr(node+&#39;.nodeState&#39;, nodeState)</span>
+        <span class="c1"># cmds.dgdirty(cmds.ls())</span>
+
+        <span class="c1"># Toggle Viewport 2.0 pause if it&#39;s stopped. (a.k.a: Enable it back.)</span>
+        <span class="k">if</span> <span class="n">cmds</span><span class="o">.</span><span class="n">ogs</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pause</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">cmds</span><span class="o">.</span><span class="n">ogs</span><span class="p">(</span><span class="n">pause</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">cmds</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">suspend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># -- Restart</span>
+        <span class="n">cmds</span><span class="o">.</span><span class="n">dgdirty</span><span class="p">(</span><span class="n">cmds</span><span class="o">.</span><span class="n">ls</span><span class="p">())</span>
+        <span class="n">cmds</span><span class="o">.</span><span class="n">ogs</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">cmds</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="selectInMaya">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.selectInMaya">[docs]</a>
+<span class="k">def</span> <span class="nf">selectInMaya</span><span class="p">(</span>
+    <span class="n">toSelect</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MObject</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MDagPath</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MFnDependencyNode</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> 
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> 
+    <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allow software selection in Maya for different Maya types.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        toSelect: The object(s) to select in Autodesk Maya.</span>
+<span class="sd">        mode: The selection mode to use. (`add` or `remove`)</span>
+<span class="sd">        replace: Define whether the function should `replace` or `add` to the current selection.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes:</span>
+<span class="sd">        This function require an Iterable as input, even if there&#39;s only one item to select.</span>
+<span class="sd">        The supported object types are:</span>
+
+<span class="sd">            * str</span>
+<span class="sd">            * MObject</span>
+<span class="sd">            * MDagPath</span>
+<span class="sd">            * MFnDependencyNodes (= All subtypes as well)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">selList</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MSelectionList</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">toSelect</span><span class="p">:</span>
+        <span class="c1"># For `str`, `maya.api.OpenMaya.MDagPath` and `maya.api.OpenMaya.MObject`:</span>
+        <span class="k">try</span><span class="p">:</span> <span class="n">selList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">each</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+        <span class="c1"># For `maya.api.OpenMaya.MFn*`:</span>
+        <span class="k">try</span><span class="p">:</span> <span class="n">selList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">each</span><span class="o">.</span><span class="n">object</span><span class="p">())</span>
+        <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MGlobal</span><span class="o">.</span><span class="n">kAddToList</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;add&#39;</span> <span class="k">else</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MGlobal</span><span class="o">.</span><span class="n">kRemoveFromList</span>
+    <span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MGlobal</span><span class="o">.</span><span class="n">kReplaceList</span>
+    
+    <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MGlobal</span><span class="o">.</span><span class="n">setActiveSelectionList</span><span class="p">(</span><span class="n">selList</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getDisplay">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.getDisplay">[docs]</a>
+<span class="k">def</span> <span class="nf">getDisplay</span><span class="p">(</span><span class="n">object_</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MObject</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MDagPath</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MFnDependencyNode</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a clean display name for a Maya object.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        object_: The object for which we want to get a clean name as a string. If it&#39;s already a string, the function </span>
+<span class="sd">          will just retunr it. If it&#39;s a Maya api type, it will do different things to get a displayable name.</span>
+<span class="sd">    </span>
+<span class="sd">    Return:</span>
+<span class="sd">        A clean displayable name for the given Maya object.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        Currently supported Maya types:</span>
+
+<span class="sd">            * str</span>
+<span class="sd">            * MObject</span>
+<span class="sd">            * MDagPath</span>
+<span class="sd">            * MFnDependencyNodes (= All subtypes as well)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MObject</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MObjectHandle</span><span class="p">(</span><span class="n">object_</span><span class="p">)</span>
+        <span class="n">object_</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MFnDependencyNode</span><span class="p">(</span><span class="n">object_</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MFn</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MObjectHandle</span><span class="p">(</span><span class="n">object_</span><span class="o">.</span><span class="n">object</span><span class="p">()</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_</span><span class="p">,</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MDagPath</span><span class="p">):</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MObjectHandle</span><span class="p">(</span><span class="n">object_</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
+        <span class="n">object_</span> <span class="o">=</span> <span class="n">OpenMaya</span><span class="o">.</span><span class="n">MFnDependencyNode</span><span class="p">(</span><span class="n">object_</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">object_</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">handle</span><span class="o">.</span><span class="n">object</span><span class="p">()</span><span class="o">.</span><span class="n">isNull</span><span class="p">()</span> <span class="ow">and</span> <span class="n">handle</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="ow">and</span> <span class="n">handle</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">object_</span><span class="o">.</span><span class="n">name</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="MayaFeedbackContainer">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaFeedbackContainer">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MayaFeedbackContainer</span><span class="p">(</span><span class="n">AtCore</span><span class="o">.</span><span class="n">FeedbackContainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Maya specific :class:`~FeedbackContainer` that implement optimized selection and deselection.</span>
+
+<span class="sd">    This is a Maya&#39;s custom implementation of a :class:`~FeedbackContainer`. While it&#39;s not necessary to use this subtype</span>
+<span class="sd">    of :class:`~FeedbackContainer` for a Maya Process, it allow for a more optimized selection/deselection behavior, </span>
+<span class="sd">    especially when there&#39;s a lot of feedback to selection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MayaFeedbackContainer.select">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaFeedbackContainer.select">[docs]</a>
+    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span><span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement Maya&#39;s in-scene selection of the current :class:`~MayaFeedbackContainer`.</span>
+
+<span class="sd">        If the :class:`~MayaFeedbackContainer` is not selectable, it will be skipped.</span>
+<span class="sd">        On the other hand, if it is, it will do one single selection of all Feedbacks in the container, this allow for</span>
+<span class="sd">        better performance than selecting each feedback one by one when there&#39;s a lot of them.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            replace: Whether or not the new elements must replace the current selection.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The state for the replace boolean. This allow to know if a chained selection must be replace again or not.</span>
+<span class="sd">            Usually, it must replace for the first item, and then add, if not, we would end up with only the latest element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectable</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">replace</span>
+        
+        <span class="c1"># with PauseViewport():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">selectInMaya</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">feedback</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">)</span>
+            <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">replace</span></div>
+
+
+<div class="viewcode-block" id="MayaFeedbackContainer.deselect">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaFeedbackContainer.deselect">[docs]</a>
+    <span class="k">def</span> <span class="nf">deselect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement Maya&#39;s in-scene deselection of the current :class:`~MayaFeedbackContainer`.</span>
+
+<span class="sd">        If the :class:`~MayaFeedbackContainer` is not selectable, it will be skipped.</span>
+<span class="sd">        On the other hand, if it is, it will do one single deselection of all Feedbacks in the container, this allow for</span>
+<span class="sd">        better performance than deselecting each feedback one by one when there&#39;s a lot of them.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectable</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># with PauseViewport():</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">selectInMaya</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">feedback</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;remove&#39;</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MayaFeedback">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaFeedback">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MayaFeedback</span><span class="p">(</span><span class="n">AtCore</span><span class="o">.</span><span class="n">Feedback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent a single Maya Feedback, this allows for better display and selection/deselection behavior.</span>
+
+<span class="sd">    Using a MayaFeedback is not mandatory when doing a Maya :class:`~Process`, and it can be used alongside normal </span>
+<span class="sd">    :class:`~Feedback`. The benefits of using a Maya Feedback is that they allow for in-scene selection and return a clean</span>
+<span class="sd">    display for complexes Maya API types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clean display name for the feedback, whether it&#39;s already a string (`maya.cmds`) or a Maya API type.</span>
+<span class="sd">        </span>
+<span class="sd">        Return:</span>
+<span class="sd">            A readable display name for the :obj:`~MayaFeedback.feedback` attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">getDisplay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MayaFeedback.select">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaFeedback.select">[docs]</a>
+    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement Maya&#39;s in-scene selection of the current :class:`~MayaFeedback`.</span>
+
+<span class="sd">        If the :class:`~MayaFeedback` is selectable, it will be selected in the scene.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            replace: Whether or not the new element must replace the current selection.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            The result of the parent&#39;s class implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectable</span><span class="p">:</span>
+            <span class="n">selectInMaya</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="p">,),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">)</span>
+            <span class="n">replace</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MayaFeedback.deselect">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaFeedback.deselect">[docs]</a>
+    <span class="k">def</span> <span class="nf">deselect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implement Maya&#39;s in-scene deselection of the current :class:`~MayaFeedback`.</span>
+
+<span class="sd">        If the :class:`~MayaFeedback` is selectable, it will be deselected in the scene.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deselect</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectable</span><span class="p">:</span>
+            <span class="n">selectInMaya</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="p">,),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;remove&#39;</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MayaProcess">
+<a class="viewcode-back" href="../../../athena.software.html#athena.software.atMaya.MayaProcess">[docs]</a>
+<span class="k">class</span> <span class="nc">MayaProcess</span><span class="p">(</span><span class="n">AtCore</span><span class="o">.</span><span class="n">Process</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom Process implementation to be used in Maya which define the best :class:`~FeedbackContainer` subclass to use.</span>
+
+<span class="sd">    It&#39;s not mandatory to create a Maya Process using this :class:`~Process` subclass, the only thing it does is making</span>
+<span class="sd">    sure to override the :class:`~Process` default :class:`~FeedbackContainer` is replace with a :class:`MayaFeedbackContainer`</span>
+<span class="sd">    which implement a better selection behavior.</span>
+<span class="sd">    By using this the user&#39;s won&#39;t have to figure out which :class:`FeedbackContainer` to use and implement it on all their</span>
+<span class="sd">    :class:`~Process`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FEEDBACK_CONTAINER_CLASS</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">MayaFeedbackContainer</span><span class="p">]</span> <span class="o">=</span> <span class="n">MayaFeedbackContainer</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Gregory Pijat.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
