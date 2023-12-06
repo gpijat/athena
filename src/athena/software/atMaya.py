@@ -7,10 +7,6 @@ from dataclasses import dataclass
 
 from athena import AtCore
 
-from functools import partial
-from shiboken2 import wrapInstance
-from PySide2 import QtWidgets
-
 from maya import cmds
 from maya.api import OpenMaya, OpenMayaUI
 
