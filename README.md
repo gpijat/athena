@@ -8,12 +8,17 @@ To quickly get started with Athena, follow these steps:
 
 ### Prerequisites
 
-Ensure you have Python >3.7 installed. Athena has no external dependencies.
+Ensure you have Python >3.8 installed. Athena has no external dependencies.
 
 ### Installing
 
-Download the latest release [here](https://github.com/gpijat/athena/releases).
-PyPi project will be available *soon*.
+You can install Athena using pip:
+
+```bash
+pip install athena-sanity
+```
+
+Or download the latest release [here](https://github.com/gpijat/athena/releases).
 
 ### Usage Example
 
