@@ -8,7 +8,6 @@ build:
 python:
   install:
     - requirements: src/docs/requirements.txt
-  setup_py_install: true
 
 sphinx:
   configuration: src/docs/conf.py
