@@ -62,3 +62,6 @@ WIKI_LINK: str = 'https://github.com/gpijat/athena'
 
 #: Link to the Github's issues page.
 REPORT_BUG_LINK: str = 'https://github.com/gpijat/athena/issues'
+
+#: Link to the developer's documentation.
+TECHNICAL_DOCUMENTATION: str = 'https://athena-sanity.readthedocs.io/en/latest/'
