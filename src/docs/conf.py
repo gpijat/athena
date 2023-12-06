@@ -18,7 +18,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'sphinx_rtd_theme',
 ]
 
 autodoc_mock_imports = ['maya', 'hou', 'bpy', 'unreal']
