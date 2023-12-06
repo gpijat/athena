@@ -9,7 +9,6 @@ python:
   install:
     - requirements: src/docs/requirements.txt
     - method: pip
-      path: .
 
 sphinx:
   configuration: src/docs/conf.py
