@@ -57,9 +57,6 @@ SETTINGS_TEMPLATE = \
 #: Default text for Process documentation.
 NO_DOCUMENTATION_AVAILABLE: str = '\nNo documentation available for this process.\n'
 
-#: Link to the Github's Wiki page.
-WIKI_LINK: str = 'https://github.com/gpijat/athena'
-
 #: Link to the Github's issues page.
 REPORT_BUG_LINK: str = 'https://github.com/gpijat/athena/issues'
 

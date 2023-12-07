@@ -64,8 +64,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#athena.AtConstants.BLUEPRINT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">BLUEPRINT_TEMPLATE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#athena.AtConstants.SETTINGS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">SETTINGS_TEMPLATE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#athena.AtConstants.NO_DOCUMENTATION_AVAILABLE"><code class="docutils literal notranslate"><span class="pre">NO_DOCUMENTATION_AVAILABLE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#athena.AtConstants.WIKI_LINK"><code class="docutils literal notranslate"><span class="pre">WIKI_LINK</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#athena.AtConstants.REPORT_BUG_LINK"><code class="docutils literal notranslate"><span class="pre">REPORT_BUG_LINK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#athena.AtConstants.TECHNICAL_DOCUMENTATION"><code class="docutils literal notranslate"><span class="pre">TECHNICAL_DOCUMENTATION</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-athena.AtCore">athena.AtCore module</a><ul>
@@ -328,15 +328,15 @@
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="athena.AtConstants.WIKI_LINK">
-<span class="sig-prename descclassname"><span class="pre">athena.AtConstants.</span></span><span class="sig-name descname"><span class="pre">WIKI_LINK</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://github.com/gpijat/athena'</span></em><a class="headerlink" href="#athena.AtConstants.WIKI_LINK" title="Link to this definition"></a></dt>
-<dd><p>Link to the Github’s Wiki page.</p>
-</dd></dl>
-
-<dl class="py data">
 <dt class="sig sig-object py" id="athena.AtConstants.REPORT_BUG_LINK">
 <span class="sig-prename descclassname"><span class="pre">athena.AtConstants.</span></span><span class="sig-name descname"><span class="pre">REPORT_BUG_LINK</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://github.com/gpijat/athena/issues'</span></em><a class="headerlink" href="#athena.AtConstants.REPORT_BUG_LINK" title="Link to this definition"></a></dt>
 <dd><p>Link to the Github’s issues page.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="athena.AtConstants.TECHNICAL_DOCUMENTATION">
+<span class="sig-prename descclassname"><span class="pre">athena.AtConstants.</span></span><span class="sig-name descname"><span class="pre">TECHNICAL_DOCUMENTATION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://athena-sanity.readthedocs.io/en/latest/'</span></em><a class="headerlink" href="#athena.AtConstants.TECHNICAL_DOCUMENTATION" title="Link to this definition"></a></dt>
+<dd><p>Link to the developer’s documentation.</p>
 </dd></dl>
 
 </section>
@@ -350,13 +350,13 @@
 To create a new process, it’s essential to define at least one <a class="reference internal" href="#athena.AtCore.Thread" title="athena.AtCore.Thread"><code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></a> object as a class attribute. These threads
 manage various feedbacks that the process will inspect and potentially address.</p>
 <p>During the execution of your process’s <a class="reference internal" href="#athena.AtCore.Process.check" title="athena.AtCore.Process.check"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check()</span></code></a>, if any issues are detected, you need to create
-instances of the <a class="reference internal" href="#athena.AtCore.Feedback" title="athena.AtCore.Feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedback</span></code></a> class (or its subclasses) and register them for the appropriate threads using
+instances of the <a class="reference internal" href="#athena.AtCore.Feedback" title="athena.AtCore.Feedback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Feedback</span></code></a> class (or its subclasses) and register them for the appropriate threads using
 the <a class="reference internal" href="#athena.AtCore.Process.addFeedback" title="athena.AtCore.Process.addFeedback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">addFeedback()</span></code></a> method. In the <a class="reference internal" href="#athena.AtCore.Process.fix" title="athena.AtCore.Process.fix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fix()</span></code></a> method, iterate over these feedback
 instances and implement any necessary actions to automatically resolve fixable issues.</p>
 <p>Additional methods for managing internal feedback are available, allowing you to retrieve feedbacks, iterate over them,
 or check if there are any feedbacks for a specific Thread.</p>
 <p>At the end of the check process, it’s crucial to set the state for each Thread. By default, they are all set to the
-<a class="reference internal" href="#athena.AtStatus._DEFAULT" title="athena.AtStatus._DEFAULT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtStatus._DEFAULT</span></code></a> built-in status. To change a Thread status, you can call the <a class="reference internal" href="#athena.AtCore.Process.setSuccess" title="athena.AtCore.Process.setSuccess"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setSuccess()</span></code></a>
+<code class="xref py py-const docutils literal notranslate"><span class="pre">AtStatus._DEFAULT</span></code> built-in status. To change a Thread status, you can call the <a class="reference internal" href="#athena.AtCore.Process.setSuccess" title="athena.AtCore.Process.setSuccess"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setSuccess()</span></code></a>
 or <a class="reference internal" href="#athena.AtCore.Process.setFail" title="athena.AtCore.Process.setFail"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setFail()</span></code></a> methods.
 Alternatively, you can skip the execution of a specific Thread using the <a class="reference internal" href="#athena.AtCore.Process.setSkipped" title="athena.AtCore.Process.setSkipped"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setSkipped()</span></code></a> method.</p>
 <p>Three non-implemented methods must or can be overridden to create a functional process:</p>
@@ -627,12 +627,12 @@ It effectively clears any previously registered feedback.</p>
 <dt class="sig sig-object py" id="athena.AtCore.Process.listenForUserInteruption">
 <span class="sig-name descname"><span class="pre">listenForUserInteruption</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/athena/AtCore.html#Process.listenForUserInteruption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#athena.AtCore.Process.listenForUserInteruption" title="Link to this definition"></a></dt>
 <dd><p>Trigger an user interuption Event to prematurely end process execution.</p>
-<p>This method triggers the <a class="reference internal" href="#athena.AtCore.Process._listenForUserInteruption" title="athena.AtCore.Process._listenForUserInteruption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_listenForUserInteruption</span></code></a> Event, which requires a registered callback
+<p>This method triggers the <a class="reference internal" href="#athena.AtCore.Process._listenForUserInteruption" title="athena.AtCore.Process._listenForUserInteruption"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_listenForUserInteruption</span></code></a> Event, which requires a registered callback
 to invoke the <a class="reference internal" href="#athena.AtCore.Process._registerInteruption" title="athena.AtCore.Process._registerInteruption"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_registerInteruption()</span></code></a> method from the Qt Application.</p>
 <p>After triggering the event, if there is a callback to invoke the appropriate method, the boolean value
-for <code class="xref py py-obj docutils literal notranslate"><span class="pre">__doIterupt</span></code> will be set to True, and an <a class="reference internal" href="#athena.AtExceptions.AtProcessExecutionInterrupted" title="athena.AtExceptions.AtProcessExecutionInterrupted"><code class="xref py py-class docutils literal notranslate"><span class="pre">AtExceptions.AtProcessExecutionInterrupted</span></code></a>
+for <code class="xref py py-obj docutils literal notranslate"><span class="pre">__doInterupt</span></code> will be set to True, and an <a class="reference internal" href="#athena.AtExceptions.AtProcessExecutionInterrupted" title="athena.AtExceptions.AtProcessExecutionInterrupted"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AtExceptions.AtProcessExecutionInterrupted</span></code></a>
 exception will be raised. This exception can be handle in the Qt Application to force the Process Status to
-<a class="reference internal" href="#athena.AtStatus._ABORTED" title="athena.AtStatus._ABORTED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtStatus._ABORTED</span></code></a>.</p>
+<code class="xref py py-const docutils literal notranslate"><span class="pre">AtStatus._ABORTED</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#athena.AtExceptions.AtProcessExecutionInterrupted" title="athena.AtExceptions.AtProcessExecutionInterrupted"><strong>AtExceptions.AtProcessExecutionInterrupted</strong></a> – If the interruption is caught and propagated.</p>
@@ -642,7 +642,7 @@ exception will be raised. This exception can be handle in the Qt Application to 
 <p class="admonition-title">Important</p>
 <p>When the Process is executing, the Qt Event System stacks QEvents, processing them at the end of the
 execution, typically after all process executions are finished. To catch user interactions during
-execution, the Qt Event System must process pending events. The <a class="reference internal" href="#athena.AtCore.Process._listenForUserInteruption" title="athena.AtCore.Process._listenForUserInteruption"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_listenForUserInteruption</span></code></a>
+execution, the Qt Event System must process pending events. The <a class="reference internal" href="#athena.AtCore.Process._listenForUserInteruption" title="athena.AtCore.Process._listenForUserInteruption"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_listenForUserInteruption</span></code></a>
 Event can trigger a call to <cite>QApplication.processEvents</cite>, accomplished by adding it as a callback for this
 Event.</p>
 <p>When this method runs, the callbacks are triggered, allowing the processing of pending interactions, such as a key
@@ -657,7 +657,7 @@ method, ensuring that the raise occurs from the main thread.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="athena.AtCore.Process._registerInteruption">
 <span class="sig-name descname"><span class="pre">_registerInteruption</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/athena/AtCore.html#Process._registerInteruption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#athena.AtCore.Process._registerInteruption" title="Link to this definition"></a></dt>
-<dd><p>Change the value for the private member <code class="xref py py-obj docutils literal notranslate"><span class="pre">__doInterupt</span></code> to True.</p>
+<dd><p>Change the value for the private member <code class="xref py py-attr docutils literal notranslate"><span class="pre">__doInterupt</span></code> to True.</p>
 <p>This simply allow to change the value of this private member from outside the class.</p>
 <dl class="field-list simple">
 </dl>
@@ -696,7 +696,7 @@ instead:</p>
 <span class="sig-name descname"><span class="pre">typeCast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Number</span></span></span><a class="reference internal" href="_modules/athena/AtCore.html#_NumberParameter.typeCast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#athena.AtCore._NumberParameter.typeCast" title="Link to this definition"></a></dt>
 <dd><p>Cast the input value to the <cite>numbers.Number</cite> type.</p>
 <p>As the <cite>numbers.Number</cite> type is not instantiable, this method is meant to work wit sub-types that define an
-instantiable type for the <a class="reference internal" href="#athena.AtCore.Parameter.TYPE" title="athena.AtCore.Parameter.TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TYPE</span></code></a>.
+instantiable type for the <a class="reference internal" href="#athena.AtCore.Parameter.TYPE" title="athena.AtCore.Parameter.TYPE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TYPE</span></code></a>.
 Will convert the input value to the Parameter’s type and make sur it’s in the range if the <cite>keepInRange</cite> attribute
 is set to <cite>True</cite>.</p>
 <dl class="field-list simple">
@@ -915,7 +915,7 @@ the specific needs of the associated process.</p>
 <dt class="sig sig-object py" id="athena.AtCore.ProtoFeedback.selectable">
 <span class="sig-name descname"><span class="pre">selectable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#athena.AtCore.ProtoFeedback.selectable" title="Link to this definition"></a></dt>
 <dd><p>Determines whether the feedback is selectable. This attribute is not used in comparison,
-meaning two instances with the same data (<a class="reference internal" href="#athena.AtCore.ProtoFeedback.feedback" title="athena.AtCore.ProtoFeedback.feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feedback</span></code></a>) will be considered
+meaning two instances with the same data (<a class="reference internal" href="#athena.AtCore.ProtoFeedback.feedback" title="athena.AtCore.ProtoFeedback.feedback"><code class="xref py py-attr docutils literal notranslate"><span class="pre">feedback</span></code></a>) will be considered
 similar, regardless of the <cite>selectable</cite> value.</p>
 </dd></dl>
 
@@ -1049,7 +1049,7 @@ methods. Using this Base Feedback as the parent for other subclassed feedback wi
 to them.</p>
 <div class="admonition-notes admonition">
 <p class="admonition-title">Notes</p>
-<p>For DCC-specific implementations, refer to athena.software. The list is not exhaustive and emphasizes
+<p>For DCC-specific implementations, refer to <a class="reference internal" href="athena.software.html#module-athena.software" title="athena.software"><code class="xref py py-mod docutils literal notranslate"><span class="pre">athena.software</span></code></a>. The list is not exhaustive and emphasizes
 common and global behavior. If you have specific needs for another software or pipeline-specific behavior,
 you can implement your own Feedback subclass.</p>
 </div>
@@ -1103,7 +1103,7 @@ the specific needs of the associated process.</p>
 <dt class="sig sig-object py" id="athena.AtCore.Feedback.selectable">
 <span class="sig-name descname"><span class="pre">selectable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#athena.AtCore.Feedback.selectable" title="Link to this definition"></a></dt>
 <dd><p>Determines whether the feedback is selectable. This attribute is not used in comparison,
-meaning two instances with the same data (<a class="reference internal" href="#athena.AtCore.ProtoFeedback.feedback" title="athena.AtCore.ProtoFeedback.feedback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feedback</span></code></a>) will be considered
+meaning two instances with the same data (<a class="reference internal" href="#athena.AtCore.ProtoFeedback.feedback" title="athena.AtCore.ProtoFeedback.feedback"><code class="xref py py-attr docutils literal notranslate"><span class="pre">feedback</span></code></a>) will be considered
 similar, regardless of the <cite>selectable</cite> value.</p>
 </dd></dl>
 
@@ -1598,7 +1598,7 @@ behavior.</p>
 <p>The implementation of the <cite>Processor</cite> class is predominantly lazy, initializing only the necessary arguments during
 instantiation and deferring expensive computation until they are actually needed, while caching their results.
 The <cite>Processor</cite> takes on the responsibility of resolving all <a class="reference internal" href="#athena.AtCore.Tag" title="athena.AtCore.Tag"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code></a>, <a class="reference internal" href="#athena.AtCore.Link" title="athena.AtCore.Link"><code class="xref py py-class docutils literal notranslate"><span class="pre">Link</span></code></a>, and
-<a class="reference internal" href="#athena.AtStatus.Status" title="athena.AtStatus.Status"><code class="xref py py-class docutils literal notranslate"><span class="pre">Status</span></code></a> overrides for all Process’ <a class="reference internal" href="#athena.AtCore.Thread" title="athena.AtCore.Thread"><code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></a>. Additionally, it can be made aware of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Status</span></code> overrides for all Process’ <a class="reference internal" href="#athena.AtCore.Thread" title="athena.AtCore.Thread"><code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></a>. Additionally, it can be made aware of
 <a class="reference internal" href="#athena.AtCore.Blueprint" title="athena.AtCore.Blueprint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Blueprint</span></code></a> settings through the <cite>setting</cite> argument or receive extra data for later use.</p>
 <p>Overall, the <cite>Processor</cite> plays a pivotal role in configuring and executing Processes defined in a Blueprint, contributing
 to the framework’s flexibility and ease of use. Whether it’s for using them in a UI or batch.</p>
@@ -1685,8 +1685,8 @@ to the framework’s flexibility and ease of use. Whether it’s for using them 
 <dt class="sig sig-object py" id="athena.AtCore.Processor.docstring">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">docstring</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#athena.AtCore.Processor.docstring" title="Link to this definition"></a></dt>
 <dd><p>Lazy getter for the Processor’s Process docstring</p>
-<p>Use the value in the Processor’s <a class="reference internal" href="#athena.AtCore.Process._doc_" title="athena.AtCore.Process._doc_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_doc_</span></code></a> attribute, if it’s empty, use class docstring
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code>. If it’s also empty, fallback on <a class="reference internal" href="#athena.AtConstants.NO_DOCUMENTATION_AVAILABLE" title="athena.AtConstants.NO_DOCUMENTATION_AVAILABLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NO_DOCUMENTATION_AVAILABLE</span></code></a></p>
+<p>Use the value in the Processor’s <a class="reference internal" href="#athena.AtCore.Process._doc_" title="athena.AtCore.Process._doc_"><code class="xref py py-attr docutils literal notranslate"><span class="pre">_doc_</span></code></a> attribute, if it’s empty, use class docstring
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">__doc__</span></code>. If it’s also empty, fallback on <code class="xref py py-const docutils literal notranslate"><span class="pre">NO_DOCUMENTATION_AVAILABLE</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The formatted docstring to be more readable and also display the path of the process.</p>
@@ -2130,11 +2130,11 @@ correct.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="athena.AtCore.Parameter.typeCast">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">typeCast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="reference internal" href="_modules/athena/AtCore.html#Parameter.typeCast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#athena.AtCore.Parameter.typeCast" title="Link to this definition"></a></dt>
-<dd><p>Cast the input value to the Parameter’s type set in <a class="reference internal" href="#athena.AtCore.Parameter.TYPE" title="athena.AtCore.Parameter.TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TYPE</span></code></a>.</p>
+<dd><p>Cast the input value to the Parameter’s type set in <a class="reference internal" href="#athena.AtCore.Parameter.TYPE" title="athena.AtCore.Parameter.TYPE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TYPE</span></code></a>.</p>
 <p>This method is not implemented on the Parameter abstract base class, it needs to be implemented in
 each an every subclass that are meant to be instanciated and use in an Athena <a class="reference internal" href="#athena.AtCore.Process" title="athena.AtCore.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a>.
 The input may be of various type so this method should handle different case of type casting.
-To do so, you can use the the <a class="reference internal" href="#athena.AtCore.Parameter.TYPE" title="athena.AtCore.Parameter.TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TYPE</span></code></a> attribute to convert the input value to the desired type.</p>
+To do so, you can use the the <a class="reference internal" href="#athena.AtCore.Parameter.TYPE" title="athena.AtCore.Parameter.TYPE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TYPE</span></code></a> attribute to convert the input value to the desired type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>Any</em>) – The input value to convert to the Parameter’s type.</p>
@@ -2385,8 +2385,8 @@ built-in are handle differently as they are “specials” by nature.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Base <cite>Status</cite> class from which status inherit From.</p>
 <p>A Status represent the result state of an Athena’s <code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code>, it allows to categorise and prioritise it’s
-state using the <a class="reference internal" href="#athena.AtStatus.Status.level" title="athena.AtStatus.Status.level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">level</span></code></a>.
-A status also have a <a class="reference internal" href="#athena.AtStatus.Status.color" title="athena.AtStatus.Status.color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">color</span></code></a> assigned that may be used in a user interface to display the result to the
+state using the <a class="reference internal" href="#athena.AtStatus.Status.level" title="athena.AtStatus.Status.level"><code class="xref py py-attr docutils literal notranslate"><span class="pre">level</span></code></a>.
+A status also have a <a class="reference internal" href="#athena.AtStatus.Status.color" title="athena.AtStatus.Status.color"><code class="xref py py-attr docutils literal notranslate"><span class="pre">color</span></code></a> assigned that may be used in a user interface to display the result to the
 users.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
