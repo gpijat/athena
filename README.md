@@ -1,6 +1,10 @@
 # Athena: Sanity Checking Framework
 
-Athena is a versatile sanity checking framework designed to simplify the process of creating and running validation procedures, known as `Process`. These processes can be executed in software environments with Python interpreters, especially in DCC (Digital Content Creation) software, or in standalone across various operating systems.
+[![License](https://img.shields.io/badge/License-GPL3.0-blue.svg)](https://opensource.org/license/gpl-3-0/)
+![PyPi](https://img.shields.io/pypi/v/athena-sanity)
+![PythonVersion](https://img.shields.io/pypi/pyversions/athena-sanity)
+
+Athena is a versatile sanity checking framework designed to simplify the process of creating and running validation procedures, known as Sanity-Check. These checks can be executed in any software environments with Python interpreters, especially in DCC (Digital Content Creation) software, or in standalone across all operating systems.
 
 ## Getting Started
 
@@ -13,7 +17,6 @@ Ensure you have Python >3.8 installed. Athena has no external dependencies.
 ### Installing
 
 You can install Athena using pip:
-
 ```bash
 pip install athena-sanity
 ```
@@ -41,7 +44,7 @@ for processor in blueprint.processors:
 
 ```
 
-Alternatively, you can skip the blueprint and just run a process with a default configuration or use your own:
+Alternatively, you can skip the blueprint and just run a process with a default configuration or use your own by passing extra arguments to the `Processor`:
 ```py
 import athena
 
@@ -61,10 +64,6 @@ You can find examples on how to write a Process or Blueprint [here](https://gith
 
 Full support for unit test will come later.
 
-## Built With
-
-* [Python](https://www.python.org/) - The programming language used
-
 ## Versioning
 
 Athena follows the principles of [Semantic Versioning (SemVer)](http://semver.org/). Check the [tags on this repository](https://github.com/gpijat/athena/tags) for available versions.
@@ -77,7 +76,7 @@ See the list of [contributors](https://github.com/gpijat/athena/contributors) wh
 
 ## License
 
-This project is licensed under the GPT-3.0 License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## More
 

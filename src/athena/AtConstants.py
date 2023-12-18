@@ -6,9 +6,6 @@ from typing import Tuple
 #: Project name string
 PROGRAM_NAME: str = 'Athena'
 
-#: Current version of the project. (Following simver convention)
-VERSION: str = '1.0.0-beta'
-
 #: Name constant for the `check` function to implement in Process Subclasses.
 CHECK: str = 'check'
 
@@ -56,9 +53,6 @@ SETTINGS_TEMPLATE = \
 
 #: Default text for Process documentation.
 NO_DOCUMENTATION_AVAILABLE: str = '\nNo documentation available for this process.\n'
-
-#: Link to the Github's Wiki page.
-WIKI_LINK: str = 'https://github.com/gpijat/athena'
 
 #: Link to the Github's issues page.
 REPORT_BUG_LINK: str = 'https://github.com/gpijat/athena/issues'

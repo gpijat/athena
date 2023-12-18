@@ -32,11 +32,13 @@ class Event(object):
         Parameters:
             name: The name of the event.
         """
+
         self._name = name
         self._callbacks = []
 
     def __call__(self, *args, **kwargs) -> None:
         """Invokes all registered callbacks with the provided arguments."""
+
         for callback in self._callbacks:
             callback(*args, **kwargs)
 
@@ -53,6 +55,7 @@ class Event(object):
             If the provided callback is not callable, a warning message is logged,
             and the callback is not registered.
         """
+
         if not callable(callback):
             AtUtils.LOGGER.warning(
                 'Event "{0}" failed to register callback: Object "{1}" is not callable.'.format(self.name, callback)
@@ -162,7 +165,7 @@ class ProtoFeedback(abc.ABC):
     selectable: bool = field(compare=False)
     """
     Determines whether the feedback is selectable. This attribute is not used in comparison,
-    meaning two instances with the same data (:obj:`~ProtoFeedback.feedback`) will be considered
+    meaning two instances with the same data (:attr:`~ProtoFeedback.feedback`) will be considered
     similar, regardless of the `selectable` value.
     """
 
@@ -299,7 +302,7 @@ class Feedback(ProtoFeedback):
     to them.
 
     Notes:
-        For DCC-specific implementations, refer to athena.software. The list is not exhaustive and emphasizes
+        For DCC-specific implementations, refer to :mod:`athena.software`. The list is not exhaustive and emphasizes
         common and global behavior. If you have specific needs for another software or pipeline-specific behavior,
         you can implement your own Feedback subclass.
     """
@@ -478,7 +481,7 @@ class Process(abc.ABC):
     manage various feedbacks that the process will inspect and potentially address.
 
     During the execution of your process's :meth:`~Process.check`, if any issues are detected, you need to create 
-    instances of the :obj:`~Feedback` class (or its subclasses) and register them for the appropriate threads using 
+    instances of the :class:`~Feedback` class (or its subclasses) and register them for the appropriate threads using 
     the :meth:`~Process.addFeedback` method. In the :meth:`~Process.fix` method, iterate over these feedback 
     instances and implement any necessary actions to automatically resolve fixable issues.
     
@@ -486,7 +489,7 @@ class Process(abc.ABC):
     or check if there are any feedbacks for a specific Thread.
 
     At the end of the check process, it's crucial to set the state for each Thread. By default, they are all set to the
-    :obj:`.AtStatus._DEFAULT` built-in status. To change a Thread status, you can call the :meth:`~Process.setSuccess`
+    :const:`.AtStatus._DEFAULT` built-in status. To change a Thread status, you can call the :meth:`~Process.setSuccess`
     or :meth:`~Process.setFail` methods.
     Alternatively, you can skip the execution of a specific Thread using the :meth:`~Process.setSkipped` method.
 
@@ -559,10 +562,10 @@ class Process(abc.ABC):
 
         This class method generates a dictionary of FeedbackContainers for each Thread associated with the Process class.
         The FeedbackContainers are initialized with the Thread, True (indicating the container is selectable),
-        and :obj:`~.AtStatus._DEFAULT` (the default status for the containers).
+        and :const:`~.AtStatus._DEFAULT` (the default status for the containers).
 
         Return:
-            A new dict with an empty FeedbackContainer per Thread with status set to :obj:`.AtStatus._DEFAULT`
+            A new dict with an empty FeedbackContainer per Thread with status set to :const:`.AtStatus._DEFAULT`
 
         Note:
             This method is typically used internally within the Process class to initialize the FeedbackContainers for
@@ -572,7 +575,7 @@ class Process(abc.ABC):
 
             * :class:`~Thread`: The class representing a task within the Athena framework.
             * :class:`~FeedbackContainer`: The container for managing feedback associated with a specific Thread.
-            * :obj:`.AtStatus._DEFAULT`: The default status used when initializing FeedbackContainers.
+            * :const:`~AtStatus._DEFAULT`: The default status used when initializing FeedbackContainers.
         """
 
         return {thread: cls.FEEDBACK_CONTAINER_CLASS(thread, True, AtStatus._DEFAULT) for thread in cls.threads()}
@@ -757,13 +760,13 @@ class Process(abc.ABC):
     def listenForUserInteruption(self) -> None:
         """Trigger an user interuption Event to prematurely end process execution.
 
-        This method triggers the :obj:`~Process._listenForUserInteruption` Event, which requires a registered callback
+        This method triggers the :attr:`~Process._listenForUserInteruption` Event, which requires a registered callback
         to invoke the :meth:`~Process._registerInteruption` method from the Qt Application.
 
         After triggering the event, if there is a callback to invoke the appropriate method, the boolean value
-        for :obj:`~Process.__doIterupt` will be set to True, and an :class:`.AtExceptions.AtProcessExecutionInterrupted` 
+        for :obj:`~Process.__doInterupt` will be set to True, and an :exc:`.AtExceptions.AtProcessExecutionInterrupted` 
         exception will be raised. This exception can be handle in the Qt Application to force the Process Status to 
-        :obj:`.AtStatus._ABORTED`.
+        :const:`.AtStatus._ABORTED`.
 
         Raises:
             AtExceptions.AtProcessExecutionInterrupted: If the interruption is caught and propagated.
@@ -771,7 +774,7 @@ class Process(abc.ABC):
         Important:
             When the Process is executing, the Qt Event System stacks QEvents, processing them at the end of the
             execution, typically after all process executions are finished. To catch user interactions during
-            execution, the Qt Event System must process pending events. The :obj:`~Process._listenForUserInteruption`
+            execution, the Qt Event System must process pending events. The :attr:`~Process._listenForUserInteruption`
             Event can trigger a call to `QApplication.processEvents`, accomplished by adding it as a callback for this 
             Event.
 
@@ -794,7 +797,7 @@ class Process(abc.ABC):
             raise AtExceptions.AtProcessExecutionInterrupted()
 
     def _registerInteruption(self) -> None:
-        """Change the value for the private member :obj:`~Process.__doInterupt` to True.
+        """Change the value for the private member :attr:`~Process.__doInterupt` to True.
         
         This simply allow to change the value of this private member from outside the class.
         """
@@ -1226,7 +1229,7 @@ class Processor(object):
     The implementation of the `Processor` class is predominantly lazy, initializing only the necessary arguments during 
     instantiation and deferring expensive computation until they are actually needed, while caching their results. 
     The `Processor` takes on the responsibility of resolving all :class:`~Tag`, :class:`~Link`, and 
-    :class:`~.AtStatus.Status` overrides for all Process' :class:`~Thread`. Additionally, it can be made aware of 
+    :class:`~AtStatus.Status` overrides for all Process' :class:`~Thread`. Additionally, it can be made aware of 
     :class:`~Blueprint` settings through the `setting` argument or receive extra data for later use.
 
     Overall, the `Processor` plays a pivotal role in configuring and executing Processes defined in a Blueprint, contributing 
@@ -1377,8 +1380,8 @@ class Processor(object):
     def docstring(self) -> str:
         """Lazy getter for the Processor's Process docstring
 
-        Use the value in the Processor's :obj:`~Process._doc_` attribute, if it's empty, use class docstring
-        :obj:`~Process.__doc__`. If it's also empty, fallback on :obj:`~.AtConstants.NO_DOCUMENTATION_AVAILABLE`
+        Use the value in the Processor's :attr:`~Process._doc_` attribute, if it's empty, use class docstring
+        :attr:`~Process.__doc__`. If it's also empty, fallback on :const:`~.AtConstants.NO_DOCUMENTATION_AVAILABLE`
 
         Returns:
             The formatted docstring to be more readable and also display the path of the process.
@@ -1923,7 +1926,7 @@ class Parameter(abc.ABC):
     def __set__(self, instance: Process, value: object) -> None:
         """Descriptor setter for the Parameter value.
 
-        Cast the given value to the right Parameter's type (:obj:`~Parameter.TYPE`) using the
+        Cast the given value to the right Parameter's type (:attr:`~Parameter.TYPE`) using the
         :meth:`~Parameter.typeCast` method and then, if the value can be validate with the 
         :meth:`~Parameter.validate` method, the value is set for the Parameter on the given instance.
 
@@ -1972,12 +1975,12 @@ class Parameter(abc.ABC):
 
     @abc.abstractmethod
     def typeCast(self, value: Any) -> T:
-        """Cast the input value to the Parameter's type set in :obj:`~Parameter.TYPE`.
+        """Cast the input value to the Parameter's type set in :attr:`~Parameter.TYPE`.
 
         This method is not implemented on the Parameter abstract base class, it needs to be implemented in 
         each an every subclass that are meant to be instanciated and use in an Athena :class:`~Process`.
         The input may be of various type so this method should handle different case of type casting.
-        To do so, you can use the the :obj:`~Parameter.TYPE` attribute to convert the input value to the desired type.
+        To do so, you can use the the :attr:`~Parameter.TYPE` attribute to convert the input value to the desired type.
 
         Parameters:
             value: The input value to convert to the Parameter's type.
@@ -2100,7 +2103,7 @@ class _NumberParameter(Parameter):
         """Cast the input value to the `numbers.Number` type.
         
         As the `numbers.Number` type is not instantiable, this method is meant to work wit sub-types that define an
-        instantiable type for the :obj:`~Parameter.TYPE`.
+        instantiable type for the :attr:`~Parameter.TYPE`.
         Will convert the input value to the Parameter's type and make sur it's in the range if the `keepInRange` attribute
         is set to `True`.
 

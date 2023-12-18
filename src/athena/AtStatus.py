@@ -9,7 +9,7 @@ from athena import AtExceptions
 
 
 _ALL_STATUS = {}
-'''Store all Status that have been created to keep track of them and allow finding lowest/highest'''
+"""Store all Status that have been created to keep track of them and allow finding lowest/highest"""
 
 
 @dataclass(frozen=True, order=True)
@@ -17,8 +17,8 @@ class Status(abc.ABC):
     """Base `Status` class from which status inherit From.
 
     A Status represent the result state of an Athena's :class:`~Process`, it allows to categorise and prioritise it's 
-    state using the :obj:`~Status.level`.
-    A status also have a :obj:`~Status.color` assigned that may be used in a user interface to display the result to the
+    state using the :attr:`~Status.level`.
+    A status also have a :attr:`~Status.color` assigned that may be used in a user interface to display the result to the
     users.
 
     Important:
@@ -152,7 +152,7 @@ def getStatusByName(name: str) -> Optional[Status]:
     """
 
     for status in getAllStatus():
-        if status._name == name:
+        if status.name == name:
             return status
     else:
         return None
