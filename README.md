@@ -1,8 +1,8 @@
 # Athena: Sanity Checking Framework
 
-[![License](https://img.shields.io/badge/License-GPL3.0-blue.svg)](https://opensource.org/license/gpl-3-0/)
-![PyPi](https://img.shields.io/pypi/v/athena-sanity)
 ![PythonVersion](https://img.shields.io/pypi/pyversions/athena-sanity)
+![PyPi](https://img.shields.io/pypi/v/athena-sanity)
+[![License](https://img.shields.io/badge/License-GPL3.0-blue.svg)](https://opensource.org/license/gpl-3-0/)
 
 Athena is a versatile sanity checking framework designed to simplify the process of creating and running validation procedures, known as Sanity-Check. These checks can be executed in any software environments with Python interpreters, especially in DCC (Digital Content Creation) software, or in standalone across all operating systems.
 
