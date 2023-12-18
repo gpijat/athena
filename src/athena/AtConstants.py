@@ -6,9 +6,6 @@ from typing import Tuple
 #: Project name string
 PROGRAM_NAME: str = 'Athena'
 
-#: Current version of the project. (Following simver convention)
-VERSION: str = '1.0.0-beta'
-
 #: Name constant for the `check` function to implement in Process Subclasses.
 CHECK: str = 'check'
 

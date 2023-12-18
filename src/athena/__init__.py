@@ -2,7 +2,7 @@ import sys
 
 from athena import AtCore, AtUtils, AtConstants, AtExceptions
 
-__version__ = AtConstants.VERSION
+__version__ = '1.0.0-beta'
 
 
 def __moduleSort(value, tuple_):

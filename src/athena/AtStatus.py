@@ -152,7 +152,7 @@ def getStatusByName(name: str) -> Optional[Status]:
     """
 
     for status in getAllStatus():
-        if status._name == name:
+        if status.name == name:
             return status
     else:
         return None
