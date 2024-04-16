@@ -7,7 +7,6 @@ import pkgutil
 import platform
 import re
 import sys
-import traceback
 
 from collections.abc import Collection, Mapping, Sequence
 from types import ModuleType, FunctionType
@@ -541,3 +540,15 @@ def deepMap(function: Callable[[T], R], collection: Collection[T]) -> Collection
         return mapSequence(function, collection)
     elif isinstance(collection, Mapping):
         return mapMapping(function, collection)
+
+
+class LazyProperty(object):
+    """Reimplementation of @cached_property which cannot be used in Python 3.7"""
+
+    def __init__(self, fGet):
+        self.fGet = fGet
+
+    def __get__(self, instance, cls):
+        value = self.fGet(instance)
+        object.__setattr__(instance, self.fGet.__name__, value)
+        return value

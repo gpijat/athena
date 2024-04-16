@@ -8,11 +8,9 @@ import numbers
 import os
 import pstats
 import re
-import sys
 import tempfile
 import time
 from dataclasses import dataclass, field
-from functools import cached_property
 from types import ModuleType, FunctionType
 from typing import TypeVar, Type, Iterator, Callable, Optional, Union, Any, Dict, List, Tuple, Mapping, Sequence
 
@@ -103,14 +101,14 @@ class AtSession(object, metaclass=AtUtils.Singleton):
         self._dev: bool = False
 
     #TODO: Remove this code or update it for blueprint import 2.0
-    # @cached_property
+    # @AtUtils.LazyProperty
     # def environVar(self):
     #     return '{program}_{software}'.format(
     #         program=AtConstants.PROGRAM_NAME.upper(), 
     #         software=self.software.upper()
     #     ) 
 
-    # @cached_property
+    # @AtUtils.LazyProperty
     # def environ(self):
     #     if self.environVar in os.environ:
     #         return os.environ[self.environVar]
@@ -123,7 +121,7 @@ class AtSession(object, metaclass=AtUtils.Singleton):
 
     #     return os.environ[self.environVar]
 
-    @cached_property
+    @AtUtils.LazyProperty
     def register(self) -> Register:
         """Lazily creates and returns the Register."""
 
@@ -1062,7 +1060,7 @@ class Blueprint(object):
 
         return self._module
 
-    @cached_property
+    @AtUtils.LazyProperty
     def file(self) -> str:
         """Lazy getter for the Blueprint's module file path.
 
@@ -1072,7 +1070,7 @@ class Blueprint(object):
 
         return os.path.dirname(self._module.__file__)
 
-    @cached_property    
+    @AtUtils.LazyProperty    
     def icon(self) -> str:
         """Lazy getter for the Blueprint's icon path.
 
@@ -1085,7 +1083,7 @@ class Blueprint(object):
 
         return os.path.join(self.file, '{0}.png'.format(self._name))
 
-    @cached_property
+    @AtUtils.LazyProperty
     def header(self) -> Tuple[str, ...]:
         """Lazy getter for the Blueprint's header.
 
@@ -1095,7 +1093,7 @@ class Blueprint(object):
 
         return getattr(self._module, 'header', ())
 
-    @cached_property
+    @AtUtils.LazyProperty
     def descriptions(self) -> Dict[str, Dict[str, Any]]:
         """Lazy getter for the Blueprint's descriptions.
 
@@ -1105,7 +1103,7 @@ class Blueprint(object):
 
         return getattr(self._module, 'descriptions', {})
 
-    @cached_property
+    @AtUtils.LazyProperty
     def settings(self) -> Dict[str, Any]:
         """Lazy getter for the Blueprint's descriptions.
 
@@ -1115,7 +1113,7 @@ class Blueprint(object):
 
         return getattr(self._module, 'settings', {})
 
-    @cached_property
+    @AtUtils.LazyProperty
     def processors(self) -> Tuple[Processor, ...]:
         """Lazy getter for the Blueprint's processors.
         
@@ -1258,7 +1256,7 @@ class Processor(object):
             statusOverride: Status overrides must be a dict with name of process Thread as key (str) and a dict with `AtStatus.FailStatus` or
                 `AtStatus.SuccessStatus` as key (possibly both) and the status for the override as value. (default: `None`)
             settings: Setting is a dict that contain data as value for each setting name as key. (default: `None`)
-            **kwargs: All remaining data passed at initialisation will automatically be used to init the Processor data.
+            **kwargs: All remaining data passed at initialisation will automagit push origin feature_python3.7_supporttically be used to init the Processor data.
         """
 
         self._processStrPath = process
@@ -1295,7 +1293,7 @@ class Processor(object):
 
         return '<{0} `{1}` at {2}>'.format(self.__class__.__name__, self._processStrPath.rpartition('.')[2], hex(id(self)))
 
-    @cached_property
+    @AtUtils.LazyProperty
     def moduleName(self) -> str:
         """Lazy getter for the Processor's Process module name.
         
@@ -1305,7 +1303,7 @@ class Processor(object):
 
         return self._processStrPath.split('.')[-2]
 
-    @cached_property
+    @AtUtils.LazyProperty
     def module(self) -> ModuleType:
         """Lazy getter that import the Processor's Process module.
 
@@ -1315,7 +1313,7 @@ class Processor(object):
 
         return AtUtils.importProcessModuleFromPath(self._processStrPath)
 
-    @cached_property
+    @AtUtils.LazyProperty
     def processClass(self):
         """Lazy getter for the Processor's Process class
 
@@ -1325,7 +1323,7 @@ class Processor(object):
 
         return getattr(self.module, self._processStrPath.rpartition('.')[2])
 
-    @cached_property
+    @AtUtils.LazyProperty
     def process(self) -> Type[Process]:
         """Lazy getter for the Processor's Process class
 
@@ -1340,7 +1338,7 @@ class Processor(object):
         
         return process
 
-    @cached_property
+    @AtUtils.LazyProperty
     def parameters(self) -> Tuple[Parameter, ...]:
         """Lazy getter Processor's Process' Parameters.
 
@@ -1356,7 +1354,7 @@ class Processor(object):
 
         return tuple(parameters)
 
-    @cached_property
+    @AtUtils.LazyProperty
     def overridedMethods(self) -> List[str]:
         """Lazy getter for the overrided methods of the Processor's Process class.
 
@@ -1366,7 +1364,7 @@ class Processor(object):
 
         return AtUtils.getOverridedMethods(self.processClass, Process)
 
-    @cached_property
+    @AtUtils.LazyProperty
     def niceName(self) -> str:
         """Lazy getter for the Processor's Process nice name.
 
@@ -1376,7 +1374,7 @@ class Processor(object):
 
         return AtUtils.camelCaseSplit(self.rawName)
 
-    @cached_property
+    @AtUtils.LazyProperty
     def docstring(self) -> str:
         """Lazy getter for the Processor's Process docstring
 
@@ -1397,7 +1395,7 @@ class Processor(object):
 
         return docstring.format(**docFormat)
 
-    @cached_property
+    @AtUtils.LazyProperty
     def hasCheckMethod(self) -> bool:
         """Lazy getter to know if the Processor's Process has a `check` method.
 
@@ -1407,7 +1405,7 @@ class Processor(object):
 
         return bool(self.overridedMethods.get(AtConstants.CHECK, False))
 
-    @cached_property
+    @AtUtils.LazyProperty
     def hasFixMethod(self) -> bool:
         """Lazy getter to know if the Processor's Process has a `fix` method.
 
@@ -1417,7 +1415,7 @@ class Processor(object):
 
         return bool(self.overridedMethods.get(AtConstants.FIX, False))
 
-    @cached_property
+    @AtUtils.LazyProperty
     def hasToolMethod(self) -> bool:
         """Lazy getter to know if the Processor's Process has a `tool` method.
 

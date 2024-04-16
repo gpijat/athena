@@ -3,7 +3,7 @@ from __future__ import annotations
 import abc
 import numbers
 from dataclasses import dataclass, field
-from typing import Type, Optional, Any, Tuple, Sequence
+from typing import  Optional, Any, Tuple
 
 from athena import AtExceptions
 
