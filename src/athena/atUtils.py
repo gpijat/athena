@@ -47,7 +47,7 @@ def iter_blueprints_path(package: str, software: str = 'standalone', verbose: bo
         yield os.path.join(package_path, '{}.py'.format(moduleName))
 
 
-#WATCME: Not used anymore.
+#WATCHME: Not used anymore.
 def get_packages() -> Tuple[str, ...]:
     """Get all packages that match the tool convention pattern.
 
@@ -157,11 +157,11 @@ def get_software() -> str:
 
 
 def _format_software(software_path: str) -> str:
-    """Check if there is an available software str in the hiven Path
+    """Check if there is an available software str in the given Path
 
     Parameters:
         software_path: The path to a software executable is expected here, but this works with any str.
-        verbose: Define if the function should log informations about its process. (default: False)
+        verbose: Define if the function should log information about its process. (default: False)
 
     Returns:
         The software found in software_path if there is one or an empty string.
@@ -238,7 +238,7 @@ def import_from_str(module_str: str, verbose: bool = False) -> ModuleType:
 
     Parameters:
         module_str: Path to a module to import.
-        verbose: Define if the function should log informations about its process. (default: False)
+        verbose: Define if the function should log information about its process. (default: False)
 
     Return:
         The loaded Module or None if fail.
@@ -383,7 +383,7 @@ class Singleton(type):
     """Keep track of the classes instances and prevent multiple instantiation"""
 
     def __call__(cls, *args, **kwargs):
-        """Override the call behavior and therefore a new class instantion.
+        """Override the call behavior and therefore a new class instantiation.
 
         If no instance of the given class exists, one is created and cached. 
         If one already exists, it's returned instead.
@@ -393,7 +393,7 @@ class Singleton(type):
             **kwargs: Variable length keyword argument dict to instantiate the class.
 
         Return:
-            A new or already existing instance of the given class, always the same and unique instand as expected from 
+            A new or already existing instance of the given class, always the same and unique instance as expected from 
             the Singleton's design pattern.
         """
 
@@ -402,13 +402,13 @@ class Singleton(type):
         return cls._instances[cls]
 
     @classmethod
-    def __instancecheck__(mcls: Type[T], instance: T) -> bool:
+    def __instancecheck__(m_cls: Type[T], instance: T) -> bool:
         """Implement behavior on instance check."""
 
-        if instance.__class__ is mcls:
+        if instance.__class__ is m_cls:
             return True
         else:
-            return isinstance(instance.__class__, mcls)
+            return isinstance(instance.__class__, m_cls)
 
 
 def create_new_athena_package_hierarchy(root_directory: str) -> None:
