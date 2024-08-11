@@ -12,7 +12,7 @@ To quickly get started with Athena, follow these steps:
 
 ### Prerequisites
 
-Ensure you have Python >3.8 installed. Athena has no external dependencies.
+Ensure you have Python 3.8+ installed. Athena has no external dependencies.
 
 ### Installing
 
