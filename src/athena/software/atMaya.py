@@ -5,7 +5,7 @@ from typing import Type, Union, Iterable
 import sys
 from dataclasses import dataclass
 
-from athena import AtCore
+from athena import atCore
 
 from maya import cmds
 from maya.api import OpenMaya, OpenMayaUI
@@ -127,7 +127,7 @@ def getDisplay(object_: Union[str, OpenMaya.MObject, OpenMaya.MDagPath, OpenMaya
 
 
 @dataclass(frozen=True)
-class MayaFeedbackContainer(AtCore.FeedbackContainer):
+class MayaFeedbackContainer(atCore.FeedbackContainer):
     """Maya specific :class:`~FeedbackContainer` that implement optimized selection and deselection.
 
     This is a Maya's custom implementation of a :class:`~FeedbackContainer`. While it's not necessary to use this subtype
@@ -177,7 +177,7 @@ class MayaFeedbackContainer(AtCore.FeedbackContainer):
 
 
 @dataclass(frozen=True)
-class MayaFeedback(AtCore.Feedback):
+class MayaFeedback(atCore.Feedback):
     """Represent a single Maya Feedback, this allows for better display and selection/deselection behavior.
 
     Using a MayaFeedback is not mandatory when doing a Maya :class:`~Process`, and it can be used alongside normal 
@@ -224,7 +224,7 @@ class MayaFeedback(AtCore.Feedback):
             selectInMaya((self.feedback,), mode='remove', replace=False)
 
 
-class MayaProcess(AtCore.Process):
+class MayaProcess(atCore.Process):
     """A custom Process implementation to be used in Maya which define the best :class:`~FeedbackContainer` subclass to use.
 
     It's not mandatory to create a Maya Process using this :class:`~Process` subclass, the only thing it does is making

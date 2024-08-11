@@ -1,8 +1,5 @@
 from typing import Any
 
-import sys
-import os
-
 
 def select(toSelect: Any, replace: bool = True) -> None:
     """Allow selection in standalone mode.

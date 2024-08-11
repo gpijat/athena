@@ -8,7 +8,6 @@ import numbers
 import os
 import pstats
 import re
-import sys
 import tempfile
 import time
 from dataclasses import dataclass, field
@@ -16,7 +15,7 @@ from functools import cached_property
 from types import ModuleType, FunctionType
 from typing import TypeVar, Type, Iterator, Callable, Optional, Union, Any, Dict, List, Tuple, Mapping, Sequence
 
-from athena import AtConstants, AtExceptions, AtStatus, AtUtils
+from athena import atConstants, atExceptions, atStatus, atUtils
 
 
 class Event(object):
@@ -42,7 +41,7 @@ class Event(object):
         for callback in self._callbacks:
             callback(*args, **kwargs)
 
-    def addCallback(self, callback: Callable) -> bool:
+    def add_callback(self, callback: Callable) -> bool:
         """Adds a callback function to the event's list of callbacks.
 
         Parameters:
@@ -57,7 +56,7 @@ class Event(object):
         """
 
         if not callable(callback):
-            AtUtils.LOGGER.warning(
+            atUtils.LOGGER.warning(
                 'Event "{0}" failed to register callback: Object "{1}" is not callable.'.format(self.name, callback)
             )
             return False
@@ -75,19 +74,19 @@ class EventSystem(abc.ABC):
     """
 
     #: Event triggered when a new Register instance is created.
-    RegisterCreated = Event('RegisterCreated')
+    register_created = Event('RegisterCreated')
 
     #: Event triggered when Blueprints are reloaded.
-    BlueprintsReloaded = Event('BlueprintsReloaded')
+    blueprints_reloaded = Event('BlueprintsReloaded')
 
     #: Event triggered when development mode is enabled.
-    DevModeEnabled = Event('DevModeEnabled')
+    dev_mode_enabled = Event('DevModeEnabled')
 
     #: Event triggered when development mode is disabled.
-    DevModeDisabled = Event('DevModeDisabled')
+    dev_mode_disabled = Event('DevModeDisabled')
 
 
-class AtSession(object, metaclass=AtUtils.Singleton):
+class AtSession(object, metaclass=atUtils.Singleton):
     """Singleton class representing the Athena's running session.
 
     This class provides a single instance that manages the session state,
@@ -101,27 +100,6 @@ class AtSession(object, metaclass=AtUtils.Singleton):
         """Initialize a new instance of __AtSession."""
 
         self._dev: bool = False
-
-    #TODO: Remove this code or update it for blueprint import 2.0
-    # @cached_property
-    # def environVar(self):
-    #     return '{program}_{software}'.format(
-    #         program=AtConstants.PROGRAM_NAME.upper(), 
-    #         software=self.software.upper()
-    #     ) 
-
-    # @cached_property
-    # def environ(self):
-    #     if self.environVar in os.environ:
-    #         return os.environ[self.environVar]
-
-    #     os.environ[self.environVar] = ''
-    #     if self.platform in ('Linux', 'Darwin'):
-    #         os.system('export {}={}'.format(self.environVar, ''))
-    #     elif self.platform == 'Windows':
-    #         os.system('setx {} {}'.format(self.environVar, ''))
-
-    #     return os.environ[self.environVar]
 
     @cached_property
     def register(self) -> Register:
@@ -141,9 +119,9 @@ class AtSession(object, metaclass=AtUtils.Singleton):
 
         self._dev = bool(value)
         if value:
-            EventSystem.DevModeEnabled()
+            EventSystem.dev_mode_enabled()
         else:
-            EventSystem.DevModeDisabled()
+            EventSystem.dev_mode_disabled()
 
 
 #TODO: When Python 3.10 will be more widely used according to vfxplatform, add slots.
@@ -227,14 +205,14 @@ class FeedbackContainer(ProtoFeedback):
     
     Notes:
         The FeedbackContainer class implement a really basic selection and deselection process,
-        you should consider reimplemting it if you intend to use a very specific selection mechanism
+        you should consider reimplementing it if you intend to use a very specific selection mechanism
         or need to deal with advanced selection/deselection. (= A lot of elements to deal with)
     """
 
     feedback: Thread
     """The FeedbackContainer data must be the Thread for which it contain feedbacks."""
 
-    status: AtStatus.Status
+    status: atStatus.Status
     """The FeedbackContainer status represent the result state of the Thread based on the contained feedbacks"""
 
     def __str__(self) -> str:
@@ -280,7 +258,7 @@ class FeedbackContainer(ProtoFeedback):
         for child in self.children:
             child.deselect()
 
-    def setStatus(self, status:AtStatus.Status) -> None:
+    def set_status(self, status:atStatus.Status) -> None:
         """Change the current FeedbackContainer status to the given status.
 
         Parameter:
@@ -334,8 +312,8 @@ class Feedback(ProtoFeedback):
         """Allow deselection for the Feedback.
 
         This implementation is a deselection cascade mechanism meant to be overridden and/or called as a superclass.
-        If the feedback is deselectable, it won't do anything, as there are no defined deselection behaviors for
-        the default Feedback. If the Feedback is not deselectable, it cascades to every child and calls their
+        If the feedback is not selectable, it won't do anything, as there are no defined deselection behaviors for
+        the default Feedback. If the Feedback is selectable, it cascades to every child and calls their
         deselect method one by one.
 
         Notes:
@@ -366,14 +344,14 @@ class Thread(object):
 
     __slots__ = (
         '_title', 
-        '_defaultFailStatus', 
-        '_failStatus', 
-        '_defaultSuccessStatus', 
-        '_successStatus',
+        '_default_fail_status', 
+        '_fail_status', 
+        '_default_success_status', 
+        '_success_status',
         '_documentation',
     )
 
-    def __init__(self, title: str, failStatus: AtStatus.FailStatus = AtStatus.ERROR, successStatus: AtStatus.SuccessStatus = AtStatus.SUCCESS, documentation: Optional[str] = None):
+    def __init__(self, title: str, fail_status: atStatus.FailStatus = atStatus.ERROR, success_status: atStatus.SuccessStatus = atStatus.SUCCESS, documentation: Optional[str] = None):
         """Initialize an instance of Thread.
 
         This method sets up a Thread instance with the provided parameters, including the thread title,
@@ -382,31 +360,31 @@ class Thread(object):
 
         Parameters:
             title: The title of the Thread.
-            failStatus: The default fail status for the command, will be set as failStatus and defaultFailStatus.
-            successStatus:The default success status for the command, will be set as successStatus and defaultSuccessStatus
+            fail_status: The default fail status for the command, will be set as fail_status and defaultFailStatus.
+            success_status:The default success status for the command, will be set as success_status and defaultSuccessStatus
             documentation: Optional documentation or description for the Thread.
 
         Raises:
-            AtExceptions.StatusException: If the provided failStatus or successStatus are not of the valid type.
+            atExceptions.StatusException: If the provided fail_status or success_status are not of the valid type.
 
         Notes:
-            The failStatus and successStatus parameters should be members of the AtStatus.FailStatus and
-            AtStatus.SuccessStatus enumerations, respectively. If not provided, the default statuses are
-            set to AtStatus.ERROR and AtStatus.SUCCESS, respectively.
+            The fail_status and success_status parameters should be members of the atStatus.FailStatus and
+            atStatus.SuccessStatus enumerations, respectively. If not provided, the default statuses are
+            set to atStatus.ERROR and atStatus.SUCCESS, respectively.
         """
 
-        if not isinstance(failStatus, AtStatus.FailStatus):
-            raise AtExceptions.StatusException('`{}` is not a valid fail status.'.format(failStatus._name))
-        if not isinstance(successStatus, AtStatus.SuccessStatus):
-            raise AtExceptions.StatusException('`{}` is not a valid success status.'.format(successStatus._name))
+        if not isinstance(fail_status, atStatus.FailStatus):
+            raise atExceptions.StatusException('`{}` is not a valid fail status.'.format(fail_status._name))
+        if not isinstance(success_status, atStatus.SuccessStatus):
+            raise atExceptions.StatusException('`{}` is not a valid success status.'.format(success_status._name))
 
         self._title = title
 
-        self._defaultFailStatus = failStatus
-        self._failStatus = failStatus
+        self._default_fail_status = fail_status
+        self._fail_status = fail_status
 
-        self._defaultSuccessStatus = successStatus
-        self._successStatus = successStatus
+        self._default_success_status = success_status
+        self._success_status = success_status
 
         self._documentation = documentation
 
@@ -421,44 +399,44 @@ class Thread(object):
         return self._title
 
     @property
-    def failStatus(self) -> AtStatus.FailStatus:
+    def fail_status(self) -> atStatus.FailStatus:
         """Getter for the Thread's fail status.
 
         Return:
             The thread's fail status.
         """
 
-        return self._failStatus
+        return self._fail_status
 
     @property
-    def successStatus(self) -> AtStatus.SuccessStatus:
+    def success_status(self) -> atStatus.SuccessStatus:
         """Getter for the Thread's success status.
 
         Return:
             The thread's success status..
         """
 
-        return self._successStatus
+        return self._success_status
 
-    def overrideFailStatus(self, status: AtStatus.FailStatus) -> None:
+    def override_fail_status(self, status: atStatus.FailStatus) -> None:
         """Override the actual fail status.
 
         Parameters:
             status: The Status class to use as new fail status.
         """
 
-        self._failStatus = status
+        self._fail_status = status
 
-    def overrideSuccessStatus(self, status: AtStatus.SuccessStatus) -> None:
+    def override_success_status(self, status: atStatus.SuccessStatus) -> None:
         """Override the actual success status.
 
         Parameters:
             status: The Status class to use as new success status.
         """
 
-        self._successStatus = status
+        self._success_status = status
 
-    def status(self, state: bool) -> AtStatus.Status:
+    def status(self, state: bool) -> atStatus.Status:
         """Get the Thread's current status based on given state boolean.
 
         Return:
@@ -466,9 +444,9 @@ class Thread(object):
         """
 
         if state:
-            return self._successStatus
+            return self._success_status
         else:
-            return self._failStatus
+            return self._fail_status
 
 
 #TODO: On a major update, replace individual process computation with process that subscribe to iteration.
@@ -489,7 +467,7 @@ class Process(abc.ABC):
     or check if there are any feedbacks for a specific Thread.
 
     At the end of the check process, it's crucial to set the state for each Thread. By default, they are all set to the
-    :const:`.AtStatus._DEFAULT` built-in status. To change a Thread status, you can call the :meth:`~Process.setSuccess`
+    :const:`.atStatus._DEFAULT` built-in status. To change a Thread status, you can call the :meth:`~Process.setSuccess`
     or :meth:`~Process.setFail` methods.
     Alternatively, you can skip the execution of a specific Thread using the :meth:`~Process.setSkipped` method.
 
@@ -517,7 +495,7 @@ class Process(abc.ABC):
     FEEDBACK_CONTAINER_CLASS: Type[FeedbackContainer] = FeedbackContainer
     """
     Define which type of feedback container will be internally used to register Feedback per Thread.
-    This is intended to be overrided in a subclass if you're willing to use a different FeedbackContainer implementation.
+    This is intended to be overridden in a subclass if you're willing to use a different FeedbackContainer implementation.
     """
 
     _name_: str = ''
@@ -526,8 +504,8 @@ class Process(abc.ABC):
     _doc_: str = ''
     """The Process user's documentation. If not set, will be set to the value of __doc__"""
 
-    _listenForUserInteruption: Event = Event('ListenForUserInteruption')
-    """Event that allow to notify subscribers when the user is trying to interupt the process execution."""
+    _listen_for_user_interruption: Event = Event('ListenForUserInterruption')
+    """Event that allow to notify subscribers when the user is trying to interrupt the process execution."""
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Type[Process]:
         """Create a new instance of the Process class.
@@ -540,12 +518,12 @@ class Process(abc.ABC):
         instance = super(Process, cls).__new__(cls, *args, **kwargs)
 
         # Instance internal data (Must not be altered by user)
-        instance._feedbackContainer: Dict[Thread, Type[FeedbackContainer]] = cls.__makeFeedbackContainer()
-        instance.__progressbar: QtWidgets.QProgressBar = None
+        instance._feedback_container: Dict[Thread, Type[FeedbackContainer]] = cls.__make_feedback_container()
+        instance.__progress_bar: QtWidgets.QProgressBar = None
 
-        instance.__doInterupt: bool = False
+        instance.__do_interrupt: bool = False
 
-        # Sunder instance attribute (Can be overrided user to custom the process)
+        # Sunder instance attribute (Can be overridden user to custom the process)
         # instance._name_ = cls._name_ or cls.__name__
         # instance._doc_ = cls._doc_ or cls.__doc__
 
@@ -557,15 +535,15 @@ class Process(abc.ABC):
         return '<Process `{0}` at {1}>'.format(self._name_, hex(id(self)))
 
     @classmethod
-    def __makeFeedbackContainer(cls) -> Dict[Thread, FeedbackContainer]:
+    def __make_feedback_container(cls) -> Dict[Thread, FeedbackContainer]:
         """Create and initialize a dictionary of :class:`~FeedbackContainers` for each :class:`~Thread`.
 
         This class method generates a dictionary of FeedbackContainers for each Thread associated with the Process class.
         The FeedbackContainers are initialized with the Thread, True (indicating the container is selectable),
-        and :const:`~.AtStatus._DEFAULT` (the default status for the containers).
+        and :const:`~.atStatus._DEFAULT` (the default status for the containers).
 
         Return:
-            A new dict with an empty FeedbackContainer per Thread with status set to :const:`.AtStatus._DEFAULT`
+            A new dict with an empty FeedbackContainer per Thread with status set to :const:`.atStatus._DEFAULT`
 
         Note:
             This method is typically used internally within the Process class to initialize the FeedbackContainers for
@@ -575,10 +553,10 @@ class Process(abc.ABC):
 
             * :class:`~Thread`: The class representing a task within the Athena framework.
             * :class:`~FeedbackContainer`: The container for managing feedback associated with a specific Thread.
-            * :const:`~AtStatus._DEFAULT`: The default status used when initializing FeedbackContainers.
+            * :const:`~atStatus._DEFAULT`: The default status used when initializing FeedbackContainers.
         """
 
-        return {thread: cls.FEEDBACK_CONTAINER_CLASS(thread, True, AtStatus._DEFAULT) for thread in cls.threads()}
+        return {thread: cls.FEEDBACK_CONTAINER_CLASS(thread, True, atStatus._DEFAULT) for thread in cls.threads()}
 
     @classmethod
     def threads(cls) -> Iterator[Thread]:
@@ -604,16 +582,16 @@ class Process(abc.ABC):
         """This method can be implemented to open a window that can allow the user to manually find or fix the errors."""
         ...
 
-    def setProgressbar(self, progressBar: QtWidgets.QProgressBar) -> None:
+    def set_progress_bar(self, progress_bar: QtWidgets.QProgressBar) -> None:
         """This method should be used to setup the Process progress bar widget.
 
         Parameters:
-            progressBar: The new progress bar to link to The Process instance.
+            progress_bar: The new progress bar to link to The Process instance.
         """
 
-        self.__progressbar = progressBar
+        self.__progress_bar = progress_bar
 
-    def setProgress(self, value: Optional[bool] = None, text: Optional[bool] = None) -> None:
+    def set_progress(self, value: Optional[bool] = None, text: Optional[bool] = None) -> None:
         """Set the progress value and/or text for the associated QProgressBar.
 
         This method allows setting the progress value and/or text for the QProgressBar associated with the Process instance.
@@ -625,12 +603,12 @@ class Process(abc.ABC):
         """
 
         if value is not None:
-            self.setProgressValue(value)
+            self.set_progress_value(value)
 
         if text is not None:
-            self.setProgressText(text)
+            self.set_progress_text(text)
 
-    def setProgressValue(self, value: numbers.Number) -> None:
+    def set_progress_value(self, value: numbers.Number) -> None:
         """Set the progress value of the Process progress bar if exist.
         
         Parameters:
@@ -640,42 +618,42 @@ class Process(abc.ABC):
             TypeError: If `value` is not numeric.
         """
 
-        if self.__progressbar is None:
+        if self.__progress_bar is None:
             return
 
         #WATCHME: `numbers.Number` is an abstract base class that define operations progressively, the first call to
         # this method will define it for the first time, this is why the profiler can detect some more calls for the
-        # first call of the first process to be run. --> We talk about insignifiant time but the displayed data will
+        # first call of the first process to be run. --> We talk about insignificant time but the displayed data will
         # be a bit different. see: https://docs.python.org/2/library/numbers.html
         if not isinstance(value, numbers.Number):
             raise TypeError('Argument `value` is not numeric')
         
-        if value and value != self.__progressbar.value():
-            self.__progressbar.setValue(float(value))
+        if value and value != self.__progress_bar.value():
+            self.__progress_bar.setValue(float(value))
 
-    def setProgressText(self, text: str) -> None:
+    def set_progress_text(self, text: str) -> None:
         """Set the label text of the Process progress bar if exist.
         
         Parameters:
             text: Text to display in the progressBar.
         """
 
-        if self.__progressbar is None:
+        if self.__progress_bar is None:
             return
 
-        if text and text != self.__progressbar.text():
-            self.__progressbar.setFormat(AtConstants.PROGRESSBAR_FORMAT.format(text))
+        if text and text != self.__progress_bar.text():
+            self.__progress_bar.setFormat(atConstants.PROGRESSBAR_FORMAT.format(text))
 
-    def clearFeedback(self) -> None:
+    def clear_feedback(self) -> None:
         """Clear all feedback associated with the threads in the process.
 
         This method resets the feedback containers for each thread by creating new instances of FeedbackContainers.
         It effectively clears any previously registered feedback.
         """
 
-        self._feedbackContainer = self.__makeFeedbackContainer()
+        self._feedback_container = self.__make_feedback_container()
 
-    def hasFeedback(self, thread) -> None:
+    def has_feedback(self, thread) -> None:
         """Check if there is feedback registered for a specific thread.
 
         Parameters:
@@ -685,9 +663,9 @@ class Process(abc.ABC):
             True if there is feedback for the specified thread, False otherwise.
         """
 
-        return bool(self._feedbackContainer[thread].children)
+        return bool(self._feedback_container[thread].children)
 
-    def addFeedback(self, thread: Thread, feedback: Feedback) -> None:
+    def add_feedback(self, thread: Thread, feedback: Feedback) -> None:
         """Add feedback to the specified thread's feedback container.
 
         Parameters:
@@ -695,9 +673,9 @@ class Process(abc.ABC):
             feedback: The feedback instance to add.
         """
 
-        self._feedbackContainer[thread].parent(feedback)
+        self._feedback_container[thread].parent(feedback)
 
-    def iterFeedback(self, thread: Thread) -> Iterator[Feedback, ...]:
+    def iter_feedback(self, thread: Thread) -> Iterator[Feedback]:
         """Iterate over the feedback instances registered for a specific thread.
 
         Parameters:
@@ -707,9 +685,9 @@ class Process(abc.ABC):
             An iterator over the feedback instances for the specified thread.
         """
 
-        return iter(self._feedbackContainer[thread].children)
+        return iter(self._feedback_container[thread].children)
 
-    def feedbackCount(self, thread: Thread) -> int:
+    def feedback_count(self, thread: Thread) -> int:
         """Get the count of feedback instances registered for a specific thread.
 
         Parameters:
@@ -719,62 +697,62 @@ class Process(abc.ABC):
             The number of feedback instances for the specified thread.
         """
 
-        return len(self._feedbackContainer[thread].children)
+        return len(self._feedback_container[thread].children)
 
-    def getFeedbackContainers(self) -> Tuple[FeedbackContainer]:
+    def get_feedback_containers(self) -> Tuple[FeedbackContainer]:
         """Get a tuple of all feedback containers associated with the threads.
 
         Return:
             A tuple containing all feedback containers associated with the threads.
         """
 
-        return tuple(self._feedbackContainer.values())
+        return tuple(self._feedback_container.values())
 
-    def setSuccess(self, thread: Thread) -> None:
+    def set_success(self, thread: Thread) -> None:
         """Set the success status for a specific thread's feedback container.
 
         Parameters:
             thread: The thread for which to set the success status.
         """
 
-        self._feedbackContainer[thread].setStatus(thread.status(True))
+        self._feedback_container[thread].set_status(thread.status(True))
 
-    def setFail(self, thread: Thread) -> None:
+    def set_fail(self, thread: Thread) -> None:
         """Set the fail status for a specific thread's feedback container.
 
         Parameters:
             thread: The thread for which to set the fail status.
         """
 
-        self._feedbackContainer[thread].setStatus(thread.status(False))
+        self._feedback_container[thread].set_status(thread.status(False))
 
-    def setSkipped(self, thread: Thread) -> None:
+    def set_skipped(self, thread: Thread) -> None:
         """Set the skipped status for a specific thread's feedback container.
 
         Parameters:
             thread: The thread for which to set the skipped status.
         """
 
-        self._feedbackContainer[thread].setStatus(AtStatus._SKIPPED)
+        self._feedback_container[thread].set_status(atStatus._SKIPPED)
 
-    def listenForUserInteruption(self) -> None:
-        """Trigger an user interuption Event to prematurely end process execution.
+    def listen_for_user_interruption(self) -> None:
+        """Trigger an user interruption Event to prematurely end process execution.
 
-        This method triggers the :attr:`~Process._listenForUserInteruption` Event, which requires a registered callback
-        to invoke the :meth:`~Process._registerInteruption` method from the Qt Application.
+        This method triggers the :attr:`~Process._listen_for_user_interruption` Event, which requires a registered callback
+        to invoke the :meth:`~Process._register_interruption` method from the Qt Application.
 
         After triggering the event, if there is a callback to invoke the appropriate method, the boolean value
-        for :obj:`~Process.__doInterupt` will be set to True, and an :exc:`.AtExceptions.AtProcessExecutionInterrupted` 
+        for :obj:`~Process.__do_interrupt` will be set to True, and an :exc:`.atExceptions.AtProcessExecutionInterrupted` 
         exception will be raised. This exception can be handle in the Qt Application to force the Process Status to 
-        :const:`.AtStatus._ABORTED`.
+        :const:`.atStatus._ABORTED`.
 
         Raises:
-            AtExceptions.AtProcessExecutionInterrupted: If the interruption is caught and propagated.
+            atExceptions.AtProcessExecutionInterrupted: If the interruption is caught and propagated.
 
         Important:
             When the Process is executing, the Qt Event System stacks QEvents, processing them at the end of the
             execution, typically after all process executions are finished. To catch user interactions during
-            execution, the Qt Event System must process pending events. The :attr:`~Process._listenForUserInteruption`
+            execution, the Qt Event System must process pending events. The :attr:`~Process._listen_for_user_interruption`
             Event can trigger a call to `QApplication.processEvents`, accomplished by adding it as a callback for this 
             Event.
 
@@ -782,33 +760,33 @@ class Process(abc.ABC):
             press. A side effect is that the key press becomes part of the Qt UI thread.
 
             To ensure the raise directly impacts the application and ends the process, it must be done from the main thread.
-            Therefore, the :meth:`~Process._registerInteruption` method needs to be called from the Qt Application to
+            Therefore, the :meth:`~Process._register_interruption` method needs to be called from the Qt Application to
             toggle the behavior of this method so it can raise. Typically, this method is called in the check or fix 
             method, ensuring that the raise occurs from the main thread.
         """
 
-        if self.__doInterupt:
+        if self.__do_interrupt:
             return
 
-        self._listenForUserInteruption()
+        self._listen_for_user_interruption()
 
-        if self.__doInterupt:
-            self.__doInterupt = False
-            raise AtExceptions.AtProcessExecutionInterrupted()
+        if self.__do_interrupt:
+            self.__do_interrupt = False
+            raise atExceptions.AtProcessExecutionInterrupted()
 
-    def _registerInteruption(self) -> None:
-        """Change the value for the private member :attr:`~Process.__doInterupt` to True.
+    def _register_interruption(self) -> None:
+        """Change the value for the private member :attr:`~Process.__do_interrupt` to True.
         
         This simply allow to change the value of this private member from outside the class.
         """
 
-        self.__doInterupt = True
+        self.__do_interrupt = True
 
 
 class Register(object):
     """The register is a container that allow the user to load and manage blueprints.
 
-    After initialisation the register will not contain any data and you will need to load the :class:`~Blueprint` you 
+    After initialization the register will not contain any data and you will need to load the :class:`~Blueprint` you 
     want for your current Athena Session.
     The role of the register is to act as a loader and data keeper for all existing Blueprints you defined and want your
     user's to be able to use for their sanity checking.
@@ -817,10 +795,10 @@ class Register(object):
     def __init__(self) -> None:
         """Initialize the Register's internal data."""
         
-        self.__blueprints: List[Blueprint, ...] = []
-        self._currentBlueprint: Blueprint = None
+        self.__blueprints: List[Blueprint] = []
+        self._current_blueprint: Blueprint = None
 
-        EventSystem.RegisterCreated()
+        EventSystem.register_created()
 
     def __bool__(self) -> bool:
         """Allow to check if the register is empty or not based on the loaded blueprints."""
@@ -830,11 +808,11 @@ class Register(object):
 
     #FIXME: The import system is not easy to use, find a better way to use them.
     #TODO: Find a way to implement this feature and clean the import process.
-    # def loadBlueprintFromPythonStr(self, pythonCode, moduleName):
-    #     module = AtUtils.moduleFromStr(pythonCode, name=moduleName)
-    #     self.loadBlueprintFromModule(Blueprint(module))
+    # def loadBlueprintFromPythonStr(self, pythonCode, module_name):
+    #     module = atUtils.moduleFromStr(pythonCode, name=module_name)
+    #     self.load_blueprint_from_module(Blueprint(module))
 
-    def loadBlueprintsFromPackageStr(self, package: str) -> None:
+    def load_blueprints_from_package_str(self, package: str) -> None:
         """Load blueprints from a package name.
 
         This method calls the loadBlueprintsFromPackage method with the imported package object.
@@ -843,14 +821,14 @@ class Register(object):
             package: The python formatted path of the package to load blueprints from.
 
         Warning:
-            This method is **deprectated** as it suppose a specific hierarchy, a feature inherited from
+            This method is **deprecated** as it suppose a specific hierarchy, a feature inherited from
             the early ages of Athena. You're not supposed to have a specific hierarchy in you packages
             to load their blueprints.
         """
 
-        self.loadBlueprintsFromPackage(AtUtils.importFromStr(package))
+        self.load_blueprints_from_package(atUtils.import_from_str(package))
 
-    def loadBlueprintsFromPackage(self, package: ModuleType) -> None:
+    def load_blueprints_from_package(self, package: ModuleType) -> None:
         """Load blueprints from a package object.
 
         This method iterates over the blueprints paths in the package and calls the loadBlueprintFromModulePath 
@@ -860,37 +838,37 @@ class Register(object):
             package: The package object to load blueprints from.
 
         Warning:
-            This method is #deprectated** as it suppose a specific hierarchy, a feature inherited from
+            This method is #deprecated** as it suppose a specific hierarchy, a feature inherited from
             the early ages of Athena. You're not supposed to have a specific hierarchy in you packages
             to load their blueprints.
         """
 
-        for modulePath in AtUtils.iterBlueprintsPath(package):
-            self.loadBlueprintFromModulePath(modulePath)
+        for module_path in atUtils.iter_blueprints_path(package):
+            self.load_blueprint_from_module_path(module_path)
 
-    def loadBlueprintFromModulePath(self, modulePath: str) -> None:
+    def load_blueprint_from_module_path(self, module_path: str) -> None:
         """Load a blueprint from a module OS path.
 
         This method converts the module path to a python import path and load blueprints from it..
 
         Parameters:
-            modulePath: The path of the module to load a blueprint from.
+            module_path: The path of the module to load a blueprint from.
         """
 
-        self.loadBlueprintFromPythonImportPath(AtUtils.pythonImportPathFromPath(modulePath))
+        self.load_blueprint_from_python_import_path(atUtils.python_import_path_from_path(module_path))
 
-    def loadBlueprintFromPythonImportPath(self, importStr: str) -> None:
+    def load_blueprint_from_python_import_path(self, import_str: str) -> None:
         """Load a blueprint from a module python's import path.
 
         This method will import the module from the string and load blueprints from it.
 
         Parameters:
-            importStr: The python import path to the Blueprint's module to load.
+            import_str: The python import path to the Blueprint's module to load.
         """
 
-        self.loadBlueprintFromModule(AtUtils.importFromStr(importStr))
+        self.load_blueprint_from_module(atUtils.import_from_str(import_str))
 
-    def loadBlueprintFromModule(self, module: ModuleType) -> None:
+    def load_blueprint_from_module(self, module: ModuleType) -> None:
         """Load a blueprint from a module object.
 
         This method creates a Blueprint object from the module and adds it to the list of blueprints. 
@@ -900,13 +878,13 @@ class Register(object):
             module: The module object to load a blueprint from.
         """
 
-        newBlueprint = Blueprint(module)
+        new_blueprint = Blueprint(module)
         for i, blueprint in enumerate(self.__blueprints):
-            if blueprint == newBlueprint:
-                self.__blueprints[i] = newBlueprint
+            if blueprint == new_blueprint:
+                self.__blueprints[i] = new_blueprint
                 break
         else:
-            self.__blueprints.append(newBlueprint)
+            self.__blueprints.append(new_blueprint)
 
     def clear(self) -> None:
         """Remove all loaded blueprints from this register."""
@@ -924,17 +902,17 @@ class Register(object):
         return tuple(self.__blueprints)
 
     @property
-    def currentBlueprint(self) -> Blueprint:
+    def current_blueprint(self) -> Blueprint:
         """Getter for current blueprint.
         
         Return:
             The current blueprint.
         """
 
-        return self._currentBlueprint
+        return self._current_blueprint
 
-    @currentBlueprint.setter
-    def currentBlueprint(self, blueprint: Blueprint) -> None:
+    @current_blueprint.setter
+    def current_blueprint(self, blueprint: Blueprint) -> None:
         """Setter for current blueprint
 
         Set the current blueprint if it's an already registered blueprint recognized by the register.
@@ -944,9 +922,9 @@ class Register(object):
         """
 
         if blueprint in self.__blueprints:
-            self._currentBlueprint = blueprint
+            self._current_blueprint = blueprint
 
-    def blueprintByName(self, name: str) -> Optional[Blueprint]:
+    def blueprint_by_name(self, name: str) -> Optional[Blueprint]:
         """Get a blueprints from the Register based on it's name.
 
         Will try to find the first Blueprint that match the given name. If none are found, nothing is returned.
@@ -975,10 +953,10 @@ class Register(object):
 
         for blueprint in blueprints:
             for processor in blueprint.processors:
-                AtUtils.reloadModule(processor.module)
-            self.loadBlueprintFromModule(AtUtils.reloadModule(blueprint._module))
+                atUtils.reload_module(processor.module)
+            self.load_blueprint_from_module(atUtils.reload_module(blueprint._module))
 
-        EventSystem.BlueprintsReloaded()
+        EventSystem.blueprints_reloaded()
 
 
 #TODO: Maybe make this a subclass of types.ModuleType and wrap class creation.
@@ -1011,7 +989,7 @@ class Blueprint(object):
         self._name: str = os.path.splitext(os.path.basename(module.__file__))[0] or module.__name__
 
     def __bool__(self) -> bool:
-        """Allow to deteremine if the blueprint contains processors or not.
+        """Whether ot not the blueprint contains any processor.
 
         Return:
             True if the blueprint contain at least one processor else False.
@@ -1119,15 +1097,15 @@ class Blueprint(object):
     def processors(self) -> Tuple[Processor, ...]:
         """Lazy getter for the Blueprint's processors.
         
-        This will create all the processors from the Blueprint's decsriptions ordered based on the header and will 
+        This will create all the processors from the Blueprint's descriptions ordered based on the header and will 
         automatically resolve the links for each description in case this is meant to be used in batch.
 
         Return:
             A tuple containing all :class:`~Processor` for the current Blueprint's description.
         """
 
-        batchLinkResolve = {}
-        processorObjects = []
+        batch_link_resolve = {}
+        processor_objects = []
 
         for id_ in self.header:
             if id_ not in self.descriptions:
@@ -1135,16 +1113,16 @@ class Blueprint(object):
 
             processor = Processor(**self.descriptions[id_], settings=self.settings)
 
-            processorObjects.append(processor)
-            batchLinkResolve[id_] = processor if processor.inBatch else None
+            processor_objects.append(processor)
+            batch_link_resolve[id_] = processor if processor.in_batch else None
         
         # Default resolve for descriptions if available in batch, call the `resolveLinks` method from descriptions to change the targets functions.
-        for processor in processorObjects:
-            processor.resolveLinks(batchLinkResolve, check=AtConstants.CHECK, fix=AtConstants.FIX, tool=AtConstants.TOOL)
+        for processor in processor_objects:
+            processor.resolve_links(batch_link_resolve, check=atConstants.CHECK, fix=atConstants.FIX, tool=atConstants.TOOL)
 
-        return tuple(processorObjects)
+        return tuple(processor_objects)
 
-    def processorByName(self, name: str) -> Optional[Processor]:
+    def processor_by_name(self, name: str) -> Optional[Processor]:
         """Find a processor from blueprint's processors based on it's name.
         
         Parameters:
@@ -1155,7 +1133,7 @@ class Blueprint(object):
         """
 
         for processor in self.processors:
-            if processor.moduleName == name:
+            if processor.module_name == name:
                 return processor
 
 
@@ -1164,7 +1142,7 @@ class Tag(enum.IntFlag):
     
     Tags are defined in the :class:`~Blueprint` and will be parsed by the :class:`~Processor` which will change 
     it's configuration based on them.
-    The :class:`~Process` by itself is totaly unaware of it's Tags as they are only used by it's wrapper, the Processor.
+    The :class:`~Process` by itself is totally unaware of it's Tags as they are only used by it's wrapper, the Processor.
     
     Tags allow Process to be optional, non blocking, hide their checks or even be completely disabled or dependant to
     another Process using Link.
@@ -1177,13 +1155,13 @@ class Tag(enum.IntFlag):
     """Define if a process should be disabled (by default it is enabled)"""
 
     NO_CHECK: int = enum.auto()
-    """This tag will remove the check of a process, it will force the isCheckable to False in blueprint."""
+    """This tag will remove the check of a process, it will force the is_checkable to False in blueprint."""
 
     NO_FIX: int = enum.auto()
-    """This tag will remove the fix of a process, it will force the isFixable to False in blueprint."""
+    """This tag will remove the fix of a process, it will force the is_fixable to False in blueprint."""
 
     NO_TOOL: int = enum.auto()
-    """This tag will remove the tool of a process, it will force the hasTool to False in blueprint."""
+    """This tag will remove the tool of a process, it will force the has_tool to False in blueprint."""
 
     NON_BLOCKING: int = enum.auto()
     """A non blocking process will raise a non blocking error, its error is ignored."""
@@ -1229,7 +1207,7 @@ class Processor(object):
     The implementation of the `Processor` class is predominantly lazy, initializing only the necessary arguments during 
     instantiation and deferring expensive computation until they are actually needed, while caching their results. 
     The `Processor` takes on the responsibility of resolving all :class:`~Tag`, :class:`~Link`, and 
-    :class:`~AtStatus.Status` overrides for all Process' :class:`~Thread`. Additionally, it can be made aware of 
+    :class:`~atStatus.Status` overrides for all Process' :class:`~Thread`. Additionally, it can be made aware of 
     :class:`~Blueprint` settings through the `setting` argument or receive extra data for later use.
 
     Overall, the `Processor` plays a pivotal role in configuring and executing Processes defined in a Blueprint, contributing 
@@ -1242,49 +1220,49 @@ class Processor(object):
         arguments: Optional[Mapping[str, Tuple[Tuple[Any, ...], Mapping[str, Any]]]] = None, 
         tags: Tag = Tag.NO_TAG,
         links: Optional[Tuple[Tuple[str, Link, Link], ...]] = None,
-        statusOverrides: Optional[Mapping[str, Mapping[Type[AtStatus.Status], AtStatus.Status]]] = None,
+        status_overrides: Optional[Mapping[str, Mapping[Type[atStatus.Status], atStatus.Status]]] = None,
         settings: Optional[Mapping[str, Any]] = None, 
         **kwargs: Any) -> None:
         """Init the Processor instances attributes and define all the default values. The tags will also be resolved.
 
         Parameters:
             process: The python path to import the process from, it must be a full import path to the Process class.
-            category: The name of the category of the Processor, if no value are provided the category will be `AtConstants.DEFAULT_CATEGORY` (default: `None`)
+            category: The name of the category of the Processor, if no value are provided the category will be :obj:`atConstants.DEFAULT_CATEGORY` (default: `None`)
             arguments: This dict must contain by method name ('__init__', 'check', ...) a tuple containing a tuple for the args and 
                 a dict for the keyword arguments.
-            tags: The tag is an integer where bytes refers to `athena.AtCore.Tags`, it must be made of one or more tags. (default: `None`)
+            tags: The tag is an integer where bytes refers to `athena.atCore.Tags`, it must be made of one or more tags. (default: `None`)
             links: The links must contain an ordered sequence of tuple with the name of another Process of the same blueprint, and two 
                 Links that are the source and the target methods to connect.
-            statusOverride: Status overrides must be a dict with name of process Thread as key (str) and a dict with `AtStatus.FailStatus` or
-                `AtStatus.SuccessStatus` as key (possibly both) and the status for the override as value. (default: `None`)
+            status_override: Status overrides must be a dict with name of process Thread as key (str) and a dict with :class:`atStatus.FailStatus` or
+                `atStatus.SuccessStatus` as key (possibly both) and the status for the override as value. (default: `None`)
             settings: Setting is a dict that contain data as value for each setting name as key. (default: `None`)
-            **kwargs: All remaining data passed at initialisation will automatically be used to init the Processor data.
+            **kwargs: All remaining data passed at initialization will automatically be used to init the Processor data.
         """
 
-        self._processStrPath = process
-        self._category = category or AtConstants.DEFAULT_CATEGORY
+        self._process_str_path = process
+        self._category = category or atConstants.DEFAULT_CATEGORY
         self._arguments = arguments
         self._tags = tags
         self._links = links
-        self._statusOverrides = statusOverrides
+        self._status_overrides = status_overrides
         self._settings = settings or {}
 
-        self.__linksData: Dict[Link, List] = {Link.CHECK: [], Link.FIX: [], Link.TOOL: []}
+        self.__links_data: Dict[Link, List] = {Link.CHECK: [], Link.FIX: [], Link.TOOL: []}
 
-        self.__isEnabled: bool = True
+        self.__is_enabled: bool = True
 
-        self.__isNonBlocking: bool = False
+        self.__is_non_blocking: bool = False
 
-        self.__inUi: bool = True
-        self.__inBatch: bool = True
+        self.__in_ui: bool = True
+        self.__in_batch: bool = True
 
         # -- We setup the tags because this process is really fast and does not require to be lazy.
         # This also give access to more data without the need to build the process instance.
-        self.setupTags()
+        self.setup_tags()
 
         # -- Declare a blueprint internal data, these data are directly retrieved from blueprint's non built-in keys.
         self._data = dict(**kwargs)
-        self._processProfile: _ProcessProfile = _ProcessProfile()
+        self._process_profile: _ProcessProfile = _ProcessProfile()
 
     def __repr__(self) -> str:
         """Readable representation of the Processor object
@@ -1293,17 +1271,17 @@ class Processor(object):
             A readable representation of the Processor based on it's process import path and id.
         """
 
-        return '<{0} `{1}` at {2}>'.format(self.__class__.__name__, self._processStrPath.rpartition('.')[2], hex(id(self)))
+        return '<{0} `{1}` at {2}>'.format(self.__class__.__name__, self._process_str_path.rpartition('.')[2], hex(id(self)))
 
     @cached_property
-    def moduleName(self) -> str:
+    def module_name(self) -> str:
         """Lazy getter for the Processor's Process module name.
         
         Return:
             The Processor's Process module name.
         """
 
-        return self._processStrPath.split('.')[-2]
+        return self._process_str_path.split('.')[-2]
 
     @cached_property
     def module(self) -> ModuleType:
@@ -1313,30 +1291,30 @@ class Processor(object):
             The Processor's Process module object that was imported.
         """
 
-        return AtUtils.importProcessModuleFromPath(self._processStrPath)
+        return atUtils.import_process_module_from_path(self._process_str_path)
 
     @cached_property
-    def processClass(self):
+    def process_class(self):
         """Lazy getter for the Processor's Process class
 
         Return:
             The Processor's Process class
         """
 
-        return getattr(self.module, self._processStrPath.rpartition('.')[2])
+        return getattr(self.module, self._process_str_path.rpartition('.')[2])
 
     @cached_property
     def process(self) -> Type[Process]:
         """Lazy getter for the Processor's Process class
 
         Return:
-            An initialised instance of the Processor's Process class.
+            An initialized instance of the Processor's Process class.
         """
 
-        initArgs, initKwargs = self.getArguments('__init__')
-        process = self.processClass(*initArgs, **initKwargs)
+        init_args, init_kwargs = self.get_arguments('__init__')
+        process = self.process_class(*init_args, **init_kwargs)
 
-        self._overrideStatus(process, self._statusOverrides)
+        self._override_status(process, self._status_overrides)
         
         return process
 
@@ -1350,152 +1328,152 @@ class Processor(object):
 
         parameters = []
 
-        for attribute in vars(self.processClass).values():
+        for attribute in vars(self.process_class).values():
             if isinstance(attribute, Parameter):
                 parameters.append(attribute)
 
         return tuple(parameters)
 
     @cached_property
-    def overridedMethods(self) -> List[str]:
-        """Lazy getter for the overrided methods of the Processor's Process class.
+    def overridden_methods(self) -> List[str]:
+        """Lazy getter for the overridden methods of the Processor's Process class.
 
         Return:
-            List of name for each overrided method on the Processor's Process class compared to :class:`~Process`
+            List of name for each overridden method on the Processor's Process class compared to :class:`~Process`
         """
 
-        return AtUtils.getOverridedMethods(self.processClass, Process)
+        return atUtils.get_overridden_methods(self.process_class, Process)
 
     @cached_property
-    def niceName(self) -> str:
+    def nice_name(self) -> str:
         """Lazy getter for the Processor's Process nice name.
 
         Return:
             A nice name for the Processor's Process, split if on camelCase.
         """
 
-        return AtUtils.camelCaseSplit(self.rawName)
+        return atUtils.camel_case_split(self.raw_name)
 
     @cached_property
     def docstring(self) -> str:
         """Lazy getter for the Processor's Process docstring
 
         Use the value in the Processor's :attr:`~Process._doc_` attribute, if it's empty, use class docstring
-        :attr:`~Process.__doc__`. If it's also empty, fallback on :const:`~.AtConstants.NO_DOCUMENTATION_AVAILABLE`
+        :attr:`~Process.__doc__`. If it's also empty, fallback on :const:`~.atConstants.NO_DOCUMENTATION_AVAILABLE`
 
         Returns:
             The formatted docstring to be more readable and also display the path of the process.
         """
 
-        docstring = self.processClass._doc_ or self.processClass.__doc__ or AtConstants.NO_DOCUMENTATION_AVAILABLE
-        docstring += '\n {0} '.format(self._processStrPath)
+        docstring = self.process_class._doc_ or self.process_class.__doc__ or atConstants.NO_DOCUMENTATION_AVAILABLE
+        docstring += '\n {0} '.format(self._process_str_path)
 
-        docFormat = {}
+        doc_format = {}
         for match in re.finditer(r'\{(\w+)\}', docstring):
-            matchStr = match.group(1)
-            docFormat[matchStr] = self.processClass._docFormat_.get(matchStr, '')
+            match_str = match.group(1)
+            doc_format[match_str] = self.process_class._doc_format_.get(match_str, '')
 
-        return docstring.format(**docFormat)
+        return docstring.format(**doc_format)
 
     @cached_property
-    def hasCheckMethod(self) -> bool:
+    def has_check_method(self) -> bool:
         """Lazy getter to know if the Processor's Process has a `check` method.
 
         Return:
             True if the Processor's Process has a `check` method, False otherwise.
         """
 
-        return bool(self.overridedMethods.get(AtConstants.CHECK, False))
+        return bool(self.overridden_methods.get(atConstants.CHECK, False))
 
     @cached_property
-    def hasFixMethod(self) -> bool:
+    def has_fix_method(self) -> bool:
         """Lazy getter to know if the Processor's Process has a `fix` method.
 
         Return:
             True if the Processor's Process has a `fix` method, False otherwise.
         """
 
-        return bool(self.overridedMethods.get(AtConstants.FIX, False))
+        return bool(self.overridden_methods.get(atConstants.FIX, False))
 
     @cached_property
-    def hasToolMethod(self) -> bool:
+    def has_tool_method(self) -> bool:
         """Lazy getter to know if the Processor's Process has a `tool` method.
 
         Return:
             True if the Processor's Process has a `tool` method, False otherwise.
         """
 
-        return bool(self.overridedMethods.get(AtConstants.TOOL, False))
+        return bool(self.overridden_methods.get(atConstants.TOOL, False))
 
     @property
-    def rawName(self) -> str:
+    def raw_name(self) -> str:
         """Getter fore the Processor's Process raw name.
 
         Return:
             The name for the Processor's Process, this will fallback to the class name if no `_name_` is set.
         """
 
-        return self.processClass._name_ or self.processClass.__name__
+        return self.process_class._name_ or self.process_class.__name__
 
     @property
-    def isEnabled(self) -> bool:
+    def is_enabled(self) -> bool:
         """Getter for the Processor's state.
         
         Return:
             `True` if the Processor is enabled, `False` Otherwise.
         """
 
-        return self.__isEnabled
+        return self.__is_enabled
 
     @property
-    def isCheckable(self) -> bool:
+    def is_checkable(self) -> bool:
         """Getter for the Processor's checkable state.
         
         Return:
             `True` if the Processor is checkable, `False` Otherwise. 
         """
 
-        return self.__isCheckable
+        return self.__is_checkable
 
     @property
-    def isFixable(self) -> bool:
+    def is_fixable(self) -> bool:
         """Getter for the Processor's fixable state.
         
         Return:
             `True` if the Processor is fixable, `False` Otherwise.
         """
 
-        return self.__isFixable
+        return self.__is_fixable
 
     @property
-    def inUi(self) -> bool:
+    def in_ui(self) -> bool:
         """Getter for Processor's UI state.
 
         Return:
             `True` if the Processor can be run in UI mode, `False` Otherwise.
         """
 
-        return self.__inUi
+        return self.__in_ui
     
     @property
-    def inBatch(self) -> bool:
+    def in_batch(self) -> bool:
         """Getter for Processor's batch state.
 
         Return:
             `True` if the Processor can be run in batch mode, `False` Otherwise.
         """
 
-        return self.__inBatch
+        return self.__in_batch
 
     @property
-    def isNonBlocking(self) -> bool:
+    def is_non_blocking(self) -> bool:
         """Getter to know whether the Processor's Process FailStatus are blocking or not.
 
         Return:
             `False` if the Processor's Process FailStatus are blocking, `True` otherwise.
         """
 
-        return self.__isNonBlocking
+        return self.__is_non_blocking
 
     @property
     def category(self) -> str:
@@ -1507,7 +1485,7 @@ class Processor(object):
 
         return self._category
 
-    def getArguments(self, method: str) -> Tuple[List[Any], Dict[str, Any]]:
+    def get_arguments(self, method: str) -> Tuple[List[Any], Dict[str, Any]]:
         """Retrieve arguments values for the given method of the Processor's Process.
         
         Parameters:
@@ -1531,7 +1509,7 @@ class Processor(object):
 
         return arguments
 
-    def getSetting(setting: str, default: Optional[Any] = None) -> Any:
+    def get_settings(self, setting: str, default: Optional[Any] = None) -> Any:
         """Get the value for a specific setting if it exists.
 
         Parameters:
@@ -1544,25 +1522,25 @@ class Processor(object):
 
         return self._settings.get(setting, default)
 
-    def getLowestFailStatus(self) -> AtStatus.FailStatus:
+    def get_lowest_fail_status(self) -> atStatus.FailStatus:
         """Get the lowest Fail status from all :class:`~Thread` from the Processor's Process.
 
         Return:
-            The Lowest Fail Status of the Processor's Process accross all it's :class:`~Thread`
+            The Lowest Fail Status of the Processor's Process across all it's :class:`~Thread`
         """
 
-        return next(iter(sorted((thread._failStatus for thread in self._threads.values()), key=lambda x: x._priority)), None)
+        return next(iter(sorted((thread._fail_status for thread in self._threads.values()), key=lambda x: x._priority)), None)
 
-    def getLowestSuccessStatus(self) -> AtStatus.SuccessStatus:
+    def get_lowest_success_status(self) -> atStatus.SuccessStatus:
         """Get the lowest Success status from all :class:`~Thread` from the Processor's Process.
 
         Return:
-            The Lowest Success Status of the Processor's Process accross all it's :class:`~Thread`
+            The Lowest Success Status of the Processor's Process across all it's :class:`~Thread`
         """
 
-        return next(iter(sorted((thread._successStatus for thread in self._threads.values()), key=lambda x: x._priority)), None)
+        return next(iter(sorted((thread._success_status for thread in self._threads.values()), key=lambda x: x._priority)), None)
 
-    def check(self, links: bool = True, doProfiling: bool = False) -> Tuple[FeedbackContainer, ...]:
+    def check(self, links: bool = True, do_profiling: bool = False) -> Tuple[FeedbackContainer, ...]:
         """This is a wrapper for the Processor's Process `check`.
 
         This will automatically execute the `check` method with it's right parameters and profile the execution if requested. 
@@ -1570,31 +1548,31 @@ class Processor(object):
 
         Parameters:
             links: Should the wrapper launch the connected links or not.
-            doProfiling: Whether the `check` method must be run with the Processor's Profiler.
+            do_profiling: Whether the `check` method must be run with the Processor's Profiler.
 
         Returns:
             All feedback containers for the Processor's Process post check.
         """
 
-        if not self.hasCheckMethod:
+        if not self.has_check_method:
             return None
         
-        args, kwargs = self.getArguments(AtConstants.CHECK)
+        args, kwargs = self.get_arguments(atConstants.CHECK)
 
         try:
-            if doProfiling:
-                self._processProfile.profileMethod(self.process.check, *args, **kwargs)
+            if do_profiling:
+                self._process_profile.profile_method(self.process.check, *args, **kwargs)
             else:
                 self.process.check(*args, **kwargs)
         except Exception as exception:
             raise
         finally:
             if links:
-                self.runLinks(Link.CHECK)
+                self.run_links(Link.CHECK)
 
-        return self.process.getFeedbackContainers()
+        return self.process.get_feedback_containers()
 
-    def fix(self, links: bool = True, doProfiling: bool = False) -> Tuple[FeedbackContainer, ...]:
+    def fix(self, links: bool = True, do_profiling: bool = False) -> Tuple[FeedbackContainer, ...]:
         """This is a wrapper for the Processor's Process `fix`.
 
         This will automatically execute the `fix` method with it's right parameters and profile the execution if requested. 
@@ -1602,31 +1580,31 @@ class Processor(object):
 
         Parameters:
             links: Should the wrapper launch the connected links or not.
-            doProfiling: Whether the `fix` method must be run with the Processor's Profiler.
+            do_profiling: Whether the `fix` method must be run with the Processor's Profiler.
 
         Returns:
             All feedback containers for the Processor's Process post fix.
         """
 
-        if not self.hasFixMethod:
+        if not self.has_fix_method:
             return None
 
-        args, kwargs = self.getArguments(AtConstants.FIX)
+        args, kwargs = self.get_arguments(atConstants.FIX)
 
         try:
-            if doProfiling:
-                self._processProfile.profileMethod(self.process.fix, *args, **kwargs)
+            if do_profiling:
+                self._process_profile.profile_method(self.process.fix, *args, **kwargs)
             else:
                 self.process.fix(*args, **kwargs)
         except Exception:
             raise
         finally:
             if links:
-                self.runLinks(Link.FIX)
+                self.run_links(Link.FIX)
 
-        return self.process.getFeedbackContainers()
+        return self.process.get_feedback_containers()
 
-    def tool(self, links: bool = True, doProfiling: bool = False) -> Any:
+    def tool(self, links: bool = True, do_profiling: bool = False) -> Any:
         """This is a wrapper for the Processor's Process `tool`.
 
         This will automatically execute the `tool` method with it's right parameters and profile the execution if requested.
@@ -1634,42 +1612,42 @@ class Processor(object):
 
         Parameters:
             links: Should the wrapper launch the connected links or not.
-            doProfiling: Whether the `tool` method must be run with the Processor's Profiler.
+            do_profiling: Whether the `tool` method must be run with the Processor's Profiler.
 
         Returns:
             The value returned by the Processor's Process `tool` method. Usually, `None`, but it could be the tool widget
             so it can be parented to the UI this Processor's is runt from.
         """
 
-        if not self.hasToolMethod:
+        if not self.has_tool_method:
             return None
 
-        args, kwargs = self.getArguments(AtConstants.TOOL)
+        args, kwargs = self.get_arguments(atConstants.TOOL)
 
         try:
-            if doProfiling:
-                returnValue = self._processProfile.profileMethod(self.process.tool, *args, **kwargs)
+            if do_profiling:
+                return_value = self._process_profile.profile_method(self.process.tool, *args, **kwargs)
             else:
-                returnValue = self.process.tool(*args, **kwargs)
+                return_value = self.process.tool(*args, **kwargs)
         except Exception:
             raise
         finally:
             if links:
-                self.runLinks(Link.TOOL)
+                self.run_links(Link.TOOL)
 
-        return returnValue
+        return return_value
 
-    def runLinks(self, which: Link) -> None:
+    def run_links(self, which: Link) -> None:
         """Execute the Processor's links for the given :class:`~Link`.
         
         Parameters:
             which: Which link we want to run.
         """
 
-        for link in self.__linksData[which]:
+        for link in self.__links_data[which]:
             link()
 
-    def getParameter(self, parameter: Parameter) -> Any:
+    def get_parameter(self, parameter: Parameter) -> Any:
         """Get the value for the given :class:`~Parameter` object.
 
         Return:
@@ -1681,9 +1659,9 @@ class Processor(object):
             class that own the :class:`~Parameter` and the instance for which we want the value.
         """
 
-        return parameter.__get__(self.process, self.processClass)
+        return parameter.__get__(self.process, self.process_class)
 
-    def setParameter(self, parameter: Parameter, value: Any) -> Any:
+    def set_parameter(self, parameter: Parameter, value: Any) -> Any:
         """Set the given value to the given :class:`~Parameter` object.
 
         Return:
@@ -1697,18 +1675,18 @@ class Processor(object):
         """
 
         parameter.__set__(self.process, value)
-        return self.getParameter(parameter)
+        return self.get_parameter(parameter)
 
-    def setupTags(self) -> None:
-        """Setup the tags used by this Processor to modify the it's behaviour."""
+    def setup_tags(self) -> None:
+        """Setup the tags used by this Processor to modify the it's behavior."""
 
-        self.__isEnabled = True
-        self.__isCheckable = self.hasCheckMethod
-        self.__isFixable = self.hasFixMethod
-        self.__hasTool = self.hasToolMethod
-        self.__isNonBlocking = False
-        self.__inBatch = True
-        self.__inUi = True
+        self.__is_enabled = True
+        self.__is_checkable = self.has_check_method
+        self.__is_fixable = self.has_fix_method
+        self.__has_tool = self.has_tool_method
+        self.__is_non_blocking = False
+        self.__in_batch = True
+        self.__in_ui = True
 
         tags = self._tags
 
@@ -1716,46 +1694,46 @@ class Processor(object):
             return
 
         if tags & Tag.DISABLED:
-            self.__isEnabled = False
+            self.__is_enabled = False
 
         if tags & Tag.NO_CHECK:
-            self.__isCheckable = False
+            self.__is_checkable = False
 
         if tags & Tag.NO_FIX:
-            self.__isFixable = False
+            self.__is_fixable = False
 
         if tags & Tag.NO_TOOL:
-            self.__hasTool = False
+            self.__has_tool = False
 
         if tags & Tag.NON_BLOCKING:
-            self.__isNonBlocking = True
+            self.__is_non_blocking = True
 
         if tags & Tag.NO_BATCH:
-            self.__inBatch = False
+            self.__in_batch = False
 
         if tags & Tag.NO_UI:
-            self.__inUi = False
+            self.__in_ui = False
 
-    def resolveLinks(self, 
-        linkedObjects: List[Optional[Processor], ...], 
-        check: Link = AtConstants.CHECK, 
-        fix: Link = AtConstants.FIX, 
-        tool: Link = AtConstants.TOOL) -> None:
+    def resolve_links(self, 
+        linked_objects: List[Optional[Processor]], 
+        check: Link = atConstants.CHECK, 
+        fix: Link = atConstants.FIX, 
+        tool: Link = atConstants.TOOL) -> None:
         """Resolve the links between the given objects and the current Processor.
 
         This need to be called with an ordered list of :class:`~Processor` or None for :class:`~Processor` to skip.
         (e.g. to skip those that should not be linked because they dont have to be run in batch or ui.)
 
         Parameters:
-            linkedObjects: List of all objects used to resolve the current Processor's links. Objects to skip have to be replaced with `None`.
+            linked_objects: List of all objects used to resolve the current Processor's links. Objects to skip have to be replaced with `None`.
             check: Name of the method to use as check link on the given objects.
             fix: Name of the method to use as fix link on the given objects.
             tool: Name of the method to use as tool link on the given objects.
         """
 
-        self.__linksData = linksData = {Link.CHECK: [], Link.FIX: [], Link.TOOL: []}
+        self.__links_data = links_data = {Link.CHECK: [], Link.FIX: [], Link.TOOL: []}
 
-        if not linkedObjects:
+        if not linked_objects:
             return
 
         links = self._links
@@ -1764,7 +1742,7 @@ class Processor(object):
 
         for link in links:
             id_, _driver, _driven = link
-            if linkedObjects[id_] is None:
+            if linked_objects[id_] is None:
                 continue
 
             driven = _driven
@@ -1772,11 +1750,11 @@ class Processor(object):
             driven = fix if _driven is Link.FIX else driven
             driven = tool if _driven is Link.TOOL else driven
 
-            linksData[_driver].append(getattr(linkedObjects[id_], driven))
+            links_data[_driver].append(getattr(linked_objects[id_], driven))
 
-    def _overrideStatus(self, 
+    def _override_status(self, 
         process: Process, 
-        overrides: Mapping[str, Mapping[Union[Type[AtStatus.FailStatus], Type[AtStatus.SuccessStatus]], AtStatus.Status]]) -> None:
+        overrides: Mapping[str, Mapping[Union[Type[atStatus.FailStatus], Type[atStatus.SuccessStatus]], atStatus.Status]]) -> None:
         """Override the Processor's Process' Threads Statuses based on a dict of overrides.
 
         Will iter through all Processor's Process' Threads and do the overrides from the dict by replacing the Fail
@@ -1793,46 +1771,46 @@ class Processor(object):
         if not overrides:
             return
 
-        for threadName, overridesDict in overrides.items():
-            if not hasattr(process, threadName):
-                raise RuntimeError('Process {0} have no thread named {1}.'.format(process._name_, threadName))
-            thread = getattr(process, threadName)
+        for thread_name, overrides_dict in overrides.items():
+            if not hasattr(process, thread_name):
+                raise RuntimeError('Process {0} have no thread named {1}.'.format(process._name_, thread_name))
+            thread = getattr(process, thread_name)
             
             # Get the fail overrides for the current name
-            status = overridesDict.get(AtStatus.FailStatus, None)
+            status = overrides_dict.get(atStatus.FailStatus, None)
             if status is not None:
-                if not isinstance(status, AtStatus.FailStatus):
+                if not isinstance(status, atStatus.FailStatus):
                     raise RuntimeError('Fail feedback status override for {0} "{1}" must be an instance or subclass of {2}'.format(
                         process._name_,
-                        threadName,
-                        AtStatus.FailStatus
+                        thread_name,
+                        atStatus.FailStatus
                     ))
-                thread.overrideFailStatus(status)
+                thread.override_fail_status(status)
             
             # Get the success overrides for the current name
-            status = overridesDict.get(AtStatus.SuccessStatus, None)
+            status = overrides_dict.get(atStatus.SuccessStatus, None)
             if status is not None:
-                if not isinstance(status, AtStatus.SuccessStatus):
+                if not isinstance(status, atStatus.SuccessStatus):
                     raise RuntimeError('Success feedback status override for {0} "{1}" must be an instance or subclass of {2}'.format(
                         process._name_,
-                        threadName,
-                        AtStatus.SuccessStatus
+                        thread_name,
+                        atStatus.SuccessStatus
                     ))
-                thread.overrideSuccessStatus(status)
+                thread.override_success_status(status)
 
-    def setProgressbar(self, progressbar: QtWidgets.QProgressBar) -> None:
+    def set_progress_bar(self, progress_bar: QtWidgets.QProgressBar) -> None:
         """Set the ProgressBar object in the UI to be used by the Processor's Process.
 
         Made to be called in the ui this method allow to give access to the progress bar in the Processor's Process to 
         give feedback on the execution progress while performing `check` and/or `fix`.
 
         Parameters:
-            progressbar: ProgressBar object object to connect to the process to display check and fix progression.
+            progress_bar: ProgressBar object object to connect to the process to display check and fix progression.
         """
 
-        self.process.setProgressbar(progressbar)
+        self.process.set_progress_bar(progress_bar)
 
-    def getData(self, key: str, default: Optional[Any] = None) -> Any:
+    def get_data(self, key: str, default: Optional[Any] = None) -> Any:
         """Get the Processor's Data for the given key or default value if key does not exists.
 
         Parameters:
@@ -1845,7 +1823,7 @@ class Processor(object):
 
         return self._data.get(key, default)
 
-    def setData(self, key: str, value: Any) -> None:
+    def set_data(self, key: str, value: Any) -> None:
         """Set the Processor's Data for the given key
 
         Parameters:
@@ -1855,10 +1833,10 @@ class Processor(object):
 
         self._data[key] = value
 
-    def interupt(self):
-        """Register user interuption for the Processor's Process"""
+    def interrupt(self):
+        """Register user interruption for the Processor's Process"""
         
-        self.process._registerInteruption()
+        self.process._register_interruption()
 
 
 #TODO: Improve the mechanic with `typeCast` and `validate`, maybe include other method to validate type as well.
@@ -1935,10 +1913,10 @@ class Parameter(abc.ABC):
             value: The new value to set the Parameter's value to.
         """
 
-        castValue = self.typeCast(value)
+        cast_value = self.type_cast(value)
 
-        if self.validate(castValue):
-            setattr(instance, self.__name, castValue)
+        if self.validate(cast_value):
+            setattr(instance, self.__name, cast_value)
 
     def __delete__(self, instance: Process) -> None:
         """Descriptor deleter for the Parameter.
@@ -1974,11 +1952,11 @@ class Parameter(abc.ABC):
         return self.__default
 
     @abc.abstractmethod
-    def typeCast(self, value: Any) -> T:
+    def type_cast(self, value: Any) -> T:
         """Cast the input value to the Parameter's type set in :attr:`~Parameter.TYPE`.
 
         This method is not implemented on the Parameter abstract base class, it needs to be implemented in 
-        each an every subclass that are meant to be instanciated and use in an Athena :class:`~Process`.
+        each an every subclass that are meant to be instantiated and use in an Athena :class:`~Process`.
         The input may be of various type so this method should handle different case of type casting.
         To do so, you can use the the :attr:`~Parameter.TYPE` attribute to convert the input value to the desired type.
 
@@ -1989,7 +1967,7 @@ class Parameter(abc.ABC):
             NotImplementedError: This is an abstract method of an abstract base class, it needs to be implemented in subclasses.
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @abc.abstractmethod
     def validate(self, value: T) -> bool:
@@ -2005,7 +1983,7 @@ class Parameter(abc.ABC):
             NotImplementedError: This is an abstract method of an abstract base class, it needs to be implemented in subclasses.
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 class BoolParameter(Parameter):
@@ -2025,7 +2003,7 @@ class BoolParameter(Parameter):
 
         super(BoolParameter, self).__init__(default)
 
-    def typeCast(self, value: Any) -> bool:
+    def type_cast(self, value: Any) -> bool:
         """Cast the input value to the `bool` type.
         
         The casting is simple and support `bool`, `str` and `int`, all value of those type that can be considered `True`
@@ -2063,7 +2041,7 @@ class BoolParameter(Parameter):
 class _NumberParameter(Parameter):
     """A sub-type of Parameter that can be used to represent a numeric value.
     
-    _NumberParameter is a protected class, only used internaly, it must not be instantiated due to the abstract nature
+    _NumberParameter is a protected class, only used internally, it must not be instantiated due to the abstract nature
     of the `numbers.Number` type.
 
     Warning:
@@ -2097,9 +2075,9 @@ class _NumberParameter(Parameter):
 
         self._minimum = minimum
         self._maximum = maximum
-        self._keepInRange = keepInRange
+        self._keep_in_range = keepInRange
 
-    def typeCast(self, value: object) -> numbers.Number:
+    def type_cast(self, value: object) -> numbers.Number:
         """Cast the input value to the `numbers.Number` type.
         
         As the `numbers.Number` type is not instantiable, this method is meant to work wit sub-types that define an
@@ -2116,7 +2094,7 @@ class _NumberParameter(Parameter):
 
         value = self.TYPE(value)
 
-        if self._keepInRange:
+        if self._keep_in_range:
             if self._minimum is not None and value < self._minimum:
                 return self._minimum
             elif self._maximum is not None and value > self._maximum:
@@ -2159,13 +2137,13 @@ class StringParameter(Parameter):
 
     TYPE: Type[str] = str
 
-    def __init__(self, default: str, validation: Optional[Sequence[str, ...]] = None, caseSensitive: bool = True):
+    def __init__(self, default: str, validation: Optional[Sequence[str]] = None, case_sensitive: bool = True):
         """Initialize a new instance of StringParameter.
 
         Parameters:
             default: The default string value for the Parameter.
             validation: List of valid string the Parameter can have or None if all string are accepted.
-            caseSensitive: Whether or not the string given in `validation` are case sensitive.
+            case_sensitive: Whether or not the string given in `validation` are case sensitive.
         """
 
         if not isinstance(default, self.TYPE):
@@ -2174,9 +2152,9 @@ class StringParameter(Parameter):
         super(StringParameter, self).__init__(default)
 
         self._validation = validation
-        self._caseSensitive = caseSensitive
+        self._case_sensitive = case_sensitive
 
-    def typeCast(self, value: object) -> str:
+    def type_cast(self, value: object) -> str:
         """Cast the input value to string.
 
         Parameters:
@@ -2201,7 +2179,7 @@ class StringParameter(Parameter):
         if self._validation is None:
             return True
         else:
-            if self._caseSensitive:
+            if self._case_sensitive:
                 return value in self._validation
             else:
                 return value.lower() in {validation.lower() for validation in self._validation}
@@ -2210,7 +2188,7 @@ class StringParameter(Parameter):
 
 
 class _ProcessProfile(object):
-    """Profiler that allow to profile the execution of `athena.AtCore.Process`"""
+    """Profiler that allow to profile the execution of `athena.atCore.Process`"""
 
     # Match integers, floats (comma or dot) and slash in case there is a separation for primitive calls.
     DIGIT_PATTERN: str = r'([0-9,.\/]+)'
@@ -2226,8 +2204,8 @@ class _ProcessProfile(object):
     )
 
     def __init__(self) -> None:
-        """Initialiste a Process Profiler and define the default instance attributes."""
-        self._profiles: Dict[str, Dict[str, Union[float, List[Tuple[str, ...], ...]]]] = {} 
+        """Initialize a Process Profiler and define the default instance attributes."""
+        self._profiles: Dict[str, Dict[str, Union[float, List[Tuple[str, ...]]]]] = {} 
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:
         """Get a profile log from the given key, or default if key does not exists.
@@ -2242,38 +2220,38 @@ class _ProcessProfile(object):
 
         return self._profiles.get(key, default)
 
-    def _getCallDataList(self, callData: Sequence[str, ...]) -> None:
+    def _get_call_data_list(self, call_data: Sequence[str]) -> None:
         """Format and split `cProfile.Profiler` call data list (each value in the list must be one line.)
 
         This will mostly remove heading or trailing spaces and return a list of tuple where each values in the
-        string is now an entry in the tuple. The order is the same than `athena.AtCore._ProcessProfile.CATEGORIES`.
+        string is now an entry in the tuple. The order is the same than `athena.atCore._ProcessProfile.CATEGORIES`.
         
         Parameters:
-            callData: Call entries from a `cProfile.Profiler` run.
+            call_data: Call entries from a `cProfile.Profiler` run.
         """
 
-        dataList = []
-        for call in callData:
-            callData = []
+        data_list = []
+        for call in call_data:
+            call_data = []
 
-            filteredData = tuple(filter(lambda x: x, call.strip().split(' ')))
-            if not filteredData:
+            filtered_data = tuple(filter(lambda x: x, call.strip().split(' ')))
+            if not filtered_data:
                 continue
-            callData.extend(filteredData[0:5])
+            call_data.extend(filtered_data[0:5])
 
-            value = ' '.join(filteredData[5:len(filteredData)])
-            callData.append(float(value) if value.isdigit() else value)
+            value = ' '.join(filtered_data[5:len(filtered_data)])
+            call_data.append(float(value) if value.isdigit() else value)
 
-            dataList.append(tuple(callData))
+            data_list.append(tuple(call_data))
 
-        return dataList
+        return data_list
 
-    def profileMethod(self, method: FunctionType, *args: Any, **kwargs: Any) -> Any:
+    def profile_method(self, method: FunctionType, *args: Any, **kwargs: Any) -> Any:
         """Profile the given method execution and return it's result. The profiling result will be stored in the 
         object.
 
         Try to execute the given method with the given args and kwargs and write the result in a temporary file.
-        The result will then be read and each line splited to save a dict in the object `_profiles` attribute using
+        The result will then be read and each line splitted to save a dict in the object `_profiles` attribute using
         the name of the given method as key.
         This dict will hold information like the time when the profiling was done (key = `time`, it can allow to not 
         update data in a ui for instance), the total number of calls and obviously a tuple with each call data (`calls`).
@@ -2295,21 +2273,21 @@ class _ProcessProfile(object):
         # Run the method with `cProfile.Profile.runcall` to profile it's execution only. We define exception before
         # executing it, if an exception occur the except statement will be processed and `exception` will be updated
         # from `None` to the exception that should be raised.
-        # At the end of this method exception must be raised in case it should be catch at upper leve in the code.
+        # At the end of this method exception must be raised in case it should be catch at upper level in the code.
         # This allow to not skip the profiling even if an exception occurred. Of course the profiling will not be complete
-        # But there should be all information from the beginning of the method to the exception. May be usefull for debugging.
+        # But there should be all information from the beginning of the method to the exception. May be useful for debugging.
         exception = None
-        returnValue = None
+        return_value = None
         try:
-            returnValue = profile.runcall(method, *args, **kwargs)
-            self._profiles[method.__name__] = self.getStatsFromProfile(profile)
-            return returnValue
+            return_value = profile.runcall(method, *args, **kwargs)
+            self._profiles[method.__name__] = self.get_stats_from_profile(profile)
+            return return_value
 
         except Exception as exception_:
-            self._profiles[method.__name__] = self.getStatsFromProfile(profile)
+            self._profiles[method.__name__] = self.get_stats_from_profile(profile)
             raise
 
-    def getStatsFromProfile(self, profile: cProfile.Profile) -> Dict[str, Union[float, List[Tuple[str, ...], ...]]]:
+    def get_stats_from_profile(self, profile: cProfile.Profile) -> Dict[str, Union[float, List[Tuple[str, ...]]]]:
         """
 
         """
@@ -2317,51 +2295,35 @@ class _ProcessProfile(object):
         # Create a temp file and use it as a stream for the `pstats.Stats` This will allow us to open the file
         # and retrieve the stats as a string. With regex it's now possible to retrieve all the data in a displayable format
         # for any user interface.
-        fd, tmpFile = tempfile.mkstemp()
+        fd, tmp_file = tempfile.mkstemp()
         try:
-            with open(tmpFile, 'w') as statStream:
-                stats = pstats.Stats(profile, stream=statStream)
+            with open(tmp_file, 'w') as stat_stream:
+                stats = pstats.Stats(profile, stream=stat_stream)
                 stats.sort_stats('cumulative')  # cumulative will use the `cumtime` to order stats, seems the most relevant.
                 stats.print_stats()
             
-            with open(tmpFile, 'r') as statStream:
-                statsStr = statStream.read()
+            with open(tmp_file, 'r') as stat_stream:
+                stats_str = stat_stream.read()
         finally:
             # No matter what happen, we want to delete the file.
             # It happen that the file is not closed here on Windows so we also call `os.close` to ensure it is really closed.
             # WindowsError: [Error 32] The process cannot access the file because it is being used by another process: ...
             os.close(fd)
-            os.remove(tmpFile)
+            os.remove(tmp_file)
 
-        split = statsStr.split('\n')
-        methodProfile = {
+        split = stats_str.split('\n')
+        method_profile = {
             'time': time.time(),  # With this we will be able to not re-generate widget (for instance) if data have not been updated.
-            'calls': self._getCallDataList(split[5:-1]),
-            'rawStats': statsStr,
+            'calls': self._get_call_data_list(split[5:-1]),
+            'rawStats': stats_str,
         }
 
         # Take care of possible primitive calls in the summary for `ncalls`.
         summary = self.DIGIT_REGEX.findall(split[0])
-        methodProfile['tottime'] = summary[-1]
+        method_profile['tottime'] = summary[-1]
         if len(summary) == 3:
-            methodProfile['ncalls'] = '{0}/{1}'.format(summary[0], summary[1])
+            method_profile['ncalls'] = '{0}/{1}'.format(summary[0], summary[1])
         else:
-            methodProfile['ncalls'] = summary[0]
+            method_profile['ncalls'] = summary[0]
 
-        return methodProfile
-
-        
-
-# Setup
-'''
-import sys
-sys.path.append('C:\Python27\Lib\site-packages')
-sys.path.append('C:\Workspace\athena\src')
-
-import athena.ressources.athena_example.ContextExample
-
-import athena
-athena._reload(__name__)
-
-athena.launch(dev=True)
-'''
+        return method_profile

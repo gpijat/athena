@@ -18,14 +18,14 @@ try:
 except ImportError:
     from imp import reload  # Python 3.0 - 3.3
 
-from athena import AtConstants
+from athena import atConstants
 
 
-LOGGER = logging.getLogger(AtConstants.PROGRAM_NAME)
+LOGGER = logging.getLogger(atConstants.PROGRAM_NAME)
 LOGGER.setLevel(20)
 
 
-def iterBlueprintsPath(package: str, software: str = 'standalone', verbose: bool = False) -> Iterator[str]:
+def iter_blueprints_path(package: str, software: str = 'standalone', verbose: bool = False) -> Iterator[str]:
     """Retrieve available envs from imported packages.
 
     Retrieve the currently imported packages path that match the pattern to works with this tool: {program}_{prod}
@@ -35,33 +35,33 @@ def iterBlueprintsPath(package: str, software: str = 'standalone', verbose: bool
     Parameters:
         package: This is the string path to a python package.
         software: The software for which to get envs. (default: 'standalone')
-        verbose: Define if the function should log informations about its process.
+        verbose: Define if the function should log information about its process.
 
     Return:
         Return a dict containing all envs for the given package and software.
         The key is the env and the value is a dict containing the imported module object for the env and its str path.
     """
 
-    packagePath = os.path.dirname(package.__file__)
+    package_path = os.path.dirname(package.__file__)
     for loader, moduleName, _ in pkgutil.iter_modules(package.__path__):
-        yield os.path.join(packagePath, '{}.py'.format(moduleName))
+        yield os.path.join(package_path, '{}.py'.format(moduleName))
 
 
 #WATCME: Not used anymore.
-def getPackages() -> Tuple[str, ...]:
+def get_packages() -> Tuple[str, ...]:
     """Get all packages that match the tool convention pattern.
 
     Loop through all modules in sys.modules.keys() and package those who match the tool convention pattern
     that is `{PROGRAM_NAME}_*`
 
     Parameters:
-        verbose: Define if the function should log informations about its process. (default: False)
+        verbose: Define if the function should log information about its process. (default: False)
 
     Return:
         Return a dict containing all package that match the pattern of the tool
         The key is the prod and the value is a dict containing the module object and its str path.
 
-    .. deprecated:: 1.0.0
+    .. deprecated:: 0.1.0-beta.2
     """
 
     packages = []
@@ -69,56 +69,56 @@ def getPackages() -> Tuple[str, ...]:
     rules = []
     # Append the rules list with all rules used to get package that end with {PROGRAM_NAME}_?_???
     rules.append(r'.*?')  # Non-greedy match on filler
-    rules.append(r'({}_(?:[A-Za-z0-9_]+))'.format(AtConstants.PROGRAM_NAME))  # Match {PROGRAM_NAME}_? pattern.
+    rules.append(r'({}_(?:[A-Za-z0-9_]+))'.format(atConstants.PROGRAM_NAME))  # Match {PROGRAM_NAME}_? pattern.
     rules.append(r'.*?')  # Non-greedy match on filler
     rules.append(r'([A-Za-z0-9_]+)')  # Word that match alpha and/or numerics, allowing '_' character.
 
     regex = re.compile(''.join(rules), re.IGNORECASE|re.DOTALL)
 
-    for loadedPackage in sys.modules.keys():
+    for loaded_package in sys.modules.keys():
 
         # Ignore all module unrelated to this tool.
-        if AtConstants.PROGRAM_NAME not in loadedPackage:
+        if atConstants.PROGRAM_NAME not in loaded_package:
             continue
 
-        search = regex.search(loadedPackage)
+        search = regex.search(loaded_package)
         if not search:
             continue
 
         groups = search.groups()
-        if not loadedPackage.endswith('.'.join(groups)):
+        if not loaded_package.endswith('.'.join(groups)):
             continue
         
-        packages.append(loadedPackage)
+        packages.append(loaded_package)
 
-        LOGGER.debug('Package "{}" found'.format(loadedPackage))
+        LOGGER.debug('Package "{}" found'.format(loaded_package))
 
     return tuple(packages)
 
 
-def importProcessModuleFromPath(processStrPath: str) -> ModuleType:
+def import_process_module_from_path(process_str_path: str) -> ModuleType:
     """Import the :class:`~Process` module from the given process python import string.
     
     Parameters:
-        processStrPath: Python import string to a :class:`~Process` class.
+        process_str_path: Python import string to a :class:`~Process` class.
 
     Return:
         The imported module that contains the Process' class.
 
     Raises:
-        ImportError: If the imported :class:`~Process` module is missing the mentionned :class:`~Process` class.
+        ImportError: If the imported :class:`~Process` module is missing the mentioned :class:`~Process` class.
     """
 
-    moduleStrPath, _, processName = processStrPath.rpartition('.')
-    module = importFromStr(moduleStrPath)
+    module_str_path, _, process_name = process_str_path.rpartition('.')
+    module = import_from_str(module_str_path)
 
-    if not hasattr(module, processName):
-        raise ImportError('Module {0} have no class named {1}'.format(module.__name__, processName))
+    if not hasattr(module, process_name):
+        raise ImportError('Module {0} have no class named {1}'.format(module.__name__, process_name))
     
     return module
 
 
-def getSoftware() -> str:
+def get_software() -> str:
     """Get the current software from which the tool is executed.
 
     Fallback on different instruction an try to get the current running software.
@@ -127,7 +127,7 @@ def getSoftware() -> str:
     Returns:
         The current software if any are find else the default value.
 
-    .. deprecated:: 1.0.0
+    .. deprecated:: 0.1.0-beta.2
     """
 
     # Fallback on the most efficient solution if psutil package is available
@@ -135,42 +135,42 @@ def getSoftware() -> str:
         import psutil
         process = psutil.Process(os.getpid())
         if process:
-            software = _formatSoftware(softwarePath=process.name())
+            software = _format_software(software_path=process.name())
             if software:
                 return software
                 
     # Fallback on sys.argv[0] or sys.executable (This depends on the current interpreter)
-    pythonInterpreter = sys.executable
-    if pythonInterpreter:
-        software = _formatSoftware(softwarePath=pythonInterpreter)
+    python_interpreter = sys.executable
+    if python_interpreter:
+        software = _format_software(software_path=python_interpreter)
         if software:
             return software
     
-    # Fallback on PYTHONHOME or _ environment variable
-    pythonHome = os.environ.get('PYTHONHOME', os.environ.get('_', ''))
-    if pythonHome:
-        software = _formatSoftware(softwarePath=pythonHome)
+    # Fallback on python_home or _ environment variable
+    python_home = os.environ.get('python_home', os.environ.get('_', ''))
+    if python_home:
+        software = _format_software(software_path=python_home)
         if software:
             return software
 
     return 'Standalone'
 
 
-def _formatSoftware(softwarePath: str) -> str:
+def _format_software(software_path: str) -> str:
     """Check if there is an available software str in the hiven Path
 
     Parameters:
-        softwarePath: The path to a software executable is expected here, but this works with any str.
+        software_path: The path to a software executable is expected here, but this works with any str.
         verbose: Define if the function should log informations about its process. (default: False)
 
     Returns:
-        The software found in softwarePath if there is one or an empty string.
+        The software found in software_path if there is one or an empty string.
 
-    .. deprecated:: 1.0.0
+    .. deprecated:: 0.1.0-beta.2
     """
 
-    path = str(softwarePath).lower()
-    for soft, regexes in AtConstants.AVAILABLE_SOFTWARE.items():
+    path = str(software_path).lower()
+    for soft, regexes in atConstants.AVAILABLE_SOFTWARE.items():
         for regex in regexes:
             match = re.search(r'\{0}?{1}\{0}?'.format(os.sep, regex), path)
             if match:
@@ -179,7 +179,7 @@ def _formatSoftware(softwarePath: str) -> str:
     return ''
 
 
-def getOs() -> str:
+def get_os() -> str:
     """Get the current used OS platform.
 
     If the Process Platform is `Darwin`, return `MacOs` instead for simplicity.
@@ -191,7 +191,7 @@ def getOs() -> str:
     return platform.system().replace('Darwin', 'MacOs')
 
 
-def pythonImportPathFromPath(path: str) -> str:
+def python_import_path_from_path(path: str) -> str:
     """Generate a python import string path from a system path to a python Module or Package.
 
     Iterate through all directories in the path and include it in the python import string if it contains an `__init__.py` module.
@@ -215,29 +215,29 @@ def pythonImportPathFromPath(path: str) -> str:
     elif os.path.isdir(path):
         path_, file_ = path, None
     
-    incrementalPath = ''
-    pythonImportPath = ''
+    incremental_path = ''
+    python_import_path = ''
     for i, folder in enumerate(path_.split(os.sep)):
         if i == 0:
-            incrementalPath = folder or os.sep
+            incremental_path = folder or os.sep
             continue
         else:
-            incrementalPath += '{}{}'.format(os.sep, folder)
+            incremental_path += '{}{}'.format(os.sep, folder)
 
-        if '__init__.py' in os.listdir(incrementalPath):
-            pythonImportPath += '{}{}'.format('.' if pythonImportPath else '', folder)
+        if '__init__.py' in os.listdir(incremental_path):
+            python_import_path += '{}{}'.format('.' if python_import_path else '', folder)
     
     if file_:
-        pythonImportPath += '.' + os.path.splitext(file_)[0]
+        python_import_path += '.' + os.path.splitext(file_)[0]
     
-    return pythonImportPath
+    return python_import_path
 
 
-def importFromStr(moduleStr: str, verbose: bool = False) -> ModuleType:
+def import_from_str(module_str: str, verbose: bool = False) -> ModuleType:
     """Try to import the module from the given string
 
     Parameters:
-        moduleStr: Path to a module to import.
+        module_str: Path to a module to import.
         verbose: Define if the function should log informations about its process. (default: False)
 
     Return:
@@ -246,19 +246,19 @@ def importFromStr(moduleStr: str, verbose: bool = False) -> ModuleType:
 
     module = None  #Maybe QC Error ?
     try:
-        module = importlib.import_module(moduleStr) #TODO: if multiple checks come from same module try to load module multiple time
+        module = importlib.import_module(module_str) #TODO: if multiple checks come from same module try to load module multiple time
         if verbose: 
-            LOGGER.info('import {} success'.format(moduleStr))
+            LOGGER.info('import {} success'.format(module_str))
     except ImportError as exception:
         if verbose:
-            LOGGER.exception('load {} failed'.format(moduleStr))
+            LOGGER.exception('load {} failed'.format(module_str))
 
         raise
 
     return module
 
 
-def reloadModule(module: ModuleType) -> ModuleType:
+def reload_module(module: ModuleType) -> ModuleType:
     """Reload the given module object using the right `reload` function, whether it's from `imp` or `importLib`.
     
     Python 3.4 and above use the `reload` function from the `importLib` module while previous version use whether the 
@@ -278,20 +278,20 @@ def reloadModule(module: ModuleType) -> ModuleType:
     return reload(module)
 
 
-def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleType:
+def module_from_str(python_code: str, name: str = 'DummyAthenaModule') -> ModuleType:
     """Build a Module object with the given str as it's code.
     
     This will build a python module object and set's it's `code` so it acts as a normal module and can be loaded into 
     Athena's :class:`~Register`.
 
     Parameters:
-        pythonCode: The Python code for the module as a string.
+        python_code: The Python code for the module as a string.
         name: Name for the created module object.
 
     Return:
         A python module that contains the given code and can be used the same way any module can.
 
-    .. deprecated:: 1.0.0
+    .. deprecated:: 0.1.0-beta.2
     """
 
     #TODO: Remove dead code.
@@ -299,13 +299,13 @@ def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleTyp
 
     # module = importlib.util.module_from_spec(spec)
 
-    # exec(pythonCode, module.__dict__)
+    # exec(python_code, module.__dict__)
     # sys.modules[name] = module
 
     # return module
 
     module = ModuleType(name)
-    exec(pythonCode, module.__dict__)
+    exec(python_code, module.__dict__)
     sys.modules[name] = module
 
     module.__file__ = ''
@@ -313,21 +313,21 @@ def moduleFromStr(pythonCode: str, name: str = 'DummyAthenaModule') -> ModuleTyp
     return module
 
 
-def importPathStrExist(importStr: str) -> bool:
+def import_path_str_exist(import_str: str) -> bool:
     """Tells whether or not the given python import string is valid or not.
     
     Parameters:
-        importStr: The python import string path to a module or package.
+        import_str: The python import string path to a module or package.
 
     Return:
         Whether or not the given import string is valid and could be imported.
     """
 
-    return bool(pkgutil.find_loader(importStr))
+    return bool(pkgutil.find_loader(import_str))
 
 
 T = TypeVar('T')
-def getOverridedMethods(instance: T, cls: Type[T]) -> Dict[str, FunctionType]:
+def get_overridden_methods(instance: T, cls: Type[T]) -> Dict[str, FunctionType]:
     """Get all methods that have been overridden from a the given instance and the given type.
 
     Parameters:
@@ -352,27 +352,27 @@ def getOverridedMethods(instance: T, cls: Type[T]) -> Dict[str, FunctionType]:
     return res
 
 
-def camelCaseSplit(toSplit: str) -> str:
+def camel_case_split(to_split: str) -> str:
     """Format a string write with camelCase convention into a string with space.
 
     Parameters:
-        toSplit: The camelCase string to split and format.
+        to_split: The camelCase string to split and format.
 
     Return:
         The given string camelCase string splitted from upper cases with whitespaces instead.
     """
 
-    matches = re.finditer('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', toSplit)
-    splitString = []
+    matches = re.finditer('(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])', to_split)
+    split_str = []
 
     previous = 0
     for match in matches:
-        splitString.append(toSplit[previous:match.start()])
+        split_str.append(to_split[previous:match.start()])
         previous = match.start()
 
-    splitString.append(toSplit[previous:])
+    split_str.append(to_split[previous:])
 
-    return ' '.join(splitString)
+    return ' '.join(split_str)
 
 
 T = TypeVar('T')
@@ -411,48 +411,48 @@ class Singleton(type):
             return isinstance(instance.__class__, mcls)
 
 
-def createNewAthenaPackageHierarchy(rootDirectory: str) -> None:
+def create_new_athena_package_hierarchy(root_directory: str) -> None:
     """Create a new Athena's package hierarchy at the given root directory.
 
     Parameters:
-        rootDirectory: The root directory at which to create a new Athena's package hierarchy.
+        root_directory: The root directory at which to create a new Athena's package hierarchy.
     
-    .. deprecated:: 1.0.0
+    .. deprecated:: 0.1.0-beta.2
     """
 
-    if os.path.exists(rootDirectory):
-        raise OSError('`{}` already exists. Abort {0} package creation.'.format(AtConstants.PROGRAM_NAME))
-    os.mkdir(rootDirectory)
+    if os.path.exists(root_directory):
+        raise OSError('`{}` already exists. Abort {0} package creation.'.format(atConstants.PROGRAM_NAME))
+    os.mkdir(root_directory)
 
-    blueprintDirectory = os.path.join(rootDirectory, 'blueprints')
-    os.mkdir(blueprintDirectory)
-    processesDirectory = os.path.join(rootDirectory, 'processes')
-    os.mkdir(processesDirectory)
+    blueprint_directory = os.path.join(root_directory, 'blueprints')
+    os.mkdir(blueprint_directory)
+    processes_directory = os.path.join(root_directory, 'processes')
+    os.mkdir(processes_directory)
 
-    initPyFiles = (
-        os.path.join(rootDirectory, '__init__.py'),
-        os.path.join(blueprintDirectory, '__init__.py'),
-        os.path.join(processesDirectory, '__init__.py')
+    init_py_files = (
+        os.path.join(root_directory, '__init__.py'),
+        os.path.join(blueprint_directory, '__init__.py'),
+        os.path.join(processes_directory, '__init__.py')
         )
     
-    header = '# Generated from {0} - Version {1}\n'.format(AtConstants.PROGRAM_NAME, AtConstants.VERSION)
-    for file in initPyFiles:
+    header = '# Generated from {0} - Version {1}\n'.format(atConstants.PROGRAM_NAME, atConstants.VERSION)
+    for file in init_py_files:
         with open(file, 'w') as file:
             file.write(header)
 
-    dummyProcessPath = os.path.join(processesDirectory, 'dummyProcess.py')
-    with open(dummyProcessPath, 'w') as file:
-        file.write(header + AtConstants.DUMMY_PROCESS_TEMPLATE)
+    dummy_process_path = os.path.join(processes_directory, 'dummyProcess.py')
+    with open(dummy_process_path, 'w') as file:
+        file.write(header + atConstants.DUMMY_PROCESS_TEMPLATE)
 
-    dummyBlueprintPath = os.path.join(blueprintDirectory, 'dummyBlueprint.py')
-    with open(dummyBlueprintPath, 'w') as file:
-        file.write(header + AtConstants.DUMMY_BLUEPRINT_TEMPLATE)
+    dummy_blueprint_path = os.path.join(blueprint_directory, 'dummyBlueprint.py')
+    with open(dummy_blueprint_path, 'w') as file:
+        file.write(header + atConstants.DUMMY_BLUEPRINT_TEMPLATE)
 
 
 T = TypeVar("T")
 R = TypeVar("R")
 
-def mapMapping(function: Callable[[T], R], mapping: Mapping[T]) -> Mapping[R]:
+def map_mapping(function: Callable[[T], R], mapping: Mapping[T]) -> Mapping[R]:
     """Execute the given function on all values inside the given Mapping object.
 
     Parameters:
@@ -466,19 +466,19 @@ def mapMapping(function: Callable[[T], R], mapping: Mapping[T]) -> Mapping[R]:
         This method will iterate recursively on the mapping and it's values from top to bottom.
     """
 
-    newMapping = {}
+    new_mapping = {}
     for key, value in mapping.items():
         if isinstance(value, Mapping):
-            newMapping[key] = mapMapping(function, value)
+            new_mapping[key] = map_mapping(function, value)
         elif isinstance(value, Sequence):
-            newMapping[key] = mapSequence(function, value)
+            new_mapping[key] = map_sequence(function, value)
         else:
-            newMapping[key] = function(value)
+            new_mapping[key] = function(value)
     
-    return type(mapping)(newMapping)
+    return type(mapping)(new_mapping)
           
 
-def mapSequence(function: Callable[[T], R], sequence: Sequence[T]) -> Sequence[R]:
+def map_sequence(function: Callable[[T], R], sequence: Sequence[T]) -> Sequence[R]:
     """Execute the given function on all values inside the given Sequence object.
 
     Parameters:
@@ -505,20 +505,20 @@ def mapSequence(function: Callable[[T], R], sequence: Sequence[T]) -> Sequence[R
     newSequence = []
     for each in sequence:
         if isinstance(each, Sequence):
-            newSequence.append(mapSequence(function, each))
+            newSequence.append(map_sequence(function, each))
         elif isinstance(each, Mapping):
-            newSequence.append(mapMapping(function, each))
+            newSequence.append(map_mapping(function, each))
         else:
             newSequence.append(function(each))
     
     return type(sequence)(newSequence)
 
 
-def deepMap(function: Callable[[T], R], collection: Collection[T]) -> Collection[R]:
+def deep_map(function: Callable[[T], R], collection: Collection[T]) -> Collection[R]:
     """Execute the given function on all values inside the given Collection object.
 
-    This will automatically call :func:`~mapSequence` or :func:`~mapMapping` based on the input collection or sub-collection
-    inside it. It should be prefered to those method when you're not aware of your input collection type or that this type
+    This will automatically call :func:`~map_sequence` or :func:`~map_mapping` based on the input collection or sub-collection
+    inside it. It should be preferred to those method when you're not aware of your input collection type or that this type
     is different from one iteration to the other.
 
     Parameters:
@@ -538,6 +538,6 @@ def deepMap(function: Callable[[T], R], collection: Collection[T]) -> Collection
         raise TypeError('{} object is not callable')
 
     if isinstance(collection, Sequence):
-        return mapSequence(function, collection)
+        return map_sequence(function, collection)
     elif isinstance(collection, Mapping):
-        return mapMapping(function, collection)
+        return map_mapping(function, collection)
