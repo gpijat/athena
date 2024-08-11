@@ -7,31 +7,31 @@ import unreal
 
 
 class SupportsStr(Protocol):
-    """Type Hints Protocol implementation for all class that support string convertion."""
+    """Type Hints Protocol implementation for all class that support string conversion."""
 
     def __str__(self) -> str:
         """Minimal implementation to supports the str Protocol."""
         ...
 
 
-def select(toSelect: Iterable[unreal.Actor], replace: bool = True) -> None:
+def select(to_select: Iterable[unreal.Actor], replace: bool = True) -> None:
     """Allow in-scene selection for Unreal-Engine.
 
     Parameters:
-        toSelect: All Unreal actors to select in the current scene.
+        to_select: All Unreal actors to select in the current scene.
         replace: Whether or not the current selection should be replaced with the new objects.
     """
 
-    actorSubSystem = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+    actor_subsystem = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 
     if replace:
-        actorSubSystem.clear_actor_selection_set()
+        actor_subsystem.clear_actor_selection_set()
 
-    for each in toSelect:
-        actorSubSystem.set_actor_selection_state(each, True)
+    for each in to_select:
+        actor_subsystem.set_actor_selection_state(each, True)
 
 
-def getDisplay(object_: Union[unreal.Actor, SupportsStr]) -> str:
+def get_display(object_: Union[unreal.Actor, SupportsStr]) -> str:
     """Get a displayable string for the given object.
     
     If the input is an `unreal.Actor` object, it's label is returned. If not, it's just converted to string.

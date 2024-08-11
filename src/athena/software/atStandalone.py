@@ -1,7 +1,7 @@
 from typing import Any
 
 
-def select(toSelect: Any, replace: bool = True) -> None:
+def select(to_select: Any, replace: bool = True) -> None:
     """Allow selection in standalone mode.
 
     Raises:
@@ -11,7 +11,7 @@ def select(toSelect: Any, replace: bool = True) -> None:
     raise NotImplementedError('To be implemented in a future release.')
 
 
-def getDisplay(object_: Any) -> str:
+def get_display(object_: Any) -> str:
     """Get a displayable string for the given object.
 
     Raises:

@@ -53,14 +53,14 @@ class PauseViewport(object):
         cmds.refresh()
 
 
-def selectInMaya(
-    toSelect: Iterable[Union[str, OpenMaya.MObject, OpenMaya.MDagPath, OpenMaya.MFnDependencyNode], ...], 
+def select_in_maya(
+    to_select: Iterable[Union[str, OpenMaya.MObject, OpenMaya.MDagPath, OpenMaya.MFnDependencyNode], ...], 
     mode: str ='add', 
     replace: bool = True) -> None:
     """Allow software selection in Maya for different Maya types.
 
     Parameters:
-        toSelect: The object(s) to select in Autodesk Maya.
+        to_select: The object(s) to select in Autodesk Maya.
         mode: The selection mode to use. (`add` or `remove`)
         replace: Define whether the function should `replace` or `add` to the current selection.
     
@@ -74,30 +74,30 @@ def selectInMaya(
             * MFnDependencyNodes (= All subtypes as well)
     """
 
-    selList = OpenMaya.MSelectionList()
+    selection_list = OpenMaya.MSelectionList()
 
-    for each in toSelect:
+    for each in to_select:
         # For `str`, `maya.api.OpenMaya.MDagPath` and `maya.api.OpenMaya.MObject`:
-        try: selList.add(each)
+        try: selection_list.add(each)
         except: pass
 
         # For `maya.api.OpenMaya.MFn*`:
-        try: selList.add(each.object())
+        try: selection_list.add(each.object())
         except: pass
 
     mode = OpenMaya.MGlobal.kAddToList if mode == 'add' else OpenMaya.MGlobal.kRemoveFromList
     if replace:
         mode = OpenMaya.MGlobal.kReplaceList
     
-    OpenMaya.MGlobal.setActiveSelectionList(selList, mode)
+    OpenMaya.MGlobal.setActiveSelectionList(selection_list, mode)
 
 
-def getDisplay(object_: Union[str, OpenMaya.MObject, OpenMaya.MDagPath, OpenMaya.MFnDependencyNode]) -> str:
+def get_display(object_: Union[str, OpenMaya.MObject, OpenMaya.MDagPath, OpenMaya.MFnDependencyNode]) -> str:
     """Get a clean display name for a Maya object.
 
     Parameters:
         object_: The object for which we want to get a clean name as a string. If it's already a string, the function 
-          will just retunr it. If it's a Maya api type, it will do different things to get a displayable name.
+          will just return it. If it's a Maya api type, it will do different things to get a displayable name.
     
     Return:
         A clean displayable name for the given Maya object.
@@ -155,7 +155,7 @@ class MayaFeedbackContainer(atCore.FeedbackContainer):
         
         # with PauseViewport():
         if self.children:
-            selectInMaya(tuple(child.feedback for child in self.children), mode='add', replace=replace)
+            select_in_maya(tuple(child.feedback for child in self.children), mode='add', replace=replace)
             replace = False
 
         return replace
@@ -173,7 +173,7 @@ class MayaFeedbackContainer(atCore.FeedbackContainer):
         
         # with PauseViewport():
         if self.children:
-            selectInMaya(tuple(child.feedback for child in self.children), mode='remove', replace=False)
+            select_in_maya(tuple(child.feedback for child in self.children), mode='remove', replace=False)
 
 
 @dataclass(frozen=True)
@@ -192,7 +192,7 @@ class MayaFeedback(atCore.Feedback):
             A readable display name for the :obj:`~MayaFeedback.feedback` attribute.
         """
 
-        return getDisplay(self.feedback)
+        return get_display(self.feedback)
 
     def select(self, replace: bool = True) -> bool:
         """Implement Maya's in-scene selection of the current :class:`~MayaFeedback`.
@@ -207,7 +207,7 @@ class MayaFeedback(atCore.Feedback):
         """
 
         if self.selectable:
-            selectInMaya((self.feedback,), mode='add', replace=replace)
+            select_in_maya((self.feedback,), mode='add', replace=replace)
             replace = False
 
         return super().select(replace=replace)
@@ -221,7 +221,7 @@ class MayaFeedback(atCore.Feedback):
         super().deselect()
 
         if self.selectable:
-            selectInMaya((self.feedback,), mode='remove', replace=False)
+            select_in_maya((self.feedback,), mode='remove', replace=False)
 
 
 class MayaProcess(atCore.Process):
