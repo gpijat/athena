@@ -13,18 +13,18 @@ Subpackages
 Submodules
 ----------
 
-athena.AtConstants module
+athena.atConstants module
 -------------------------
 
-.. automodule:: athena.AtConstants
+.. automodule:: athena.atConstants
    :members:
    :undoc-members:
    :show-inheritance:
 
-athena.AtCore module
+athena.atCore module
 --------------------
 
-.. automodule:: athena.AtCore
+.. automodule:: athena.atCore
    :members:
    :undoc-members:
    :show-inheritance:
@@ -33,7 +33,7 @@ athena.AtCore module
    .. autoclass:: Process
       :members:
       :private-members:
-      :exclude-members: __makeFeedbackContainer
+      :exclude-members: __make_feedback_container
 
    .. autoclass:: _NumberParameter
       :members:
@@ -43,18 +43,18 @@ athena.AtCore module
       :members:
       :show-inheritance:
 
-athena.AtExceptions module
+athena.atExceptions module
 --------------------------
 
-.. automodule:: athena.AtExceptions
+.. automodule:: athena.atExceptions
    :members:
    :undoc-members:
    :show-inheritance:
 
-athena.AtStatus module
+athena.atStatus module
 ----------------------
 
-.. automodule:: athena.AtStatus
+.. automodule:: athena.atStatus
    :members:
    :undoc-members:
    :show-inheritance:
@@ -68,18 +68,10 @@ athena.AtStatus module
    .. autodata:: _ABORTED
    .. autodata:: _EXCEPTION
 
-athena.AtTests module
+athena.atUtils module
 ---------------------
 
-.. automodule:: athena.AtTests
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-athena.AtUtils module
----------------------
-
-.. automodule:: athena.AtUtils
+.. automodule:: athena.atUtils
    :members:
    :undoc-members:
    :show-inheritance:

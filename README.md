@@ -12,7 +12,7 @@ To quickly get started with Athena, follow these steps:
 
 ### Prerequisites
 
-Ensure you have Python >3.8 installed. Athena has no external dependencies.
+Ensure you have Python 3.8+ installed. Athena has no external dependencies.
 
 ### Installing
 
@@ -29,10 +29,10 @@ You can load a blueprint and run all it's processes, or query one single process
 ```python
 import athena
 
-register = athena.AtCore.AtSession().register
-register.loadBlueprintFromPythonImportPath('athena.examples.blueprint.exampleBlueprint')
-blueprint = register.blueprintByName('exampleBlueprint')
-# processor = blueprint.processorByName('exampleProcess')  # To get a single processor.
+register = athena.atCore.AtSession().register
+register.load_blueprint_from_python_import_path('athena.examples.blueprint.exampleBlueprint')
+blueprint = register.blueprint_by_name('exampleBlueprint')
+# processor = blueprint.processor_byName('exampleProcess')  # To get a single processor.
 
 for processor in blueprint.processors:
     result = processor.check()
@@ -48,7 +48,7 @@ Alternatively, you can skip the blueprint and just run a process with a default 
 ```py
 import athena
 
-processor = athena.AtCore.Processor('athena.examples.process.exampleProcess')
+processor = athena.atCore.Processor('athena.examples.process.exampleProcess')
 
 result = processor.check()
 for container in result:

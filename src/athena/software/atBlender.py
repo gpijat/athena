@@ -3,7 +3,7 @@ from typing import Iterable
 import bpy
 
 
-def select(toSelect: Iterable[bpy.types.Object], replace: bool = True) -> None:
+def select(to_select: Iterable[bpy.types.Object], replace: bool = True) -> None:
     """Allow software selection in Blender.
 
     Parameters:
@@ -18,7 +18,7 @@ def select(toSelect: Iterable[bpy.types.Object], replace: bool = True) -> None:
         each.select_set(True)
 
 
-def getDisplay(object_: bpy.types.Object) -> str:
+def get_display(object_: bpy.types.Object) -> str:
     """Get a proper displayable string for the given object.
 
     Will simply return the object's name.

@@ -5,7 +5,7 @@ import numbers
 from dataclasses import dataclass, field
 from typing import Type, Optional, Any, Tuple, Sequence
 
-from athena import AtExceptions
+from athena import atExceptions
 
 
 _ALL_STATUS = {}
@@ -44,7 +44,7 @@ class Status(abc.ABC):
         global _ALL_STATUS
 
         if cls is Status:
-            raise AtExceptions.AthenaException('{} is abstract an can\'t be instantiated.'.format(cls))
+            raise atExceptions.AthenaException('{} is abstract an can\'t be instantiated.'.format(cls))
 
         instance = super().__new__(cls)
         _ALL_STATUS.setdefault(instance.__class__, set()).add(instance)
@@ -130,18 +130,18 @@ _EXCEPTION: _BuiltInStatus = _BuiltInStatus('Exception', (125, 125, 125), float(
 """Status for a Process which encountered an Exception and was interupted."""
 
 
-def getAllStatus() -> Tuple[Status, ...]:
+def get_all_statuses() -> Tuple[Status, ...]:
     """Return all existing Status in a list.
 
     Return:
         All instance of Status subclass defined. Contains the built-in one (defined in this module) as well as user defined
-        Sucess subclass.
+        Success subclass.
     """
 
-    return tuple(status for statusTypeList in _ALL_STATUS.values() for status in statusTypeList)
+    return tuple(status for status_type_list in _ALL_STATUS.values() for status in status_type_list)
 
 
-def getStatusByName(name: str) -> Optional[Status]:
+def get_status_by_name(name: str) -> Optional[Status]:
     """Find Status instance based on it's name.
 
     Parameters:
@@ -151,14 +151,14 @@ def getStatusByName(name: str) -> Optional[Status]:
         The status that match the name if any, else None.
     """
 
-    for status in getAllStatus():
+    for status in get_all_statuses():
         if status.name == name:
             return status
     else:
         return None
 
 
-def getAllFailStatus() -> Tuple[FailStatus, ...]:
+def get_all_fail_status() -> Tuple[FailStatus, ...]:
     """Get all Fail Status instances.
 
     Return:
@@ -168,7 +168,7 @@ def getAllFailStatus() -> Tuple[FailStatus, ...]:
     return tuple(_ALL_STATUS[FailStatus])
 
 
-def getAllSuccessStatus() -> Tuple[SuccessStatus, ...]:
+def get_all_success_status() -> Tuple[SuccessStatus, ...]:
     """Get all Success Status instances.
 
     Return:
@@ -178,41 +178,41 @@ def getAllSuccessStatus() -> Tuple[SuccessStatus, ...]:
     return tuple(_ALL_STATUS[SuccessStatus])
 
 
-def lowestFailStatus() -> FailStatus:
+def lowest_fail_status() -> FailStatus:
     """Get the lowest Fail Status instance based on Status.level.
 
     Return:
         The Fail Status with the lowest level.
     """
 
-    return sorted(getAllFailStatus(), key=lambda x: x.level)[0]
+    return sorted(get_all_fail_status(), key=lambda x: x.level)[0]
 
 
-def highestFailStatus() -> FailStatus:
+def highest_fail_status() -> FailStatus:
     """Get the highest Fail Status instance based on Status.level.
 
     Return:
         The Fail Status with the highest level.
     """
 
-    return sorted(getAllFailStatus(), key=lambda x: x.level)[-1]
+    return sorted(get_all_fail_status(), key=lambda x: x.level)[-1]
 
 
-def lowestSuccessStatus() -> SuccessStatus:
+def lowest_success_status() -> SuccessStatus:
     """Get the lowest Success Status instance based on Status.level.
 
     Return:
         The Success Status with the lowest level.
     """
 
-    return sorted(getAllSuccessStatus(), key=lambda x: x.level)[0]
+    return sorted(get_all_success_status(), key=lambda x: x.level)[0]
 
 
-def highestSuccessStatus() -> SuccessStatus:
+def highest_success_status() -> SuccessStatus:
     """Get the highest Success Status instance based on Status.level.
 
     Return:
         The Success Status with the highest level.
     """
 
-    return sorted(getAllSuccessStatus(), key=lambda x: x.level)[-1]
+    return sorted(get_all_success_status(), key=lambda x: x.level)[-1]

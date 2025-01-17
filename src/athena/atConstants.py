@@ -30,7 +30,7 @@ BLUEPRINT_TEMPLATE = \
     'process': '',  # String
     'category': '',  # String
     'arguments': {'': ([], {})},  # Dict with str key and tuple with a tuple and a dict as value.
-    'tags': 0,  # Integer - AtCore.Tag
+    'tags': 0,  # Integer - atCore.Tag
     'links': (('', '', '')),  # Tuple of tuple that contains three str, the target ID, the source method and the target method.
     'statusOverrides': {'': {}},  # Dict that contains name of the threads to overrides and a dict with new status indexed by status type.
     'settings': {}  # Dict with str key and values.
