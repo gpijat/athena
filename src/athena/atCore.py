@@ -1986,14 +1986,14 @@ class _NumberParameter(Parameter):
         default: numbers.Number, 
         minimum: Optional[numbers.Number] = None, 
         maximum: Optional[numbers.Number] = None, 
-        keepInRange: bool = False):
+        keep_in_range: bool = False):
         """Initialize a new instance of _NumberParameter.
 
         Parameters:
             default: The default numeric value for the Parameter.
             minimum: The minimum value accepted for the Parameter. If None, no minimum limit is set.
             maximum: The maximum value accepted for the Parameter. If None, no maximum limit is set.
-            keepInRange: Whether or not values below minimum or above maximum are forced to theses limits if they exceed them.
+            keep_in_range: Whether or not values below minimum or above maximum are forced to theses limits if they exceed them.
         """
 
         if not isinstance(default, self.TYPE):
@@ -2003,14 +2003,14 @@ class _NumberParameter(Parameter):
 
         self._minimum = minimum
         self._maximum = maximum
-        self._keep_in_range = keepInRange
+        self._keep_in_range = keep_in_range
 
     def type_cast(self, value: object) -> numbers.Number:
         """Cast the input value to the `numbers.Number` type.
         
         As the `numbers.Number` type is not instantiable, this method is meant to work wit sub-types that define an
         instantiable type for the :attr:`~Parameter.TYPE`.
-        Will convert the input value to the Parameter's type and make sur it's in the range if the `keepInRange` attribute
+        Will convert the input value to the Parameter's type and make sur it's in the range if the `keep_in_range` attribute
         is set to `True`.
 
         Parameters:
