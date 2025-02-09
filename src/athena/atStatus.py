@@ -12,7 +12,6 @@ _ALL_STATUS = {}
 """Store all Status that have been created to keep track of them and allow finding lowest/highest"""
 
 
-@dataclass(frozen=True, order=True)
 class Status(abc.ABC):
     """Base `Status` class from which status inherit From.
 
@@ -26,30 +25,26 @@ class Status(abc.ABC):
         to sort the different statuses.
     """
 
-    name: str = field(compare=False)
+    # name: str = field(compare=False)
     """The name of the Status, mostly used to differentiate multiple statuses of the same type. Not used in comparison."""
 
-    color: Tuple[numbers.Number, numbers.Number, numbers.Number] = field(compare=False)
+    # color: Tuple[numbers.Number, numbers.Number, numbers.Number] = field(compare=False)
     """The color that represent the status, to differentiate multiple statuses in a UI for instance. Not used in comparison"""
 
-    level: float = float('nan')
+    # level: float = float('nan')
     """
-    The level for the satus, it must be a float greater than or equal to zero, `inf` or `nan` but those should be reserved
+    The level for the status, it must be a float greater than or equal to zero, `inf` or `nan` but those should be reserved
     for special use case.
     """
-
-    def __new__(cls, *args: Any, **kwargs: Any) -> Status:
-        """Create a new instance of the Status and store it in the _ALL_STATUS module attribute"""
+    
+    def __init__(self, name, color, level):
+        self._name = name
+        self._color = color
+        self._level = level
 
         global _ALL_STATUS
 
-        if cls is Status:
-            raise atExceptions.AthenaException('{} is abstract an can\'t be instantiated.'.format(cls))
-
-        instance = super().__new__(cls)
-        _ALL_STATUS.setdefault(instance.__class__, set()).add(instance)
-
-        return instance
+        _ALL_STATUS.setdefault(self.__class__, set()).add(self)
 
     def __repr__(self) -> str:
         """Human readable representation of the Status object.
@@ -59,10 +54,42 @@ class Status(abc.ABC):
             rgb and therefore not expressive enough to be included.
         """
 
-        return '<{}: {} ({})>'.format(self.__class__.__name__, self.name, self.level)
+        return '<{}: {} ({})>'.format(self.__class__.__name__, self._name, self._level)
+    
+    def __eq__(self, other):
+        if not isinstance(other, Status):
+            raise TypeError('\'{}\' objects can only be compared to other \'{}\' objects.'.format(self.__class__.__name__))
+        
+        return self._level == other._level
+    
+    def __gt__(self, other):
+        if not isinstance(other, Status):
+            raise TypeError('\'{}\' objects can only be compared to other \'{}\' objects.'.format(self.__class__.__name__))
+        
+        return self._level > other._level
+    
+    def __lt__(self, other):
+        if not isinstance(other, Status):
+            raise TypeError('\'{}\' objects can only be compared to other \'{}\' objects.'.format(self.__class__.__name__))
+        
+        return self._level < other._level
+    
+    def __hash__(self):
+        return hash((self._name, self._color, self._level))
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def color(self):
+        return self._color
+    
+    @property
+    def level(self):
+        return self._level
 
 
-@dataclass(frozen=True, order=True)
 class FailStatus(Status):
     """Represent a Fail Status, can be instantiated to define a new Failure level
     
@@ -74,7 +101,6 @@ class FailStatus(Status):
     ...
 
 
-@dataclass(frozen=True, order=True)
 class SuccessStatus(Status):
     """Represent a Success Status, can be instantiated to define a new Success level
 
@@ -86,7 +112,6 @@ class SuccessStatus(Status):
     ...
 
 
-@dataclass(frozen=True, order=True)
 class _BuiltInStatus(Status):
     """Represent a Built-In Status, can be instantiated to define a new Built-In level
 

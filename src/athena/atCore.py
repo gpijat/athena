@@ -1,89 +1,17 @@
 from __future__ import annotations
 
 import abc
-import cProfile
 import enum
 import inspect
 import numbers
 import os
-import pstats
 import re
-import tempfile
-import time
 from dataclasses import dataclass, field
 from functools import cached_property
-from types import ModuleType, FunctionType
-from typing import TypeVar, Type, Iterator, Callable, Optional, Union, Any, Dict, List, Tuple, Mapping, Sequence
+from types import ModuleType
+from typing import TypeVar, Type, Iterator, Optional, Union, Any, Dict, List, Tuple, Mapping, Sequence
 
-from athena import atConstants, atExceptions, atStatus, atUtils
-
-
-class Event(object):
-    """A simple event system for handling callbacks.
-
-    This class allows you to create an event object that can be called like a function.
-    Registered callbacks will be invoked when the event is called.
-    """
-
-    def __init__(self, name: str) -> None:
-        """Initializes an Event with a given name.
-
-        Parameters:
-            name: The name of the event.
-        """
-
-        self._name = name
-        self._callbacks = []
-
-    def __call__(self, *args, **kwargs) -> None:
-        """Invokes all registered callbacks with the provided arguments."""
-
-        for callback in self._callbacks:
-            callback(*args, **kwargs)
-
-    def add_callback(self, callback: Callable) -> bool:
-        """Adds a callback function to the event's list of callbacks.
-
-        Parameters:
-            callback: The callback function to be registered.
-
-        Return:
-            True if the callback was successfully registered, False otherwise.
-
-        Warnings:
-            If the provided callback is not callable, a warning message is logged,
-            and the callback is not registered.
-        """
-
-        if not callable(callback):
-            atUtils.LOGGER.warning(
-                'Event "{0}" failed to register callback: Object "{1}" is not callable.'.format(self.name, callback)
-            )
-            return False
-
-        self._callbacks.append(callback)
-
-        return True
-
-
-class EventSystem(abc.ABC):
-    """Athena's internal event system.
-
-    This class defines events that can be used to notify subscribers
-    when specific events occur within the base framework.
-    """
-
-    #: Event triggered when a new Register instance is created.
-    register_created = Event('RegisterCreated')
-
-    #: Event triggered when Blueprints are reloaded.
-    blueprints_reloaded = Event('BlueprintsReloaded')
-
-    #: Event triggered when development mode is enabled.
-    dev_mode_enabled = Event('DevModeEnabled')
-
-    #: Event triggered when development mode is disabled.
-    dev_mode_disabled = Event('DevModeDisabled')
+from athena import atConstants, atExceptions, atStatus, atUtils, atEvent, atProfiling
 
 
 class AtSession(object, metaclass=atUtils.Singleton):
@@ -91,7 +19,7 @@ class AtSession(object, metaclass=atUtils.Singleton):
 
     This class provides a single instance that manages the session state,
     including a registration system and a development mode toggle.
-    
+
     Example:
         >>> AtSession().dev = True  # Enable development mode.
     """
@@ -119,9 +47,9 @@ class AtSession(object, metaclass=atUtils.Singleton):
 
         self._dev = bool(value)
         if value:
-            EventSystem.dev_mode_enabled()
+            atEvent.dev_mode_enabled()
         else:
-            EventSystem.dev_mode_disabled()
+            atEvent.dev_mode_disabled()
 
 
 #TODO: When Python 3.10 will be more widely used according to vfxplatform, add slots.
@@ -220,14 +148,14 @@ class FeedbackContainer(ProtoFeedback):
 
         return self.feedback._title
 
-    def select(self, replace:bool = True) -> bool:
+    def select(self, replace: bool = True) -> bool:
         """Allow selection for the FeedbackContainer.
 
         If it isn't selectable, this won't do anything. On the other hand, if it is,
         the behavior is to call the `select` method for each Feedback in the container's children one by one.
         Also, if `replace` is set to `True`, only the first child will replace the current selection
         while others will be added to it.
-        
+
         Parameters:
             replace: Whether we replace or add to the current selection.
 
@@ -238,7 +166,7 @@ class FeedbackContainer(ProtoFeedback):
 
         if not self.selectable:
             return replace
-            
+
         for child in self.children:
             child.select(replace=replace)
             replace = False
@@ -285,7 +213,7 @@ class Feedback(ProtoFeedback):
         you can implement your own Feedback subclass.
     """
 
-    def select(self, replace:bool = True) -> bool:
+    def select(self, replace: bool = True) -> bool:
         """Allow selection for the Feedback.
 
         This implementation is a selection cascade mechanism meant to be overridden and/or called as a superclass.
@@ -504,7 +432,7 @@ class Process(abc.ABC):
     _doc_: str = ''
     """The Process user's documentation. If not set, will be set to the value of __doc__"""
 
-    _listen_for_user_interruption: Event = Event('ListenForUserInterruption')
+    _listen_for_user_interruption: atEvent.AtEvent = atEvent.AtEvent('ListenForUserInterruption')
     """Event that allow to notify subscribers when the user is trying to interrupt the process execution."""
 
     def __new__(cls, *args: Any, **kwargs: Any) -> Type[Process]:
@@ -736,9 +664,9 @@ class Process(abc.ABC):
         self._feedback_container[thread].set_status(atStatus._SKIPPED)
 
     def listen_for_user_interruption(self) -> None:
-        """Trigger an user interruption Event to prematurely end process execution.
+        """Trigger an user interruption AtEvent to prematurely end process execution.
 
-        This method triggers the :attr:`~Process._listen_for_user_interruption` Event, which requires a registered callback
+        This method triggers the :attr:`~Process._listen_for_user_interruption` AtEvent, which requires a registered callback
         to invoke the :meth:`~Process._register_interruption` method from the Qt Application.
 
         After triggering the event, if there is a callback to invoke the appropriate method, the boolean value
@@ -798,7 +726,7 @@ class Register(object):
         self.__blueprints: List[Blueprint] = []
         self._current_blueprint: Blueprint = None
 
-        EventSystem.register_created()
+        atEvent.register_created()
 
     def __bool__(self) -> bool:
         """Allow to check if the register is empty or not based on the loaded blueprints."""
@@ -956,7 +884,7 @@ class Register(object):
                 atUtils.reload_module(processor.module)
             self.load_blueprint_from_module(atUtils.reload_module(blueprint._module))
 
-        EventSystem.blueprints_reloaded()
+        atEvent.blueprints_reloaded()
 
 
 #TODO: Maybe make this a subclass of types.ModuleType and wrap class creation.
@@ -1262,7 +1190,7 @@ class Processor(object):
 
         # -- Declare a blueprint internal data, these data are directly retrieved from blueprint's non built-in keys.
         self._data = dict(**kwargs)
-        self._process_profile: _ProcessProfile = _ProcessProfile()
+        self._process_profile: atProfiling._AtProcessProfile = atProfiling._AtProcessProfile()
 
     def __repr__(self) -> str:
         """Readable representation of the Processor object
@@ -1967,7 +1895,7 @@ class Parameter(abc.ABC):
             NotImplementedError: This is an abstract method of an abstract base class, it needs to be implemented in subclasses.
         """
 
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abc.abstractmethod
     def validate(self, value: T) -> bool:
@@ -1983,7 +1911,7 @@ class Parameter(abc.ABC):
             NotImplementedError: This is an abstract method of an abstract base class, it needs to be implemented in subclasses.
         """
 
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
 class BoolParameter(Parameter):
@@ -2058,14 +1986,14 @@ class _NumberParameter(Parameter):
         default: numbers.Number, 
         minimum: Optional[numbers.Number] = None, 
         maximum: Optional[numbers.Number] = None, 
-        keepInRange: bool = False):
+        keep_in_range: bool = False):
         """Initialize a new instance of _NumberParameter.
 
         Parameters:
             default: The default numeric value for the Parameter.
             minimum: The minimum value accepted for the Parameter. If None, no minimum limit is set.
             maximum: The maximum value accepted for the Parameter. If None, no maximum limit is set.
-            keepInRange: Whether or not values below minimum or above maximum are forced to theses limits if they exceed them.
+            keep_in_range: Whether or not values below minimum or above maximum are forced to theses limits if they exceed them.
         """
 
         if not isinstance(default, self.TYPE):
@@ -2075,14 +2003,14 @@ class _NumberParameter(Parameter):
 
         self._minimum = minimum
         self._maximum = maximum
-        self._keep_in_range = keepInRange
+        self._keep_in_range = keep_in_range
 
     def type_cast(self, value: object) -> numbers.Number:
         """Cast the input value to the `numbers.Number` type.
         
         As the `numbers.Number` type is not instantiable, this method is meant to work wit sub-types that define an
         instantiable type for the :attr:`~Parameter.TYPE`.
-        Will convert the input value to the Parameter's type and make sur it's in the range if the `keepInRange` attribute
+        Will convert the input value to the Parameter's type and make sur it's in the range if the `keep_in_range` attribute
         is set to `True`.
 
         Parameters:
@@ -2187,143 +2115,10 @@ class StringParameter(Parameter):
         return False
 
 
-class _ProcessProfile(object):
-    """Profiler that allow to profile the execution of `athena.atCore.Process`"""
+if __name__ == "__main__":
+    session = AtSession()
 
-    # Match integers, floats (comma or dot) and slash in case there is a separation for primitive calls.
-    DIGIT_PATTERN: str = r'([0-9,.\/]+)'
-    DIGIT_REGEX: re.Pattern = re.compile(DIGIT_PATTERN)
+    for each in range(20):
+        print(each)
 
-    CATEGORIES: Tuple[Tuple[str, str], ...] = (
-        ('ncalls', 'Number of calls. Multiple numbers (e.g. 3/1) means the function recursed. it reads: Calls / Primitive Calls.'),
-        ('tottime', 'Total time spent in the function (excluding time spent in calls to sub-functions).'), 
-        ('percall', 'Quotient of tottime divided by ncalls.'), 
-        ('cumtime', 'Cumulative time spent in this and all subfunctions (from invocation till exit). This figure is accurate even for recursive functions.'), 
-        ('percall', 'Quotient of cumtime divided by primitive calls.'), 
-        ('filename:lineno(function)', 'Data for each function.')
-    )
-
-    def __init__(self) -> None:
-        """Initialize a Process Profiler and define the default instance attributes."""
-        self._profiles: Dict[str, Dict[str, Union[float, List[Tuple[str, ...]]]]] = {} 
-
-    def get(self, key: str, default: Optional[Any] = None) -> Any:
-        """Get a profile log from the given key, or default if key does not exists.
-        
-        Parameters:
-            key: The key to get data from in the profiler's profile data.
-            default: The default value to return in case the key does not exists.
-
-        Return:
-            The data stored at the given key if exists else the default value is returned.
-        """
-
-        return self._profiles.get(key, default)
-
-    def _get_call_data_list(self, call_data: Sequence[str]) -> None:
-        """Format and split `cProfile.Profiler` call data list (each value in the list must be one line.)
-
-        This will mostly remove heading or trailing spaces and return a list of tuple where each values in the
-        string is now an entry in the tuple. The order is the same than `athena.atCore._ProcessProfile.CATEGORIES`.
-        
-        Parameters:
-            call_data: Call entries from a `cProfile.Profiler` run.
-        """
-
-        data_list = []
-        for call in call_data:
-            call_data = []
-
-            filtered_data = tuple(filter(lambda x: x, call.strip().split(' ')))
-            if not filtered_data:
-                continue
-            call_data.extend(filtered_data[0:5])
-
-            value = ' '.join(filtered_data[5:len(filtered_data)])
-            call_data.append(float(value) if value.isdigit() else value)
-
-            data_list.append(tuple(call_data))
-
-        return data_list
-
-    def profile_method(self, method: FunctionType, *args: Any, **kwargs: Any) -> Any:
-        """Profile the given method execution and return it's result. The profiling result will be stored in the 
-        object.
-
-        Try to execute the given method with the given args and kwargs and write the result in a temporary file.
-        The result will then be read and each line splitted to save a dict in the object `_profiles` attribute using
-        the name of the given method as key.
-        This dict will hold information like the time when the profiling was done (key = `time`, it can allow to not 
-        update data in a ui for instance), the total number of calls and obviously a tuple with each call data (`calls`).
-        The raw stats result is also saved under the `rawStats` key if the user want to use it directly.
-        
-        Parameters:
-            method: A callable for which we want to profile the execution and save new data.
-            *args: The arguments to call the method with.
-            **kwargs: The keyword arguments to call the method with.
-
-        Return:
-            The result of the given method with the provided args and kwargs.
-        """
-
-        assert callable(method), '`method` must be passed a callable argument.'
-
-        profile = cProfile.Profile()
-
-        # Run the method with `cProfile.Profile.runcall` to profile it's execution only. We define exception before
-        # executing it, if an exception occur the except statement will be processed and `exception` will be updated
-        # from `None` to the exception that should be raised.
-        # At the end of this method exception must be raised in case it should be catch at upper level in the code.
-        # This allow to not skip the profiling even if an exception occurred. Of course the profiling will not be complete
-        # But there should be all information from the beginning of the method to the exception. May be useful for debugging.
-        exception = None
-        return_value = None
-        try:
-            return_value = profile.runcall(method, *args, **kwargs)
-            self._profiles[method.__name__] = self.get_stats_from_profile(profile)
-            return return_value
-
-        except Exception as exception_:
-            self._profiles[method.__name__] = self.get_stats_from_profile(profile)
-            raise
-
-    def get_stats_from_profile(self, profile: cProfile.Profile) -> Dict[str, Union[float, List[Tuple[str, ...]]]]:
-        """
-
-        """
-
-        # Create a temp file and use it as a stream for the `pstats.Stats` This will allow us to open the file
-        # and retrieve the stats as a string. With regex it's now possible to retrieve all the data in a displayable format
-        # for any user interface.
-        fd, tmp_file = tempfile.mkstemp()
-        try:
-            with open(tmp_file, 'w') as stat_stream:
-                stats = pstats.Stats(profile, stream=stat_stream)
-                stats.sort_stats('cumulative')  # cumulative will use the `cumtime` to order stats, seems the most relevant.
-                stats.print_stats()
-            
-            with open(tmp_file, 'r') as stat_stream:
-                stats_str = stat_stream.read()
-        finally:
-            # No matter what happen, we want to delete the file.
-            # It happen that the file is not closed here on Windows so we also call `os.close` to ensure it is really closed.
-            # WindowsError: [Error 32] The process cannot access the file because it is being used by another process: ...
-            os.close(fd)
-            os.remove(tmp_file)
-
-        split = stats_str.split('\n')
-        method_profile = {
-            'time': time.time(),  # With this we will be able to not re-generate widget (for instance) if data have not been updated.
-            'calls': self._get_call_data_list(split[5:-1]),
-            'rawStats': stats_str,
-        }
-
-        # Take care of possible primitive calls in the summary for `ncalls`.
-        summary = self.DIGIT_REGEX.findall(split[0])
-        method_profile['tottime'] = summary[-1]
-        if len(summary) == 3:
-            method_profile['ncalls'] = '{0}/{1}'.format(summary[0], summary[1])
-        else:
-            method_profile['ncalls'] = summary[0]
-
-        return method_profile
+    print(session.dev)
