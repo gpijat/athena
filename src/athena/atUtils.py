@@ -451,7 +451,6 @@ def create_new_athena_package_hierarchy(root_directory: str) -> None:
 
 T = TypeVar("T")
 R = TypeVar("R")
-
 def map_mapping(function: Callable[[T], R], mapping: Mapping[T]) -> Mapping[R]:
     """Execute the given function on all values inside the given Mapping object.
 
