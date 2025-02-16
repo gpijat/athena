@@ -25,5 +25,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
     - name: Run Pytest
-      run: coverage run -m pytest -v -s
+      run: python -m pytest --import-mode=append tests/
       
