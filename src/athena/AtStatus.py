@@ -120,7 +120,7 @@ CORRECT: SuccessStatus = SuccessStatus('Correct', (22, 194, 15), -1.0)
 WARNING: FailStatus = FailStatus('Warning', (196, 98, 16), 1.0)
 """Represent a lightly fail status, that are usually not too problematic as is but that may require attention."""
 
-ERROR: FailStatus = FailStatus('Error', (150, 0, 0), float('inf'))
+ERROR: FailStatus = FailStatus('Error', (150, 0, 0), float('-inf'))
 """Base fail status, represent the classic state of a failed :class:`~Process` execution.""" 
 
 _ABORTED: _BuiltInStatus = _BuiltInStatus('Aborted', (100, 100, 100), float('nan'))
