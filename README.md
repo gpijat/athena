@@ -25,14 +25,16 @@ Or download the latest release [here](https://github.com/gpijat/athena/releases)
 
 ### Usage Example
 
-You can load a blueprint and run all it's processes, or query one single process to run:
+You can load a Blueprint and run all it's processes, or query one single process to run:
+When part of a `Blueprint`, a `Process` can have extra configuration to modify it's behavior or interaction with other
+processes within the blueprint.
 ```python
-import athena
+from athena import atCore
 
-register = athena.atCore.AtSession().register
+register = atCore.AtSession().register
 register.load_blueprint_from_python_import_path('athena.examples.blueprint.exampleBlueprint')
 blueprint = register.blueprint_by_name('exampleBlueprint')
-# processor = blueprint.processor_byName('exampleProcess')  # To get a single processor.
+# processor = blueprint.processor_by_name('exampleProcess')  # To get a single `Processor` from the `Blueprint`.
 
 for processor in blueprint.processors:
     result = processor.check()
@@ -46,9 +48,10 @@ for processor in blueprint.processors:
 
 Alternatively, you can skip the blueprint and just run a process with a default configuration or use your own by passing extra arguments to the `Processor`:
 ```py
-import athena
+from athena import atCore
 
-processor = athena.atCore.Processor('athena.examples.process.exampleProcess')
+# The `Processor` takes full import path to the `Process` class. The same way you'd define it in the `Blueprint`.
+processor = atCore.Processor('athena.examples.process.exampleProcess.AthenaExampleProcess')
 
 result = processor.check()
 for container in result:

@@ -13,10 +13,16 @@ class AthenaExampleProcess(atCore.Process):
     framework behavior and how to write a simple check Process.
     """
 
+    # To gather feedback, your `Process` must define at least one `Thread` that represent a task.
+    # While most simple process will implement one single thread, some use case needs checking a few different possible
+    # errors and way to make something wrong. Multiple thread cann allows for better more understandable feedback.
     RANDOM_ISSUES: atCore.Thread = atCore.Thread(
         title='This is an example thread:',
+        documentation="Using this argument you can optionally provide details on the specificities of this thread " \
+                      "within the process."
     )
 
+    # Parameters are options for the process to allow users to tweak it's behavior if needs be.
     iterations: atCore.IntParameter = atCore.IntParameter(100, minimum=1, maximum=1000)
     duration: atCore.FloatParameter = atCore.FloatParameter(5.0, minimum=0.0, maximum=60.0)
 
