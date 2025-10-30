@@ -36,6 +36,10 @@ def test_get_status_by_name():
     assert atStatus.get_status_by_name('Default') is atStatus._DEFAULT
 
 
+def test_get_status_by_name_not_found():
+    assert atStatus.get_status_by_name('') is None
+
+
 def test_all_fail_status_are_FailStatus_subclasses():
     assert all(isinstance(status, atStatus.FailStatus) for status in atStatus.get_all_fail_status())
 

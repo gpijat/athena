@@ -7,11 +7,10 @@ import pkgutil
 import platform
 import re
 import sys
-import traceback
 
 from collections.abc import Collection, Mapping, Sequence
 from types import ModuleType, FunctionType
-from typing import TypeVar, Type, Optional, Any, Iterator, Tuple, Dict, Hashable
+from typing import TypeVar, Type, Optional, Any, Iterator, Tuple, Dict, Hashable, Callable
 
 try:
     from importlib import reload  # Python 3.4+
@@ -534,9 +533,11 @@ def deep_map(function: Callable[[T], R], collection: Collection[T]) -> Collectio
     if not isinstance(collection, Collection):
         raise TypeError('{} must be a subtype of {}. (Sequence: {} or Mapping: {})'.format(collection, Collection, Sequence, Mapping))
     if not callable(function):
-        raise TypeError('{} object is not callable')
+        raise TypeError('Value for arg `function` is not callable. Got {}'.format(function))
 
     if isinstance(collection, Sequence):
         return map_sequence(function, collection)
     elif isinstance(collection, Mapping):
         return map_mapping(function, collection)
+    else:
+        raise RuntimeError('Value for arg `collection` is unsupported.')
