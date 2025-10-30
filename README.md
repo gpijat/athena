@@ -6,6 +6,9 @@
 
 Athena is a versatile sanity checking framework designed to simplify the process of creating and running validation procedures, known as Sanity-Check. These checks can be executed in any software environments with Python interpreters, especially in DCC (Digital Content Creation) software, or in standalone across all operating systems.
 
+[<img src="https://vumbnail.com/880496852.jpg" width="600" height="300"/>](https://vimeo.com/880496852)
+
+
 ## Getting Started
 
 To quickly get started with Athena, follow these steps:
