@@ -2,7 +2,7 @@ name: Publish to TestPyPI (manual)
 
 # Manual dry-run publish to https://test.pypi.org, so you can sanity-check a
 # release (metadata, README rendering, install from index) before tagging a
-# real release that goes to PyPI. Uses an API token, not Trusted Publishing.
+# real release that goes to PyPI. Uses Trusted Publishing, same as publish.yml.
 on:
   workflow_dispatch:
 
@@ -35,6 +35,13 @@ jobs:
     name: Publish to TestPyPI
     needs: build
     runs-on: ubuntu-latest
+    # Separate GitHub Environment from `pypi` since this is a different
+    # Trusted Publisher registration (test.pypi.org, not pypi.org). Create it
+    # (Settings > Environments) or remove this line. See .github/PYPI_SETUP.md.
+    environment: testpypi
+    permissions:
+      # Required for PyPI Trusted Publishing (OIDC) — no API token needed.
+      id-token: write
     steps:
       - name: Download dist artifact
         uses: actions/download-artifact@v4
@@ -46,4 +53,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          # With Trusted Publishing configured on TestPyPI, no `password` is
+          # needed.
