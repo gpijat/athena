@@ -23,8 +23,16 @@ class AthenaExampleProcess(atCore.Process):
     )
 
     # Parameters are options for the process to allow users to tweak it's behavior if needs be.
-    iterations: atCore.IntParameter = atCore.IntParameter(100, minimum=1, maximum=1000)
-    duration: atCore.FloatParameter = atCore.FloatParameter(5.0, minimum=0.0, maximum=60.0)
+    # `iterations` keeps the default policy. It directly changes how many issues get sampled, so
+    # changing it should count against the pipeline conformance gate.
+    iterations: atCore.Parameter = atCore.IntParameter(100, minimum=1, maximum=1000)
+    # `duration` only paces the fake `time.sleep` calls to give the user some feedback and has no effect
+    # on which issues are generated. A studio can let artists tune it without tainting the result, so it
+    # is given an explicit `FREE` user override policy.
+    duration: atCore.Parameter = atCore.FloatParameter(
+        5.0, minimum=0.0, maximum=60.0,
+        policy=atCore.ParameterPolicy(user_override=atCore.UserParameterOverride.FREE),
+    )
 
     def check(self) -> None:
         """Iterate as much as :obj:`AthenaExampleProcess.iterations` dictate to generate example feedbacks.
