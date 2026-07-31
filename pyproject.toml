@@ -1,3 +1,54 @@
+[project]
+name = "athena-sanity"
+version = "0.2.0rc1"
+description = "Open Source Sanity Checking framework"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Gregory Pijat", email = "pijat.gregory@gmail.com" },
+]
+dependencies = []
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Topic :: Multimedia :: Graphics :: 3D Rendering",
+    "Topic :: Games/Entertainment",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+
+[project.urls]
+Homepage = "https://github.com/gpijat/athena"
+"Bug Tracker" = "https://github.com/gpijat/athena/issues"
+
+# Dependency groups (PEP 735) — installed by `uv sync`; `dev` is on by default.
+[dependency-groups]
+dev = [
+    "pytest>=7",
+    "pytest-cov",
+]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme",
+]
+
 [build-system]
-requires = ['setuptools>=42']
-build-backend = 'setuptools.build_meta'
+requires = ["uv_build>=0.11.4,<0.12.0"]
+build-backend = "uv_build"
+
+# The distribution is `athena-sanity` but the import package is `athena`, so the
+# module name must be set explicitly (module root defaults to `src`).
+[tool.uv.build-backend]
+module-name = "athena"

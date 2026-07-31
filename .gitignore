@@ -26,6 +26,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# uv — this is a published library, so the lockfile is not committed
+uv.lock
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
