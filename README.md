@@ -3,11 +3,15 @@
 ![PythonVersion](https://img.shields.io/pypi/pyversions/athena-sanity)
 ![PyPi](https://img.shields.io/pypi/v/athena-sanity)
 [![License](https://img.shields.io/badge/License-GPL3.0-blue.svg)](https://opensource.org/license/gpl-3-0/)
+[![Documentation Status](https://readthedocs.org/projects/athena-sanity/badge/?version=latest)](https://athena-sanity.readthedocs.io/en/latest/?badge=latest)
 
 Athena is a versatile sanity checking framework designed to simplify the process of creating and running validation procedures, known as Sanity-Check. These checks can be executed in any software environments with Python interpreters, especially in DCC (Digital Content Creation) software, or in standalone across all operating systems.
 
 [<img src="https://vumbnail.com/880496852.jpg" width="600" height="300"/>](https://vimeo.com/880496852)
 
+## Documentation
+
+Full documentation, including API reference and guides, is available on [Read the Docs](https://athena-sanity.readthedocs.io/en/latest/).
 
 ## Getting Started
 
