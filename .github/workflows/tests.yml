@@ -1,0 +1,42 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: py${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        # Bounds + middle of the declared support range (pyproject.toml: >=3.8).
+        python-version: ["3.8", "3.10", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install project and dev dependencies
+        # Fetches the requested Python, creates the venv, installs the package
+        # plus the `dev` dependency group (pytest, pytest-cov).
+        run: uv sync --python ${{ matrix.python-version }}
+
+      - name: Run tests
+        # `uv run` executes inside the synced environment, from the repo root,
+        # so the `tests.fixtures` imports resolve.
+        run: uv run pytest --cov=athena --cov-report=term-missing

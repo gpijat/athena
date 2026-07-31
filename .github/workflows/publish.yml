@@ -1,0 +1,61 @@
+name: Publish to PyPI
+
+# Publishes a new version when you create a GitHub Release (recommended), or
+# when you push a version tag like v0.1.0. The version that gets published is
+# the one in pyproject.toml ([project] version) — bump it before tagging.
+on:
+  release:
+    types: [published]
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Check distributions
+        run: uvx twine check dist/*
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    # A GitHub Environment lets you add required reviewers / protection before
+    # a release actually goes out. Create it (Settings > Environments) or remove
+    # this line. See .github/PYPI_SETUP.md.
+    environment: pypi
+    permissions:
+      # Required for PyPI Trusted Publishing (OIDC) — no API token needed.
+      id-token: write
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # With Trusted Publishing configured on PyPI, no `password` is needed.
+        # To use an API token instead, see .github/PYPI_SETUP.md and add:
+        #   with:
+        #     password: ${{ secrets.PYPI_API_TOKEN }}
