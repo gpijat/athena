@@ -1,6 +1,6 @@
 [project]
 name = "athena-sanity"
-version = "0.2.0rc1"
+version = "0.3.0"
 description = "Open Source Sanity Checking framework"
 readme = "README.md"
 requires-python = ">=3.8"

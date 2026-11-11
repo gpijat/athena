@@ -28,6 +28,14 @@ athena.software.atMaya module
    :undoc-members:
    :show-inheritance:
 
+athena.software.atMobu module
+-----------------------------
+
+.. automodule:: athena.software.atMobu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 athena.software.atStandalone module
 -----------------------------------
 

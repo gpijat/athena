@@ -20,7 +20,7 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
-autodoc_mock_imports = ['maya', 'hou', 'bpy', 'unreal']
+autodoc_mock_imports = ['maya', 'hou', 'bpy', 'unreal', 'pyfbsdk', 'unbind']
 autodoc_typehints = "both"
 autodoc_typehints_description_target = 'documented'
 autodoc_member_order = 'bysource'
